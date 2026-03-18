@@ -1,0 +1,11 @@
+{
+  "name": "invitation-lynda-marcel-backend",
+  "version": "1.0.0",
+  "description": "Backend invitation mariage Lynda & Marcel-Cédric",
+  "private": true,
+  "dependencies": {
+    "googleapis": "^140.0.0",
+    "twilio": "^5.0.0",
+    "jsonwebtoken": "^9.0.0"
+  }
+}
