@@ -378,6 +378,8 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
 <script>
 (function(){
 var pr=null,di=[],lv=3,af='once',lbi=0,lbv=[],confirmed=false;
+var guestToken='';
+var guestJwt='';
 
 var photos=[
   {c:'once',col:'#c8a870',tag:'Lynda'},{c:'once',col:'#b89858',tag:'Marcel-Cédric'},
@@ -408,10 +410,13 @@ ds.forEach(function(inp,i){
 g('otbtn').addEventListener('click',chk);
 
 function chk(){
-  var c=ds.map(function(d){return d.value;}).join('');
-  if(c==='1234')go(3);else if(c==='1111')go(1);
-  else ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
-}
+    var c=ds.map(function(d){return d.value;}).join('');
+    if(c==='1234'){go(3);return;}
+    if(c==='1111'){go(1);return;}
+    if(c.length===4) verifyReal(c);
+    else ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
+  }
+
 
 function go(l){
   lv=l;
@@ -620,6 +625,68 @@ async function anim(){
   });
   await w(380);ds[0].focus();
 }
+
+/* ── API : vérification OTP réel ── */
+async function verifyReal(code){
+  var btn=g('otbtn');
+  btn.textContent='Vérification…';btn.disabled=true;
+  try{
+    var body={otp:code};
+    if(guestToken) body.guestToken=guestToken;
+    var res=await fetch('/.netlify/functions/verify-otp',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    var data=await res.json();
+    if(!res.ok) throw new Error(data.error);
+    guestJwt=data.token;
+    go(data.niveau);
+  }catch(e){
+    ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
+    g('rverr')&&(g('rverr').textContent=e.message);
+    btn.textContent='Ouvrir mon invitation';btn.disabled=false;
+  }
+}
+
+/* ── API : lecture du token dans l'URL au chargement ── */
+(function(){
+  var params=new URLSearchParams(window.location.search);
+  var t=params.get('t');
+  if(!t) return;
+  guestToken=t;
+  /* Appel automatique send-otp dès l'ouverture du lien */
+  fetch('/.netlify/functions/send-otp',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({guestToken:t})
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    if(data.success){
+      var sub=g('otpb')&&g('otpb').querySelector('.ots');
+      if(sub) sub.textContent='Bonjour '+data.prenom+' — votre code a été envoyé sur WhatsApp';
+    }
+  })
+  .catch(function(e){console.warn('send-otp auto:',e);});
+})();
+
+/* ── API : sauvegarde RSVP réel ── */
+(function(){
+  var origSub=g('rvsub');
+  if(!origSub) return;
+  origSub.addEventListener('click',function(){
+    if(!guestJwt) return;
+    var msg=(g('rvmsg')&&g('rvmsg').value)||'';
+    if(!pr||msg.trim().length<20) return;
+    fetch('/.netlify/functions/save-rsvp',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:guestJwt,presence:pr,regime:di,message:msg.trim()})
+    }).catch(function(e){console.warn('save-rsvp:',e);});
+  });
+})();
+
 anim();
 })();
 </script>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Admin — Invitation Lynda &amp; Marcel-Cédric</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+body{min-height:100vh;font-family:Georgia,serif;background:linear-gradient(158deg,#d4845a 0%,#dc8870 4%,#e09080 7%,#dda0a8 11%,#d890a0 18%,#d88098 26%,#d8a0b0 33%,#e0b8c0 40%,#eac8cc 46%,#f2dcd8 52%,#f5f0e8 57%,#f0ecd8 62%,#e8e8c8 67%,#d8e4a8 73%,#c8d890 80%,#b8cc78 88%,#a8c065 95%,#98b455 100%);padding:20px 16px 40px;}
+
+.page{display:none;max-width:500px;margin:0 auto;}
+.page.active{display:block;}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:28px;}
+.header h1{font-family:'Dancing Script',cursive;font-size:32px;color:#7c3010;margin-bottom:4px;}
+.header p{font-size:12px;font-style:italic;color:rgba(100,45,20,.55);}
+
+/* CARDS */
+.card{background:rgba(255,252,248,.72);border:1px solid rgba(180,90,50,.2);border-radius:18px;padding:24px 22px;margin-bottom:16px;box-shadow:0 4px 20px rgba(180,90,50,.1);}
+
+/* LABELS & INPUTS */
+label{display:block;font-size:11px;font-style:italic;color:rgba(110,45,20,.65);margin-bottom:6px;letter-spacing:.5px;}
+input,select{width:100%;padding:11px 14px;background:rgba(255,255,255,.8);border:1.5px solid rgba(180,90,50,.28);border-radius:10px;font-size:14px;color:#7c3010;font-family:Georgia,serif;outline:none;transition:border-color .2s,box-shadow .2s;margin-bottom:14px;}
+input:focus,select:focus{border-color:rgba(160,70,30,.6);box-shadow:0 0 0 3px rgba(180,90,50,.15);}
+input::placeholder{color:rgba(160,90,50,.35);}
+
+/* OTP CASES */
+.otp-row{display:flex;gap:10px;justify-content:center;margin-bottom:16px;}
+.od{width:52px;height:60px;background:rgba(255,255,255,.8);border:1.5px solid rgba(180,90,50,.28);border-radius:12px;text-align:center;font-size:24px;font-weight:700;color:#7c3010;outline:none;-webkit-user-select:text;user-select:text;transition:border-color .2s,box-shadow .2s;}
+.od:focus{border-color:rgba(160,70,30,.6);box-shadow:0 0 0 3px rgba(180,90,50,.18);}
+.od.filled{background:rgba(255,240,225,.9);border-color:rgba(160,80,40,.45);}
+.od.err{border-color:rgba(200,50,50,.7)!important;}
+
+/* BOUTONS */
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Dancing Script',cursive;font-size:18px;cursor:pointer;transition:transform .1s,filter .2s;margin-bottom:8px;}
+.btn-primary{background:linear-gradient(135deg,#c2410c,#9a3412);color:#fff5ee;}
+.btn-primary:hover{filter:brightness(1.1);}
+.btn-primary:active{transform:scale(.975);}
+.btn-secondary{background:rgba(255,252,248,.6);border:1.5px solid rgba(180,90,50,.25)!important;color:rgba(120,50,20,.7);font-size:14px;padding:10px;}
+.btn-secondary:hover{background:rgba(255,252,248,.9);}
+.btn-sm{width:auto;padding:6px 14px;font-size:13px;border-radius:8px;font-family:Georgia,serif;font-style:italic;cursor:pointer;border:1px solid rgba(180,90,50,.3);background:rgba(255,252,248,.6);color:rgba(120,50,20,.7);transition:background .2s;}
+.btn-sm:hover{background:rgba(255,252,248,.95);}
+.btn-sm.danger{border-color:rgba(180,40,30,.3);color:rgba(160,30,20,.7);}
+
+/* MESSAGES */
+.msg{padding:10px 14px;border-radius:10px;font-size:12px;font-style:italic;margin-bottom:12px;display:none;}
+.msg.show{display:block;}
+.msg.ok{background:rgba(120,180,80,.18);border:1px solid rgba(100,160,60,.35);color:#2d6010;}
+.msg.ko{background:rgba(200,60,50,.12);border:1px solid rgba(180,50,40,.3);color:#8c1020;}
+.msg.info{background:rgba(180,120,50,.12);border:1px solid rgba(160,100,40,.3);color:#7c4010;}
+
+/* HINT */
+.hint{font-size:11px;font-style:italic;color:rgba(140,60,20,.42);text-align:center;margin-top:4px;}
+
+/* TABLEAU INVITÉS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+.stat{background:rgba(255,252,248,.55);border:1px solid rgba(180,90,50,.18);border-radius:12px;padding:12px 8px;text-align:center;}
+.stat-val{font-family:'Dancing Script',cursive;font-size:26px;color:#7c3010;line-height:1;}
+.stat-lbl{font-size:10px;font-style:italic;color:rgba(110,50,20,.55);margin-top:2px;}
+
+.guest-list{display:flex;flex-direction:column;gap:8px;}
+.guest-card{background:rgba(255,252,248,.55);border:1px solid rgba(180,90,50,.18);border-radius:12px;padding:12px 14px;}
+.guest-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.guest-name{font-family:'Dancing Script',cursive;font-size:19px;color:#7c3010;}
+.guest-badge{font-size:10px;font-style:italic;padding:3px 9px;border-radius:20px;}
+.badge-1{background:rgba(180,120,50,.15);border:1px solid rgba(160,100,40,.3);color:rgba(120,70,20,.8);}
+.badge-2{background:rgba(180,80,30,.18);border:1px solid rgba(160,60,20,.3);color:rgba(140,50,15,.85);}
+.badge-3{background:rgba(140,60,20,.2);border:1px solid rgba(120,45,15,.35);color:rgba(110,40,12,.9);}
+.guest-tel{font-size:11px;font-style:italic;color:rgba(110,50,20,.55);margin-bottom:6px;}
+.guest-rsvp{font-size:11px;color:rgba(110,50,20,.65);}
+.rsvp-oui{color:#2d6010;font-weight:700;}
+.rsvp-non{color:#8c1020;}
+
+/* SECTION ADD */
+.section-title{font-family:'Dancing Script',cursive;font-size:22px;color:#7c3010;margin-bottom:14px;}
+
+/* NIVEAU SELECTOR */
+.niveau-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.niv-btn{padding:10px 6px;border-radius:10px;border:1.5px solid rgba(180,90,50,.22);background:rgba(255,252,248,.5);color:rgba(120,50,20,.65);font-size:12px;font-style:italic;cursor:pointer;transition:all .2s;text-align:center;}
+.niv-btn.sel{background:rgba(194,65,12,.22);border-color:rgba(180,70,20,.48);color:#7c2d12;}
+
+.sep{height:1px;background:rgba(180,90,50,.15);margin:16px 0;}
+
+/* LOGOUT */
+.logout{text-align:right;margin-bottom:12px;}
+.logout button{background:none;border:none;font-size:11px;font-style:italic;color:rgba(140,60,20,.5);cursor:pointer;text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 : SAISIE NUMÉRO -->
+<div class="page active" id="pg-phone">
+  <div class="header">
+    <h1>Espace admin</h1>
+    <p>Invitation Lynda &amp; Marcel-Cédric</p>
+  </div>
+  <div class="card">
+    <label>Votre numéro WhatsApp admin</label>
+    <input type="tel" id="admin-phone" placeholder="+33745671875" inputmode="tel" autocomplete="tel">
+    <div class="msg" id="msg-phone"></div>
+    <button class="btn btn-primary" id="btn-send-otp">Recevoir mon code</button>
+    <div class="hint">Un code à 4 chiffres sera envoyé sur WhatsApp</div>
+  </div>
+</div>
+
+<!-- PAGE 2 : SAISIE OTP -->
+<div class="page" id="pg-otp">
+  <div class="header">
+    <h1>Code de vérification</h1>
+    <p id="otp-hint-phone">Code envoyé sur votre WhatsApp</p>
+  </div>
+  <div class="card">
+    <div class="otp-row">
+      <input class="od" id="a0" maxlength="1" type="tel" inputmode="numeric" autocomplete="one-time-code">
+      <input class="od" id="a1" maxlength="1" type="tel" inputmode="numeric" autocomplete="off">
+      <input class="od" id="a2" maxlength="1" type="tel" inputmode="numeric" autocomplete="off">
+      <input class="od" id="a3" maxlength="1" type="tel" inputmode="numeric" autocomplete="off">
+    </div>
+    <div class="msg" id="msg-otp"></div>
+    <button class="btn btn-primary" id="btn-verify-otp">Accéder au tableau de bord</button>
+    <button class="btn btn-secondary" id="btn-back-phone">← Changer de numéro</button>
+  </div>
+</div>
+
+<!-- PAGE 3 : TABLEAU DE BORD -->
+<div class="page" id="pg-dashboard">
+  <div class="logout"><button id="btn-logout">Se déconnecter</button></div>
+  <div class="header">
+    <h1>Tableau de bord</h1>
+    <p>Gestion des invités</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="stat-total">—</div><div class="stat-lbl">Invités</div></div>
+    <div class="stat"><div class="stat-val" id="stat-rsvp">—</div><div class="stat-lbl">RSVP reçus</div></div>
+    <div class="stat"><div class="stat-val" id="stat-oui">—</div><div class="stat-lbl">Présences</div></div>
+  </div>
+
+  <!-- AJOUT INVITÉ -->
+  <div class="card">
+    <div class="section-title">Ajouter un invité</div>
+    <label>Prénom</label>
+    <input type="text" id="new-prenom" placeholder="Prénom de l'invité" autocomplete="off">
+    <label>Numéro WhatsApp</label>
+    <input type="tel" id="new-phone" placeholder="+336 XX XX XX XX" inputmode="tel">
+    <label>Niveau d'accès</label>
+    <div class="niveau-grid">
+      <button class="niv-btn sel" data-n="1">Niv. 1<br><span style="font-size:10px;">Cérémonie</span></button>
+      <button class="niv-btn" data-n="2">Niv. 2<br><span style="font-size:10px;">+ Cocktail 1</span></button>
+      <button class="niv-btn" data-n="3">Niv. 3<br><span style="font-size:10px;">+ Cocktail 2</span></button>
+    </div>
+    <div class="msg" id="msg-add"></div>
+    <button class="btn btn-primary" id="btn-add-guest">Ajouter &amp; envoyer l'invitation WhatsApp</button>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- LISTE INVITÉS -->
+  <div class="section-title" style="margin-bottom:12px;">Liste des invités <span id="refresh-btn" style="font-size:12px;font-style:italic;color:rgba(140,60,20,.5);cursor:pointer;text-decoration:underline;margin-left:8px;">actualiser</span></div>
+  <div class="msg" id="msg-list"></div>
+  <div class="guest-list" id="guest-list"></div>
+</div>
+
+<script>
+(function(){
+  var adminPhone = '';
+  var signedOTP = '';
+  var adminToken = '';
+  var selectedNiveau = 1;
+
+  function show(pgId){
+    document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+    document.getElementById(pgId).classList.add('active');
+    window.scrollTo(0,0);
+  }
+
+  function showMsg(id, text, type){
+    var el = document.getElementById(id);
+    el.textContent = text;
+    el.className = 'msg show ' + type;
+  }
+  function hideMsg(id){ document.getElementById(id).className = 'msg'; }
+
+  /* ── PAGE 1 : NUMÉRO ── */
+  document.getElementById('btn-send-otp').addEventListener('click', async function(){
+    var raw = document.getElementById('admin-phone').value.trim();
+    if(!raw){ showMsg('msg-phone','Veuillez saisir votre numéro','ko'); return; }
+    adminPhone = raw.replace(/\s/g,'');
+    this.textContent = 'Envoi en cours…';
+    this.disabled = true;
+    hideMsg('msg-phone');
+    try {
+      var res = await fetch('/.netlify/functions/admin-send-otp',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({phone: adminPhone})
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error);
+      signedOTP = data.signed;
+      document.getElementById('otp-hint-phone').textContent = 'Code envoyé sur ' + adminPhone;
+      show('pg-otp');
+      setTimeout(function(){ document.getElementById('a0').focus(); }, 200);
+    } catch(e){
+      showMsg('msg-phone', e.message, 'ko');
+    } finally {
+      this.textContent = 'Recevoir mon code';
+      this.disabled = false;
+    }
+  });
+
+  /* ── PAGE 2 : OTP ── */
+  var otpInputs = ['a0','a1','a2','a3'].map(function(id){ return document.getElementById(id); });
+  otpInputs.forEach(function(inp, i){
+    inp.addEventListener('keydown', function(e){
+      if(e.key==='Backspace'){
+        if(inp.value){inp.value='';inp.classList.remove('filled');}
+        else if(i>0){otpInputs[i-1].focus();otpInputs[i-1].value='';otpInputs[i-1].classList.remove('filled');}
+        e.preventDefault();
+      }
+      if(e.key==='Enter') verifyOTP();
+    });
+    inp.addEventListener('input', function(){
+      var v=inp.value.replace(/\D/g,'').slice(-1);
+      inp.value=v;
+      if(v){inp.classList.add('filled');if(i<3)otpInputs[i+1].focus();}
+      else inp.classList.remove('filled');
+    });
+    inp.addEventListener('paste', function(e){
+      var t=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'');
+      if(t.length>=4){otpInputs.forEach(function(d,j){d.value=t[j]||'';t[j]?d.classList.add('filled'):d.classList.remove('filled');});otpInputs[3].focus();e.preventDefault();}
+    });
+    inp.addEventListener('click', function(){ inp.select(); });
+  });
+
+  document.getElementById('btn-verify-otp').addEventListener('click', verifyOTP);
+  document.getElementById('btn-back-phone').addEventListener('click', function(){
+    otpInputs.forEach(function(d){d.value='';d.classList.remove('filled','err');});
+    hideMsg('msg-otp');
+    show('pg-phone');
+  });
+
+  async function verifyOTP(){
+    var code = otpInputs.map(function(d){return d.value;}).join('');
+    if(code.length < 4){ showMsg('msg-otp','Veuillez saisir les 4 chiffres','ko'); return; }
+    hideMsg('msg-otp');
+    var btn = document.getElementById('btn-verify-otp');
+    btn.textContent = 'Vérification…'; btn.disabled = true;
+    try {
+      var res = await fetch('/.netlify/functions/admin-verify-otp',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({phone: adminPhone, otp: code, signed: signedOTP})
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error);
+      adminToken = data.token;
+      show('pg-dashboard');
+      loadGuests();
+    } catch(e){
+      showMsg('msg-otp', e.message, 'ko');
+      otpInputs.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},400);});
+    } finally {
+      btn.textContent = 'Accéder au tableau de bord'; btn.disabled = false;
+    }
+  }
+
+  /* ── PAGE 3 : DASHBOARD ── */
+  document.getElementById('btn-logout').addEventListener('click', function(){
+    adminToken = ''; adminPhone = ''; signedOTP = '';
+    otpInputs.forEach(function(d){d.value='';d.classList.remove('filled');});
+    document.getElementById('admin-phone').value = '';
+    document.getElementById('guest-list').innerHTML = '';
+    show('pg-phone');
+  });
+
+  /* Niveau selector */
+  document.querySelectorAll('.niv-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.niv-btn').forEach(function(b){b.classList.remove('sel');});
+      btn.classList.add('sel');
+      selectedNiveau = parseInt(btn.getAttribute('data-n'));
+    });
+  });
+
+  /* Ajouter invité */
+  document.getElementById('btn-add-guest').addEventListener('click', async function(){
+    var prenom = document.getElementById('new-prenom').value.trim();
+    var phone = document.getElementById('new-phone').value.trim();
+    hideMsg('msg-add');
+
+    if(!prenom){ showMsg('msg-add','Prénom requis','ko'); return; }
+    if(!phone){ showMsg('msg-add','Numéro requis','ko'); return; }
+
+    this.textContent = 'Ajout en cours…'; this.disabled = true;
+    try {
+      var res = await fetch('/.netlify/functions/admin-add-guest',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({token: adminToken, prenom, phone, niveau: selectedNiveau})
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error);
+      showMsg('msg-add', '✓ ' + data.message, 'ok');
+      document.getElementById('new-prenom').value = '';
+      document.getElementById('new-phone').value = '';
+      document.querySelectorAll('.niv-btn').forEach(function(b){b.classList.remove('sel');});
+      document.querySelector('.niv-btn[data-n="1"]').classList.add('sel');
+      selectedNiveau = 1;
+      loadGuests();
+    } catch(e){
+      showMsg('msg-add', e.message, 'ko');
+    } finally {
+      this.textContent = 'Ajouter & envoyer l\'invitation WhatsApp'; this.disabled = false;
+    }
+  });
+
+  /* Charger la liste */
+  document.getElementById('refresh-btn').addEventListener('click', loadGuests);
+
+  async function loadGuests(){
+    showMsg('msg-list','Chargement…','info');
+    try {
+      var res = await fetch('/.netlify/functions/admin-list-guests',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({token: adminToken})
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error);
+      hideMsg('msg-list');
+      renderGuests(data.guests);
+    } catch(e){
+      showMsg('msg-list', e.message, 'ko');
+    }
+  }
+
+  function renderGuests(guests){
+    var total = guests.length;
+    var rsvpCount = guests.filter(function(g){return g.rsvp_presence;}).length;
+    var ouiCount = guests.filter(function(g){return g.rsvp_presence==='oui';}).length;
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-rsvp').textContent = rsvpCount;
+    document.getElementById('stat-oui').textContent = ouiCount;
+
+    var list = document.getElementById('guest-list');
+    if(!guests.length){
+      list.innerHTML = '<div style="text-align:center;font-style:italic;font-size:12px;color:rgba(130,60,25,.42);padding:20px;">Aucun invité pour l\'instant</div>';
+      return;
+    }
+
+    var nivLabels = {1:'Cérémonie', 2:'+ Cocktail 1', 3:'+ Cocktail 1 & 2'};
+    list.innerHTML = guests.map(function(g){
+      var rsvpHtml = g.rsvp_presence
+        ? '<span class="rsvp-'+(g.rsvp_presence==='oui'?'oui':'non')+'">'+(g.rsvp_presence==='oui'?'✓ Présent(e)':'✗ Absent(e)')+'</span>'
+          +(g.rsvp_regime?' · '+g.rsvp_regime:'')
+        : '<span style="color:rgba(150,80,30,.45);">En attente</span>';
+      return '<div class="guest-card">'
+        +'<div class="guest-top">'
+        +'<span class="guest-name">'+escHtml(g.prenom)+'</span>'
+        +'<span class="guest-badge badge-'+g.niveau+'">Niv. '+g.niveau+' — '+nivLabels[g.niveau]+'</span>'
+        +'</div>'
+        +'<div class="guest-tel">'+escHtml(g.telephone)+'</div>'
+        +'<div class="guest-rsvp">'+rsvpHtml+'</div>'
+        +(g.rsvp_message?'<div style="font-size:11px;font-style:italic;color:rgba(100,50,20,.55);margin-top:5px;border-top:1px solid rgba(180,90,50,.12);padding-top:5px;">«&nbsp;'+escHtml(g.rsvp_message)+'&nbsp;»</div>':'')
+        +'</div>';
+    }).join('');
+  }
+
+  function escHtml(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+})();
+</script>
+</body>
+</html>
