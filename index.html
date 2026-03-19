@@ -592,7 +592,7 @@ function loadDriveAlbum(cat){
 function buildPlaceholder(cell,p){
   var colors={once:'#c8a070',cer:'#b89060',ck1:'#c06840',ck2:'#906080'};
   var ph=document.createElement('div');ph.className='albph';
-  ph.style.background=colors[p.c]||'#b89060';
+  ph.style.background=colors[p.c||af_current]||'#b89060';
   ph.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15l-5-5L5 21" stroke="rgba(255,252,248,.45)" stroke-width="1.5" stroke-linecap="round"/><circle cx="8.5" cy="8.5" r="2.5" stroke="rgba(255,252,248,.45)" stroke-width="1.5"/><rect x="3" y="3" width="18" height="18" rx="3" stroke="rgba(255,252,248,.38)" stroke-width="1.5"/></svg>';
   if(p.uploader){
     var tg=document.createElement('div');tg.className='albph-tag';tg.textContent=p.uploader;ph.appendChild(tg);
