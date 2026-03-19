@@ -736,11 +736,11 @@ async function verifyReal(code){
         var p1=document.getElementById('p1');
         var rvf=document.getElementById('rvf');
         var rvok=document.getElementById('rvok');
-        alert('p1:'+!!p1+' rvf:'+!!rvf+' rvok:'+!!rvok);
+        
         if(p1)p1.style.display='flex';
-        alert('avant appel applyExistingRSVP');
+       
         applyExistingRSVP(rsvp);
-        alert('après appel applyExistingRSVP');
+      
       }
     })
     .catch(function(e){
@@ -751,7 +751,6 @@ async function verifyReal(code){
   }catch(e){
     ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
     var errEl=g('rverr');if(errEl) errEl.textContent=e.message;
-    alert('ERREUR verifyReal: '+(e.message||e));
     btn.textContent='Ouvrir mon invitation';btn.disabled=false;
   }
 }
@@ -796,11 +795,7 @@ async function verifyReal(code){
       body:JSON.stringify({token:jwt,presence:pr,regime:di,message:msg.trim()})
     })
     .then(function(r){return r.json();})
-    .then(function(d){
-      if(d.success) alert('✓ Réponse enregistrée');
-      else alert('Erreur: '+d.error);
-    })
-    .catch(function(e){alert('Erreur save-rsvp: '+e.message);});
+    .catch(function(e){console.warn('save-rsvp:',e);});
   });
 })();
 
@@ -846,6 +841,17 @@ function applyExistingRSVP(data){
     rved.textContent='Modifier votre réservation';
     rved.style.display='block';
   }
+
+   /* Révéler les onglets et filtres album selon le niveau */
+  if(estPresent&&!confirmed){
+    confirmed=true;
+    if(lv>=2)g('t2').classList.remove('hidden');
+    if(lv>=3)g('t3').classList.remove('hidden');
+    g('af-cer').classList.remove('hidden');
+    if(lv>=2)g('af1').classList.remove('hidden');
+    if(lv>=3)g('af2').classList.remove('hidden');
+  }
+
 }
 
 function escHtml(s){
