@@ -45,7 +45,7 @@ exports.handler = async (event) => {
         return {
           statusCode: 200,
           body: JSON.stringify({
-            rsvp_submitted: presence !== "",
+            rsvp_submitted: presence === "oui" || presence === "non",
             rsvp_presence:  presence,
             rsvp_regime:    row[6] || "",
             rsvp_message:   row[7] || "",
