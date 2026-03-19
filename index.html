@@ -807,29 +807,18 @@ async function verifyReal(code){
 
 /* ── RSVP déjà soumis : afficher "Vous avez déjà confirmé" ── */
 function applyExistingRSVP(data){
-  alert('applyExistingRSVP appelée: '+data.rsvp_presence);
   if(!data.rsvp_presence||data.rsvp_presence==='') return;
-  alert('RSVP: '+data.rsvp_presence+' | rvf:'+!!document.getElementById('rvf')+' | rvok:'+!!document.getElementById('rvok')+' | p1:'+!!document.getElementById('p1'));
+
   var p1=document.getElementById('p1');
-  try {
-    alert('etape 1');
-    if(p1)p1.style.display='flex';
-    alert('etape 2');
-    applyExistingRSVP(rsvp);
-    alert('etape 3');
-  } catch(err) {
-    alert('ERREUR JS: '+err.message);
-  }
-  
+  if(p1)p1.style.display='flex';
+
   var rvf=g('rvf'), rvok=g('rvok');
   if(!rvf||!rvok) return;
 
   var okt=g('rvokt'), okm=g('rvokm');
   var estPresent = data.rsvp_presence==='oui';
 
-  if(okt) okt.textContent = estPresent
-    ? 'Présence confirmée ✓'
-    : 'Absence confirmée';
+  if(okt) okt.textContent = estPresent ? 'Présence confirmée ✓' : 'Absence confirmée';
 
   var txt = estPresent
     ? 'Votre présence est enregistrée pour le 15 mai 2026.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.'
@@ -852,7 +841,6 @@ function applyExistingRSVP(data){
     bc.disabled=true;
   }
 
-  /* Lien "Modifier votre réservation" */
   var rved=g('rved');
   if(rved){
     rved.textContent='Modifier votre réservation';
