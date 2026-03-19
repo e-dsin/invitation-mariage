@@ -728,10 +728,24 @@ async function verifyReal(code){
     guestJwt=data.token;
     go(data.niveau);
     /* Si RSVP déjà soumis → afficher directement l'écran "déjà confirmé" */
-    fetch('/.netlify/functions/check-rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:data.token})})
+     fetch('/.netlify/functions/check-rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:data.token})})
     .then(function(r){return r.json();})
-    .then(function(rsvp){if(rsvp.rsvp_submitted){setTimeout(function(){applyExistingRSVP(rsvp);},800);}})
-    .catch(function(e){console.warn('check-rsvp:',e);});
+    .then(function(rsvp){
+      if(rsvp.rsvp_submitted){
+        /* Délai suffisant pour que go() finisse d'initialiser le DOM */
+        setTimeout(function(){
+          /* Forcer l'affichage du panel RSVP avant d'appliquer */
+          var p1=document.getElementById('p1');
+          if(p1){p1.style.display='flex';}
+          applyExistingRSVP(rsvp);
+        },1200);
+      }
+    })
+    .catch(function(e){
+      /* Afficher l'erreur visuellement sur mobile */
+      var hint=document.getElementById('alct');
+      if(hint) hint.textContent='RSVP check: '+(e.message||'erreur');
+    });
   }catch(e){
     ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
     var errEl=g('rverr');if(errEl) errEl.textContent=e.message;
@@ -783,6 +797,9 @@ async function verifyReal(code){
 /* ── RSVP déjà soumis : afficher "Vous avez déjà confirmé" ── */
 function applyExistingRSVP(data){
   if(!data.rsvp_presence||data.rsvp_presence==='') return;
+  var p1=document.getElementById('p1');
+  if(p1)p1.style.display='flex';
+  
   var rvf=g('rvf'), rvok=g('rvok');
   if(!rvf||!rvok) return;
 
