@@ -731,6 +731,7 @@ async function verifyReal(code){
      fetch('/.netlify/functions/check-rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:data.token})})
     .then(function(r){return r.json();})
     .then(function(rsvp){
+      alert('check-rsvp: '+JSON.stringify(rsvp));
       if(rsvp.rsvp_submitted){
         /* Délai suffisant pour que go() finisse d'initialiser le DOM */
         setTimeout(function(){
