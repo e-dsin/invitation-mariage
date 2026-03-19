@@ -41,15 +41,20 @@ exports.handler = async (event) => {
       const row = rows[i];
       const tel = (row[1] || "").replace(/\s/g, "");
       if (tel === cleanPhone) {
-        const presence = row[5] || "";
+        /* Normaliser : trim + lowercase pour éviter tout problème de casse/espace */
+        const presence = (row[5] || "").trim().toLowerCase();
+        const isOui = presence === "oui";
+        const isNon = presence === "non";
+        const submitted = isOui || isNon;
+
         return {
           statusCode: 200,
           body: JSON.stringify({
-            rsvp_submitted: presence === "oui" || presence === "non",
-            rsvp_presence:  presence,
-            rsvp_regime:    row[6] || "",
-            rsvp_message:   row[7] || "",
-            rsvp_date:      row[8] || "",
+            rsvp_submitted:  submitted,
+            rsvp_presence:   submitted ? (isOui ? "oui" : "non") : "",
+            rsvp_regime:     row[6] || "",
+            rsvp_message:    row[7] || "",
+            rsvp_date:       row[8] || "",
           }),
         };
       }
@@ -57,7 +62,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ rsvp_submitted: false }),
+      body: JSON.stringify({ rsvp_submitted: false, rsvp_presence: "" }),
     };
   } catch (err) {
     console.error("check-rsvp error:", err.message);
