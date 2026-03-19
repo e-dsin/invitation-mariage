@@ -750,6 +750,7 @@ async function verifyReal(code){
   }catch(e){
     ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
     var errEl=g('rverr');if(errEl) errEl.textContent=e.message;
+    alert('ERREUR verifyReal: '+(e.message||e));
     btn.textContent='Ouvrir mon invitation';btn.disabled=false;
   }
 }
