@@ -4,16 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#d4845a">
-<meta property="og:title" content="Lynda &amp; Marcel-Cédric ">
+<meta property="og:title" content="Lynda &amp; Marcel-Cédric — 15.05.2026">
 <meta property="og:description" content="Vous êtes invité(e) à célébrer leur union">
-<meta property="og:image" content="https://onsemarie-lynda-mc.netlify.app/preview.jpeg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:url" content="https://onsemarie-lynda-mc.netlify.app">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://onsemarie-lynda-mc.netlify.app/preview.jpg">
-
 <title>Invitation — Lynda &amp; Marcel-Cédric</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap');
@@ -253,7 +245,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
     <input class="od" id="d3" maxlength="1" type="tel" inputmode="numeric" autocomplete="off">
   </div>
   <button id="otbtn">Ouvrir mon invitation</button>
-  <div class="oth">Accès Démo : 1111 (faire-part)</div>
+  <div class="oth">Démo : 1234 (accès complet) · 1111 (faire-part seul)</div>
 </div></div>
 
 <div id="main">
@@ -283,7 +275,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
       <div class="fpdt">15 / 05 / 2026</div>
       <div class="fplc">Mairie de Paris 11 — 15h</div>
       <div class="fpadr"><a href="https://maps.google.com/?q=1+Place+Léon+Blum,+75011+Paris" target="_blank" rel="noopener">1 place Léon Blum, 75011 Paris</a></div>
-      <div class="fpck">La cérémonie sera suivie d'un cocktail .</div>
+      <div class="fpck">La cérémonie sera suivie d'un cocktail de 2h.</div>
       <button id="btn-confirm">Confirmer votre présence</button>
     </div>
 
@@ -418,13 +410,12 @@ ds.forEach(function(inp,i){
 g('otbtn').addEventListener('click',chk);
 
 function chk(){
-    var c=ds.map(function(d){return d.value;}).join('');
-    if(c==='1234'){go(3);return;}
-    if(c==='1111'){go(1);return;}
-    if(c.length===4) verifyReal(c);
-    else ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
-  }
-
+  var c=ds.map(function(d){return d.value;}).join('');
+  if(c==='1234'){go(3);return;}
+  if(c==='1111'){go(1);return;}
+  if(c.length===4) verifyReal(c);
+  else ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
+}
 
 function go(l){
   lv=l;
@@ -652,18 +643,17 @@ async function verifyReal(code){
     go(data.niveau);
   }catch(e){
     ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
-    g('rverr')&&(g('rverr').textContent=e.message);
+    var errEl=g('rverr');if(errEl) errEl.textContent=e.message;
     btn.textContent='Ouvrir mon invitation';btn.disabled=false;
   }
 }
 
-/* ── API : lecture du token dans l'URL au chargement ── */
+/* ── API : lecture ?t= au chargement → send-otp automatique ── */
 (function(){
   var params=new URLSearchParams(window.location.search);
   var t=params.get('t');
   if(!t) return;
   guestToken=t;
-  /* Appel automatique send-otp dès l'ouverture du lien */
   fetch('/.netlify/functions/send-otp',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
@@ -672,18 +662,21 @@ async function verifyReal(code){
   .then(function(r){return r.json();})
   .then(function(data){
     if(data.success){
-      var sub=g('otpb')&&g('otpb').querySelector('.ots');
-      if(sub) sub.textContent='Bonjour '+data.prenom+' — votre code a été envoyé sur WhatsApp';
+      var otpb=g('otpb');
+      if(otpb){
+        var sub=otpb.querySelector('.ots');
+        if(sub) sub.textContent='Bonjour '+data.prenom+' \u2014 votre code a \u00e9t\u00e9 envoy\u00e9 sur WhatsApp';
+      }
     }
   })
   .catch(function(e){console.warn('send-otp auto:',e);});
 })();
 
-/* ── API : sauvegarde RSVP réel ── */
+/* ── API : sauvegarde RSVP dans Google Sheets ── */
 (function(){
-  var origSub=g('rvsub');
-  if(!origSub) return;
-  origSub.addEventListener('click',function(){
+  var rvs=g('rvsub');
+  if(!rvs) return;
+  rvs.addEventListener('click',function(){
     if(!guestJwt) return;
     var msg=(g('rvmsg')&&g('rvmsg').value)||'';
     if(!pr||msg.trim().length<20) return;

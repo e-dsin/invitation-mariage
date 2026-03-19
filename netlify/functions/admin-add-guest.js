@@ -81,6 +81,7 @@ async function sendWelcomeWhatsApp(prenom, phone, niveau, guestToken) {
       `${inviteUrl}\n\n` +
       `Votre accès : *${niveauLabel}*\n\n` +
       `En cliquant sur le lien, vous recevrez automatiquement votre code d'accès par WhatsApp.\n\n` +
+      `⚠️ Ce lien est nominatif — le code d'accès sera envoyé uniquement à vous sur ce numéro.\n\n` +
       `Avec tout notre amour 💕\nLynda & Marcel-Cédric`,
   });
 }
