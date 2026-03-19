@@ -30,6 +30,9 @@ async function findGuestByPhone(sheets, phone) {
         phone: row[1],
         otpCode: row[3] || "",
         otpExpires: parseInt(row[4]) || 0,
+        rsvp_presence: row[5] || "",
+        rsvp_regime:   row[6] || "",
+        rsvp_message:  row[7] || "",
       };
     }
   }
@@ -52,6 +55,9 @@ async function findGuestByToken(sheets, token) {
         phone: row[1],
         otpCode: row[3] || "",
         otpExpires: parseInt(row[4]) || 0,
+        rsvp_presence: row[5] || "",
+        rsvp_regime:   row[6] || "",
+        rsvp_message:  row[7] || "",
       };
     }
   }
@@ -140,6 +146,9 @@ exports.handler = async (event) => {
         prenom: guest.prenom,
         niveau: guest.niveau,
         token,
+        rsvp_presence: guest.rsvp_presence,
+        rsvp_regime:   guest.rsvp_regime,
+        rsvp_message:  guest.rsvp_message,
       }),
     };
   } catch (err) {

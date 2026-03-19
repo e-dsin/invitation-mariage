@@ -76,7 +76,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
 #main.show{opacity:1;pointer-events:auto;animation:fadeUp .62s cubic-bezier(.2,0,.8,1) forwards;}
 #tabs{display:flex;flex-shrink:0;border-bottom:1px solid rgba(180,90,50,.18);background:rgba(255,252,248,.55);overflow-x:auto;-webkit-overflow-scrolling:touch;}
 #tabs::-webkit-scrollbar{display:none;}
-.tab{flex:0 0 auto;padding:11px 10px 9px;text-align:center;font-family:'Dancing Script',cursive;font-size:14px;color:rgba(130,55,25,.38);cursor:pointer;border-bottom:2.5px solid transparent;transition:color .22s,border-color .22s;white-space:nowrap;}
+.tab{flex:0 0 auto;padding:11px 10px 9px;text-align:center;font-family:'Dancing Script',cursive;font-size:16px;color:rgba(130,55,25,.38);cursor:pointer;border-bottom:2.5px solid transparent;transition:color .22s,border-color .22s;white-space:nowrap;}
 .tab.on{color:#b45309;border-bottom-color:#b45309;background:rgba(255,252,248,.7);}
 .tab.off{opacity:.28;pointer-events:none;}
 .tab.hidden{display:none;}
@@ -554,7 +554,8 @@ function loadDriveAlbum(cat){
       /* Vignette Drive ou placeholder avec nom uploader */
       if(p.thumbnailUrl){
         var img=document.createElement('img');
-        img.src=p.thumbnailUrl;
+        /* Proxy via drive-image pour éviter les blocages d'auth Google */
+        img.src=driveImgUrl(p.id);
         img.alt=p.uploader||'';
         img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;';
         img.onerror=function(){buildPlaceholder(cell,p);};
@@ -643,7 +644,7 @@ function lbs(){
   var p=lbv[lbi];if(!p)return;
   var im=g('lbimg'),ph=g('lbph');
   if(p.fullUrl||p.thumbnailUrl){
-    im.src=p.fullUrl||p.thumbnailUrl;
+    im.src=driveImgUrl(p.id);
     im.style.display='block';ph.style.display='none';
     im.onerror=function(){
       im.style.display='none';
@@ -718,6 +719,10 @@ async function verifyReal(code){
     if(!res.ok) throw new Error(data.error);
     guestJwt=data.token;
     go(data.niveau);
+    /* Si RSVP déjà soumis → afficher directement l'écran "déjà confirmé" */
+    if(data.rsvp_presence){
+      setTimeout(function(){ applyExistingRSVP(data); }, 400);
+    }
   }catch(e){
     ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
     var errEl=g('rverr');if(errEl) errEl.textContent=e.message;
@@ -764,6 +769,48 @@ async function verifyReal(code){
     }).catch(function(e){console.warn('save-rsvp:',e);});
   });
 })();
+
+
+/* ── RSVP déjà soumis : afficher "Vous avez déjà confirmé" ── */
+function applyExistingRSVP(data){
+  var rvf=g('rvf'), rvok=g('rvok');
+  if(!rvf||!rvok) return;
+
+  /* Mettre à jour le titre et le message */
+  var okt=g('rvokt'), okm=g('rvokm');
+  if(okt) okt.textContent = data.rsvp_presence==='oui'
+    ? 'Vous avez déjà confirmé votre présence'
+    : 'Vous avez déjà décliné';
+
+  var txt = data.rsvp_presence==='oui'
+    ? 'Votre présence est confirmée pour le 15 mai 2026.'
+    : 'Votre absence a été enregistrée.';
+  if(data.rsvp_message) txt+='<br><br><em>« '+escHtml(data.rsvp_message)+' »</em>';
+  if(okm) okm.innerHTML=txt;
+
+  /* Afficher l'écran de confirmation, masquer le formulaire */
+  rvf.style.display='none';
+  rvok.style.display='flex';
+
+  /* Animer la coche si présent */
+  if(data.rsvp_presence==='oui'){
+    var cp=g('ckp');
+    if(cp){cp.style.transition='stroke-dashoffset .6s cubic-bezier(.2,0,.2,1) .1s';cp.style.strokeDashoffset='0';}
+  }
+
+  /* Bouton "Confirmer votre présence" sur le faire-part → désactiver */
+  var bc=g('btn-confirm');
+  if(bc){bc.textContent='Présence confirmée ✓';bc.classList.add('done');bc.disabled=true;}
+}
+
+function escHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ── PROXY IMAGES : construire l'URL via drive-image ── */
+function driveImgUrl(fileId){
+  return '/.netlify/functions/drive-image?id='+fileId+'&token='+encodeURIComponent(guestJwt);
+}
 
 anim();
 })();
