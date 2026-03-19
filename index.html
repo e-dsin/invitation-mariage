@@ -731,15 +731,14 @@ async function verifyReal(code){
      fetch('/.netlify/functions/check-rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:data.token})})
     .then(function(r){return r.json();})
     .then(function(rsvp){
-      alert('check-rsvp: '+JSON.stringify(rsvp));
+      
       if(rsvp.rsvp_submitted){
-        /* Délai suffisant pour que go() finisse d'initialiser le DOM */
-        setTimeout(function(){
-          /* Forcer l'affichage du panel RSVP avant d'appliquer */
-          var p1=document.getElementById('p1');
-          if(p1){p1.style.display='flex';}
-          applyExistingRSVP(rsvp);
-        },1200);
+        var p1=document.getElementById('p1');
+        var rvf=document.getElementById('rvf');
+        var rvok=document.getElementById('rvok');
+        alert('p1:'+!!p1+' rvf:'+!!rvf+' rvok:'+!!rvok);
+        if(p1)p1.style.display='flex';
+        applyExistingRSVP(rsvp);
       }
     })
     .catch(function(e){
