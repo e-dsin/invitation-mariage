@@ -4,9 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#d4845a">
-<meta property="og:title" content="Lynda &amp; Marcel-Cédric — 15.05.2026">
+<meta property="og:title" content="Lynda &amp; Marcel-Cédric">
 <meta property="og:description" content="Vous êtes invité(e) à célébrer leur union">
+<meta property="og:image" content="https://onsemarie-lynda-mc.netlify.app/preview.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://onsemarie-lynda-mc.netlify.app">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://onsemarie-lynda-mc.netlify.app/preview.jpg">
 <title>Invitation — Lynda &amp; Marcel-Cédric</title>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -275,7 +283,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
       <div class="fpdt">15 / 05 / 2026</div>
       <div class="fplc">Mairie de Paris 11 — 15h</div>
       <div class="fpadr"><a href="https://maps.google.com/?q=1+Place+Léon+Blum,+75011+Paris" target="_blank" rel="noopener">1 place Léon Blum, 75011 Paris</a></div>
-      <div class="fpck">La cérémonie sera suivie d'un cocktail de 2h.</div>
+      <div class="fpck">La cérémonie sera suivie d'un cocktail.</div>
       <button id="btn-confirm">Confirmer votre présence</button>
     </div>
 
@@ -720,9 +728,10 @@ async function verifyReal(code){
     guestJwt=data.token;
     go(data.niveau);
     /* Si RSVP déjà soumis → afficher directement l'écran "déjà confirmé" */
-    if(data.rsvp_presence){
-      setTimeout(function(){ applyExistingRSVP(data); }, 400);
-    }
+    fetch('/.netlify/functions/check-rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:data.token})})
+    .then(function(r){return r.json();})
+    .then(function(rsvp){if(rsvp.rsvp_submitted){setTimeout(function(){applyExistingRSVP(rsvp);},400);}})
+    .catch(function(e){console.warn('check-rsvp:',e);});
   }catch(e){
     ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
     var errEl=g('rverr');if(errEl) errEl.textContent=e.message;
