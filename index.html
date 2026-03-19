@@ -805,6 +805,7 @@ async function verifyReal(code){
 
 /* ── RSVP déjà soumis : afficher "Vous avez déjà confirmé" ── */
 function applyExistingRSVP(data){
+  alert('applyExistingRSVP appelée: '+data.rsvp_presence);
   if(!data.rsvp_presence||data.rsvp_presence==='') return;
   alert('RSVP: '+data.rsvp_presence+' | rvf:'+!!document.getElementById('rvf')+' | rvok:'+!!document.getElementById('rvok')+' | p1:'+!!document.getElementById('p1'));
   var p1=document.getElementById('p1');
