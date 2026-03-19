@@ -48,9 +48,12 @@ exports.handler = async (event) => {
     return { statusCode: 401, body: JSON.stringify({ error: "Session expirée. Veuillez vous reconnecter." }) };
   }
 
-  if (!presence || !["oui", "non"].includes(presence)) {
+  if (!presence || !["oui", "non", "yes", "no"].includes(presence)) {
     return { statusCode: 400, body: JSON.stringify({ error: "Présence invalide" }) };
   }
+
+  /* Normaliser en français pour le Sheets */
+  const presenceNorm = (presence === "yes" || presence === "oui") ? "oui" : "non";
 
   if (!message || message.trim().length < 20) {
     return { statusCode: 400, body: JSON.stringify({ error: "Message trop court (20 caractères minimum)" }) };
@@ -72,7 +75,7 @@ exports.handler = async (event) => {
       valueInputOption: "RAW",
       requestBody: {
         values: [[
-          presence,
+          presenceNorm,
           (regime || []).join(", "),
           message.trim(),
           now,
