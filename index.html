@@ -738,7 +738,9 @@ async function verifyReal(code){
         var rvok=document.getElementById('rvok');
         alert('p1:'+!!p1+' rvf:'+!!rvf+' rvok:'+!!rvok);
         if(p1)p1.style.display='flex';
+        alert('avant appel applyExistingRSVP');
         applyExistingRSVP(rsvp);
+        alert('après appel applyExistingRSVP');
       }
     })
     .catch(function(e){
