@@ -784,14 +784,22 @@ async function verifyReal(code){
   var rvs=g('rvsub');
   if(!rvs) return;
   rvs.addEventListener('click',function(){
-    if(!guestJwt) return;
+    /* Lire guestJwt au moment du clic, pas à l'enregistrement du listener */
+    var jwt=guestJwt;
+    if(!jwt) return;
     var msg=(g('rvmsg')&&g('rvmsg').value)||'';
     if(!pr||msg.trim().length<20) return;
     fetch('/.netlify/functions/save-rsvp',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({token:guestJwt,presence:pr,regime:di,message:msg.trim()})
-    }).catch(function(e){console.warn('save-rsvp:',e);});
+      body:JSON.stringify({token:jwt,presence:pr,regime:di,message:msg.trim()})
+    })
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.success) alert('✓ Réponse enregistrée');
+      else alert('Erreur: '+d.error);
+    })
+    .catch(function(e){alert('Erreur save-rsvp: '+e.message);});
   });
 })();
 
