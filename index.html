@@ -381,18 +381,8 @@ var pr=null,di=[],lv=3,af='once',lbi=0,lbv=[],confirmed=false;
 var guestToken='';
 var guestJwt='';
 
-var photos=[
-  {c:'once',col:'#c8a870',tag:'Lynda'},{c:'once',col:'#b89858',tag:'Marcel-Cédric'},
-  {c:'once',col:'#d0b080',tag:'Lynda'},{c:'once',col:'#c0a068',tag:'Les mariés'},
-  {c:'once',col:'#d8b888',tag:'Marcel-Cédric'},{c:'once',col:'#c8a070',tag:'Lynda'},
-  {c:'cer',col:'#c8a070',tag:'Famille'},{c:'cer',col:'#b89060',tag:'Amis'},
-  {c:'cer',col:'#d0a880',tag:'Lynda'},{c:'cer',col:'#c09868',tag:'Marcel-Cédric'},
-  {c:'cer',col:'#d4b078',tag:'Famille'},{c:'cer',col:'#b88858',tag:'Amis'},
-  {c:'ck1',col:'#c06840',tag:'Sophie'},{c:'ck1',col:'#b05838',tag:'Thomas'},
-  {c:'ck1',col:'#a84830',tag:'Julie'},{c:'ck1',col:'#c07848',tag:'Marc'},
-  {c:'ck2',col:'#906080',tag:'Emma'},{c:'ck2',col:'#a07090',tag:'Pierre'},
-  {c:'ck2',col:'#806070',tag:'Camille'}
-];
+var photos=[];  /* tableau vide — les photos viennent de Google Drive */
+
 
 function g(id){return document.getElementById(id);}
 function w(ms){return new Promise(function(r){setTimeout(r,ms);});}
@@ -425,6 +415,8 @@ function go(l){
   qr('qr2',l>=3);
   if(l<3)g('qr2w').classList.add('lkd');
   ralb();
+  /* Charger l'album Drive dès l'authentification */
+  setTimeout(function(){ loadDriveAlbum('once'); }, 300);
 }
 
 /* Bouton "Confirmer votre présence" → va au RSVP */
@@ -499,8 +491,15 @@ g('rvsub').addEventListener('click',function(){
 
 g('rved').addEventListener('click',function(){g('rvf').style.display='block';g('rvok').style.display='none';var cp=g('ckp');if(cp){cp.style.transition='none';cp.style.strokeDashoffset='60';}});
 
-/* ALBUM */
+/* ── ALBUM DRIVE ── */
 var af_current='once';
+var driveCache={};  /* cache par catégorie pour éviter les rechargements */
+
+function catName(c){
+  return c==='once'?'Il était une fois':c==='cer'?'Cérémonie · 15 mai 2026':c==='ck1'?'Cocktail 1':'Cocktail 2';
+}
+
+/* Changer de filtre */
 g('afs').addEventListener('click',function(e){
   var b=e.target.closest('.albf');
   if(!b||b.classList.contains('lk')||b.classList.contains('hidden'))return;
@@ -508,84 +507,162 @@ g('afs').addEventListener('click',function(e){
   document.querySelectorAll('.albf').forEach(function(x){
     if(x.classList.contains('hidden'))return;
     x.classList.remove('on');
-    if(x.getAttribute('data-c')==='once'){
-      x.classList.remove('off');
-    } else {
-      x.classList.add('off');
-    }
+    x.getAttribute('data-c')==='once'?x.classList.remove('off'):x.classList.add('off');
   });
-  b.classList.remove('off');
-  b.classList.add('on');
-
-  /* "Il était une fois" = lecture seule */
-  var upz=g('alb-upload-zone');
+  b.classList.remove('off');b.classList.add('on');
+  var upbtn=g('alfi')?g('alfi').parentElement:null;
   var noup=g('alb-no-upload');
-  var upbtn=g('alfi').parentElement;
   if(af_current==='once'){
-    upbtn.style.display='none';noup.style.display='block';
+    if(upbtn)upbtn.style.display='none';
+    if(noup)noup.style.display='block';
   }else{
-    upbtn.style.display='flex';noup.style.display='none';
+    if(upbtn)upbtn.style.display='flex';
+    if(noup)noup.style.display='none';
   }
-  ralb();
+  loadDriveAlbum(af_current);
 });
 
-g('alfi').addEventListener('change',function(e){
-  Array.from(e.target.files).forEach(function(f){
-    var r=new FileReader();
-    r.onload=function(ev){
-      photos.push({c:af_current,url:ev.target.result,tag:'Moi'});ralb();
-    };r.readAsDataURL(f);
-  });e.target.value='';
-});
-
-function catName(c){
-  return c==='once'?'Il était une fois':c==='cer'?'Cérémonie · 15 mai 2026':c==='ck1'?'Cocktail 1':'Cocktail 2';
-}
-
-function ralb(){
+/* Charger les photos depuis Drive */
+function loadDriveAlbum(cat){
   var grid=g('alg'),em=g('alem'),ct=g('alct');
-  var fil=photos.filter(function(p){
-    if(p.c!==af_current)return false;
-    if(p.c==='ck1'&&lv<2)return false;
-    if(p.c==='ck2'&&lv<3)return false;
-    return true;
-  });
-  lbv=fil;
-  ct.textContent=fil.length+' photo'+(fil.length>1?'s':'')+' · '+catName(af_current);
-  if(!fil.length){grid.innerHTML='';em.style.display='block';return;}
-  em.style.display='none';grid.innerHTML='';
-  fil.forEach(function(p,i){
-    var cell=document.createElement('div');cell.className='albc';
-    cell.style.animation='photoIn .28s ease '+(i*0.038)+'s both';
-    if(p.url){
-      var img=document.createElement('img');img.src=p.url;img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;';cell.appendChild(img);
-    } else {
-      var ph=document.createElement('div');ph.className='albph';
-      ph.style.background=p.col;
-      ph.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15l-5-5L5 21" stroke="rgba(255,252,248,.45)" stroke-width="1.5" stroke-linecap="round"/><circle cx="8.5" cy="8.5" r="2.5" stroke="rgba(255,252,248,.45)" stroke-width="1.5"/><rect x="3" y="3" width="18" height="18" rx="3" stroke="rgba(255,252,248,.38)" stroke-width="1.5"/></svg>';
-      if(p.tag){var tg=document.createElement('div');tg.className='albph-tag';tg.textContent=p.tag;ph.appendChild(tg);}
-      cell.appendChild(ph);
-    }
-    var ov=document.createElement('div');ov.className='albov';
-    if(p.tag){var tgov=document.createElement('div');tgov.className='alb-tag';tgov.textContent=p.tag;ov.appendChild(tgov);}
-    cell.appendChild(ov);
-    (function(idx){cell.addEventListener('click',function(){lbi=idx;g('lb').classList.add('open');lbs();});})(i);
-    grid.appendChild(cell);
+  if(!guestJwt){
+    /* Pas encore authentifié via API → grille vide silencieuse */
+    grid.innerHTML='';em.style.display='none';
+    ct.textContent='0 photo · '+catName(cat);
+    return;
+  }
+  /* Afficher un état de chargement */
+  grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:24px;font-size:11px;font-style:italic;color:rgba(130,60,25,.42);">Chargement…</div>';
+  em.style.display='none';
+
+  fetch('/.netlify/functions/drive-list',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({token:guestJwt,category:cat})
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var photos=data.photos||[];
+    driveCache[cat]=photos;
+    lbv=photos;
+    ct.textContent=photos.length+' photo'+(photos.length>1?'s':'')+' · '+catName(cat);
+    if(!photos.length){grid.innerHTML='';em.style.display='block';return;}
+    em.style.display='none';grid.innerHTML='';
+    photos.forEach(function(p,i){
+      var cell=document.createElement('div');cell.className='albc';
+      cell.style.animation='photoIn .28s ease '+(i*0.038)+'s both';
+      /* Vignette Drive ou placeholder avec nom uploader */
+      if(p.thumbnailUrl){
+        var img=document.createElement('img');
+        img.src=p.thumbnailUrl;
+        img.alt=p.uploader||'';
+        img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;';
+        img.onerror=function(){buildPlaceholder(cell,p);};
+        cell.appendChild(img);
+      } else {
+        buildPlaceholder(cell,p);
+      }
+      /* Overlay avec nom uploader */
+      var ov=document.createElement('div');ov.className='albov';
+      if(p.uploader){
+        var tgov=document.createElement('div');tgov.className='alb-tag';
+        tgov.textContent=p.uploader;ov.appendChild(tgov);
+      }
+      cell.appendChild(ov);
+      (function(idx){cell.addEventListener('click',function(){lbi=idx;g('lb').classList.add('open');lbs();});})(i);
+      grid.appendChild(cell);
+    });
+  })
+  .catch(function(e){
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:24px;font-size:11px;font-style:italic;color:rgba(180,50,30,.55);">Erreur de chargement</div>';
+    console.warn('drive-list:',e);
   });
 }
 
+/* Placeholder coloré avec nom uploader si pas de thumbnail */
+function buildPlaceholder(cell,p){
+  var colors={once:'#c8a070',cer:'#b89060',ck1:'#c06840',ck2:'#906080'};
+  var ph=document.createElement('div');ph.className='albph';
+  ph.style.background=colors[p.c]||'#b89060';
+  ph.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15l-5-5L5 21" stroke="rgba(255,252,248,.45)" stroke-width="1.5" stroke-linecap="round"/><circle cx="8.5" cy="8.5" r="2.5" stroke="rgba(255,252,248,.45)" stroke-width="1.5"/><rect x="3" y="3" width="18" height="18" rx="3" stroke="rgba(255,252,248,.38)" stroke-width="1.5"/></svg>';
+  if(p.uploader){
+    var tg=document.createElement('div');tg.className='albph-tag';tg.textContent=p.uploader;ph.appendChild(tg);
+  }
+  cell.appendChild(ph);
+}
+
+/* Upload vers Drive */
+g('alfi').addEventListener('change',function(e){
+  var files=Array.from(e.target.files);
+  if(!files.length)return;
+  if(!guestJwt){alert('Session expirée, veuillez recharger la page.');return;}
+  var upbtn=g('alfi').parentElement;
+  if(upbtn){upbtn.style.opacity='.5';upbtn.style.pointerEvents='none';}
+
+  var promises=files.map(function(f){
+    return new Promise(function(resolve){
+      var r=new FileReader();
+      r.onload=function(ev){
+        var base64=ev.target.result.split(',')[1];
+        fetch('/.netlify/functions/drive-upload',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({
+            token:guestJwt,
+            category:af_current,
+            fileData:base64,
+            fileName:f.name,
+            mimeType:f.type
+          })
+        })
+        .then(function(res){return res.json();})
+        .then(function(data){
+          if(data.success){
+            /* Invalider le cache pour forcer rechargement */
+            delete driveCache[af_current];
+          } else {
+            alert(data.error||'Erreur upload');
+          }
+          resolve();
+        })
+        .catch(function(err){console.warn('upload err:',err);resolve();});
+      };
+      r.readAsDataURL(f);
+    });
+  });
+
+  Promise.all(promises).then(function(){
+    if(upbtn){upbtn.style.opacity='';upbtn.style.pointerEvents='';}
+    loadDriveAlbum(af_current);
+  });
+  e.target.value='';
+});
+
+/* Lightbox Drive */
 function lbs(){
   var p=lbv[lbi];if(!p)return;
   var im=g('lbimg'),ph=g('lbph');
-  if(p.url){im.src=p.url;im.style.display='block';ph.style.display='none';}
-  else{
-    im.style.display='none';ph.style.display='flex';
-    ph.style.cssText='width:260px;height:260px;background:'+p.col+';border-radius:10px;display:flex;align-items:center;justify-content:center;';
-    ph.innerHTML='<svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M21 15l-5-5L5 21" stroke="rgba(255,252,248,.45)" stroke-width="1.5" stroke-linecap="round"/><circle cx="8.5" cy="8.5" r="2.5" stroke="rgba(255,252,248,.45)" stroke-width="1.5"/><rect x="3" y="3" width="18" height="18" rx="3" stroke="rgba(255,252,248,.4)" stroke-width="1.5"/></svg>';
+  if(p.fullUrl||p.thumbnailUrl){
+    im.src=p.fullUrl||p.thumbnailUrl;
+    im.style.display='block';ph.style.display='none';
+    im.onerror=function(){
+      im.style.display='none';
+      buildLbPlaceholder(ph,p);
+    };
+  } else {
+    im.style.display='none';
+    buildLbPlaceholder(ph,p);
   }
-  g('lbcap').textContent=catName(p.c);
-  g('lbtag').textContent=p.tag?p.tag:'';
+  g('lbcap').textContent=catName(p.c||af_current);
+  g('lbtag').textContent=p.uploader||'';
   g('lbctr').textContent=(lbi+1)+' / '+lbv.length;
+}
+
+function buildLbPlaceholder(ph,p){
+  var colors={once:'#c8a070',cer:'#b89060',ck1:'#c06840',ck2:'#906080'};
+  ph.style.cssText='width:260px;height:260px;background:'+(colors[p.c||af_current]||'#b89060')+';border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;';
+  ph.innerHTML='<svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M21 15l-5-5L5 21" stroke="rgba(255,252,248,.45)" stroke-width="1.5" stroke-linecap="round"/><circle cx="8.5" cy="8.5" r="2.5" stroke="rgba(255,252,248,.45)" stroke-width="1.5"/><rect x="3" y="3" width="18" height="18" rx="3" stroke="rgba(255,252,248,.4)" stroke-width="1.5"/></svg>'+(p.uploader?'<div style="font-size:12px;font-style:italic;color:rgba(255,252,248,.7);font-family:Georgia,serif;">'+p.uploader+'</div>':'');
+  ph.style.display='flex';
 }
 
 g('lbx').addEventListener('click',function(){g('lb').classList.remove('open');});
