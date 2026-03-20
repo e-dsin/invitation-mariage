@@ -33,11 +33,11 @@ exports.handler = async (event) => {
   try { ({ phone } = JSON.parse(event.body)); }
   catch { return { statusCode: 400, body: JSON.stringify({ error: "Corps invalide" }) }; }
 
-  const adminPhone = process.env.ADMIN_PHONE;
-  if (!adminPhone) return { statusCode: 500, body: JSON.stringify({ error: "Admin non configuré" }) };
+  const adminPhones = process.env.ADMIN_PHONE;
+  if (!adminPhones) return { statusCode: 500, body: JSON.stringify({ error: "Admin non configuré" }) };
 
   const clean = (phone || "").replace(/\s/g, "");
-  if (clean !== adminPhone) {
+  if (!adminPhones.includes(clean)) {
     return { statusCode: 403, body: JSON.stringify({ error: "Numéro non autorisé" }) };
   }
 

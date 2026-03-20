@@ -31,9 +31,9 @@ exports.handler = async (event) => {
   catch { return { statusCode: 400, body: JSON.stringify({ error: "Corps invalide" }) }; }
 
   const clean = (phone || "").replace(/\s/g, "");
-  const adminPhone = process.env.ADMIN_PHONE;
+  const adminPhones = process.env.ADMIN_PHONE;
 
-  if (clean !== adminPhone) {
+  if (!adminPhones.includes(clean)) {
     return { statusCode: 403, body: JSON.stringify({ error: "Numéro non autorisé" }) };
   }
 
