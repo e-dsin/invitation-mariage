@@ -29,7 +29,9 @@ exports.handler = async (event) => {
 
   try {
     /* Cloudinary Admin API — liste les ressources du dossier */
-    const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image?prefix=${encodeURIComponent(folder)}/&max_results=100&context=true`;
+
+    const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image?type=upload&prefix=${encodeURIComponent(folder + "/")}&max_results=100&context=true`;
+
     const auth = Buffer.from(`${apiKey}:${apiSecret}`).toString("base64");
 
     const res = await fetch(url, {
