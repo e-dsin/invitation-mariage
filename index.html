@@ -381,7 +381,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
   <div id="lbcap"></div><div id="lbtag"></div><div id="lbctr"></div>
   <button id="lbnx">›</button>
 </div>
-<div style="text-align:center;padding:10px 0 18px;font-size:10px;font-style:italic;color:rgba(100,45,20,.35);">© Mundo Archi - 2026</div>
+<div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10px;font-style:italic;color:rgba(100,45,20,.35);z-index:1;">© Mundo Archi - 2026</div>
 </div>
 
 <script>
@@ -805,6 +805,16 @@ function applyExistingRSVP(data){
   if(rved){
     rved.textContent='Modifier votre réservation';
     rved.style.display='block';
+  }
+
+  /* Révéler les onglets et filtres album selon le niveau */
+  if(estPresent&&!confirmed){
+    confirmed=true;
+    if(lv>=2)g('t2').classList.remove('hidden');
+    if(lv>=3)g('t3').classList.remove('hidden');
+    g('af-cer').classList.remove('hidden');
+    if(lv>=2)g('af1').classList.remove('hidden');
+    if(lv>=3)g('af2').classList.remove('hidden');
   }
 }
 
