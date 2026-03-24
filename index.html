@@ -245,7 +245,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
 
 <div id="otp"><div id="otpb">
   <div class="ott">Votre invitation vous attend</div>
-  <div class="ots">Entrez le code reçu par WhatsApp</div>
+  <div class="ots">Entrez le code reçu par SMS</div>
   <div id="otr">
     <input class="od" id="d0" maxlength="1" type="tel" inputmode="numeric" autocomplete="one-time-code">
     <input class="od" id="d1" maxlength="1" type="tel" inputmode="numeric" autocomplete="off">
@@ -789,7 +789,7 @@ async function verifyReal(code){
       var otpb=g('otpb');
       if(otpb){
         var sub=otpb.querySelector('.ots');
-        if(sub) sub.textContent='Bonjour '+data.prenom+' \u2014 votre code a \u00e9t\u00e9 envoy\u00e9 sur WhatsApp';
+        if(sub) sub.textContent='Bonjour '+data.prenom+' \u2014 votre code a \u00e9t\u00e9 envoy\u00e9 par SMS';
       }
     }
   })

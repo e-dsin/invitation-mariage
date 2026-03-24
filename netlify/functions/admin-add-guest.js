@@ -71,8 +71,7 @@ exports.handler = async (event) => {
   if (!prenom || prenom.trim().length < 2) return { statusCode: 400, body: JSON.stringify({ error: "Prénom invalide" }) };
   if (!phone || !/^\+[1-9]\d{6,14}$/.test(phone.replace(/\s/g, ""))) return { statusCode: 400, body: JSON.stringify({ error: "Numéro invalide (format +336...)" }) };
   const niv = parseInt(niveau);
-  if (![1, 2, 3].includes(niv)) return { statusCode: 400, body: JSON.stringify({ error: "Niveau invalide (1, 2 ou 3)" }) };
-
+  if (![1, 2, 3, 4].includes(niv)) return { statusCode: 400, body: JSON.stringify({ error: "Niveau invalide (1, 2, 3 ou 4)" }) };
   const cleanPhone = phone.replace(/\s/g, "");
 
   try {
