@@ -453,8 +453,10 @@ function go(l){
   }
 
   /* Afficher les sections RSVP cocktail selon niveau */
-  if(l>=2 && g('sck1')) g('sck1').style.display='block';
-  if(l>=3 && g('sck2')) g('sck2').style.display='block';
+if(l===2 && g('sck1')) g('sck1').style.display='block';
+if(l===3 && g('sck2')) g('sck2').style.display='block';
+if(l>=4 && g('sck1')) g('sck1').style.display='block';
+if(l>=4 && g('sck2')) g('sck2').style.display='block';
 
   /* Charger l'album dès l'authentification */
   setTimeout(function(){ loadAlbum('once'); }, 300);
@@ -512,12 +514,13 @@ g('dgrid').addEventListener('click',function(e){
 g('rvsub').addEventListener('click',function(){
   if(!pr){g('rverr').textContent='Veuillez indiquer votre présence à la cérémonie.';return;}
   /* Vérifier les confirmations cocktail si visible */
-  if(lv>=2 && g('sck1') && g('sck1').style.display!=='none' && !prCk1){
+  if((lv===2||lv>=4) && g('sck1') && g('sck1').style.display!=='none' && !prCk1){
     g('rverr').textContent='Veuillez indiquer votre présence au cocktail famille.';return;
   }
-  if(lv>=3 && g('sck2') && g('sck2').style.display!=='none' && !prCk2){
+  if((lv===3||lv>=4) && g('sck2') && g('sck2').style.display!=='none' && !prCk2){
     g('rverr').textContent='Veuillez indiquer votre présence au repas de mariage.';return;
   }
+
   var msg=g('rvmsg').value.trim();
   if(msg.length<20){
     g('rverr').textContent='Votre message doit contenir au moins 20 caractères.';
