@@ -454,7 +454,7 @@ function go(l){
 
   /* Afficher les sections RSVP cocktail selon niveau */
 if(l===2 && g('sck1')) g('sck1').style.display='block';
-if(l===3 && g('sck2')) g('sck2').style.display='block';
+if(l===3 && g('sck2')) g('sck2').style.display='none';
 if(l>=4 && g('sck1')) g('sck1').style.display='block';
 if(l>=4 && g('sck2')) g('sck2').style.display='block';
 
@@ -524,7 +524,7 @@ g('rvsub').addEventListener('click',function(){
   if((lv===2||lv>=4) && g('sck1') && g('sck1').style.display!=='none' && !prCk1){
     g('rverr').textContent='Veuillez indiquer votre présence au cocktail famille.';return;
   }
-  if((lv===3||lv>=4) && g('sck2') && g('sck2').style.display!=='none' && !prCk2){
+  if(lv>=4 && g('sck2') && g('sck2').style.display!=='none' && !prCk2){
     g('rverr').textContent='Veuillez indiquer votre présence au repas de mariage.';return;
   }
 
