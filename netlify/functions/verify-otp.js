@@ -16,7 +16,7 @@ async function getSheetsClient() {
 async function findGuestByPhone(sheets, phone) {
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: "Invités!A:J",
+    range: "Invités!A:L",
   });
   const rows = res.data.values || [];
   for (let i = 1; i < rows.length; i++) {
@@ -42,12 +42,12 @@ async function findGuestByPhone(sheets, phone) {
 async function findGuestByToken(sheets, token) {
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: "Invités!A:J",
+    range: "Invités!A:L",
   });
   const rows = res.data.values || [];
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
-    if ((row[9] || "") === token) {
+    if ((row[11] || "") === token) {
       return {
         rowIndex: i + 1,
         prenom: row[0],
