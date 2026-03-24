@@ -549,11 +549,11 @@ g('rvsub').addEventListener('click',function(){
   /* Révéler les onglets après confirmation */
   if(pr==='yes'&&!confirmed){
     confirmed=true;
-    if(lv>=2)g('t2').classList.remove('hidden');
-    if(lv>=3)g('t3').classList.remove('hidden');
-    g('af-cer').classList.remove('hidden');
-    if(lv>=2){g('af1').classList.remove('hidden');}
-    if(lv>=3){g('af2').classList.remove('hidden');}
+    if(lv===2||lv>=4)g('t2').classList.remove('hidden');
+    if(lv===3||lv>=4)g('t3').classList.remove('hidden');
+    if(lv===2)g('af-cer').classList.remove('hidden');
+    if(lv===2||lv>=4)g('af1').classList.remove('hidden');
+    if(lv===3||lv>=4)g('af2').classList.remove('hidden');
     var bc=g('btn-confirm');
     if(bc){bc.textContent='Présence confirmée ✓';bc.classList.add('done');bc.disabled=true;}
   }
@@ -852,11 +852,11 @@ function applyExistingRSVP(data){
 
   if(estPresent&&!confirmed){
     confirmed=true;
-    if(lv>=2)g('t2').classList.remove('hidden');
-    if(lv>=3)g('t3').classList.remove('hidden');
-    g('af-cer').classList.remove('hidden');
+    if(lv===2||lv>=4)g('t2').classList.remove('hidden');
+    if(lv===3||lv>=4)g('t3').classList.remove('hidden');
+    if(lv===2||lv>=4)g('af-cer').classList.remove('hidden');
     if(lv===2||lv>=4)g('af1').classList.remove('hidden');
-    if(lv>=3)g('af2').classList.remove('hidden');
+    if(lv===3||lv>=4)g('af2').classList.remove('hidden');
   }
 }
 
