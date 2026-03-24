@@ -1,5 +1,4 @@
 const { google } = require("googleapis");
-const twilio = require("twilio");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
@@ -36,54 +35,22 @@ async function addGuest(sheets, prenom, phone, niveau) {
   const otp = generateOTP();
   const expires = Date.now() + OTP_VALIDITY_MS;
   const guestToken = generateGuestToken();
-
-  await sheets.spreadsheets.values.append({
-    spreadsheetId: SHEET_ID,
-    range: "Invités!A:J",
-    valueInputOption: "RAW",
-    insertDataOption: "INSERT_ROWS",
-    requestBody: {
-      values: [[
-        prenom,
-        phone,
-        String(niveau),
-        otp,
-        String(expires),
-        "", "", "", "",
-        guestToken,
-      ]],
-    },
-  });
-
-  return { otp, guestToken };
-}
-
-async function sendWelcomeWhatsApp(prenom, phone, niveau, guestToken) {
-  const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-  const toWA = phone.startsWith("whatsapp:") ? phone : `whatsapp:${phone}`;
-
-  const niveauLabel = niveau === 3
-    ? "Cérémonie + Cocktail 1 & 2"
-    : niveau === 2
-    ? "Cérémonie + Cocktail 1"
-    : "Cérémonie";
-
   const siteUrl = process.env.SITE_URL || "https://votre-site.netlify.app";
   const inviteUrl = `${siteUrl}?t=${guestToken}`;
 
-  await client.messages.create({
-    from: process.env.TWILIO_WHATSAPP_FROM,
-    to: toWA,
-    body:
-      `Bonjour ${prenom} 🌸\n\n` +
-      `Lynda & Marcel-Cédric vous invitent à célébrer leur union le *15 mai 2026*.\n\n` +
-      `Votre invitation personnelle :\n` +
-      `${inviteUrl}\n\n` +
-      `Votre accès : *${niveauLabel}*\n\n` +
-      `En cliquant sur le lien, vous recevrez automatiquement votre code d'accès par WhatsApp.\n\n` +
-      `⚠️ Ce lien est nominatif — le code d'accès sera envoyé uniquement à vous sur ce numéro.\n\n` +
-      `Avec tout notre amour 💕\nLynda & MC`,
+  /* Colonnes : A=prenom B=tel C=niveau D=otp E=expires F=rsvp_presence G=rsvp_regime
+     H=rsvp_message I=rsvp_date J=rsvp_ck1 K=rsvp_ck2 L=guest_token */
+  await sheets.spreadsheets.values.append({
+    spreadsheetId: SHEET_ID,
+    range: "Invités!A:L",
+    valueInputOption: "RAW",
+    insertDataOption: "INSERT_ROWS",
+    requestBody: {
+      values: [[prenom, phone, String(niveau), otp, String(expires), "", "", "", "", "", "", guestToken]],
+    },
   });
+
+  return { guestToken, inviteUrl };
 }
 
 exports.handler = async (event) => {
@@ -91,11 +58,8 @@ exports.handler = async (event) => {
   if (event.httpMethod !== "POST") return { statusCode: 405, body: JSON.stringify({ error: "Method not allowed" }) };
 
   let adminToken, prenom, phone, niveau;
-  try {
-    ({ token: adminToken, prenom, phone, niveau } = JSON.parse(event.body));
-  } catch {
-    return { statusCode: 400, body: JSON.stringify({ error: "Corps invalide" }) };
-  }
+  try { ({ token: adminToken, prenom, phone, niveau } = JSON.parse(event.body)); }
+  catch { return { statusCode: 400, body: JSON.stringify({ error: "Corps invalide" }) }; }
 
   try {
     const payload = jwt.verify(adminToken, process.env.OTP_SECRET);
@@ -104,35 +68,26 @@ exports.handler = async (event) => {
     return { statusCode: 401, body: JSON.stringify({ error: "Session admin expirée ou invalide" }) };
   }
 
-  if (!prenom || prenom.trim().length < 2) {
-    return { statusCode: 400, body: JSON.stringify({ error: "Prénom invalide" }) };
-  }
-  if (!phone || !/^\+[1-9]\d{6,14}$/.test(phone.replace(/\s/g, ""))) {
-    return { statusCode: 400, body: JSON.stringify({ error: "Numéro invalide (format +336...)" }) };
-  }
+  if (!prenom || prenom.trim().length < 2) return { statusCode: 400, body: JSON.stringify({ error: "Prénom invalide" }) };
+  if (!phone || !/^\+[1-9]\d{6,14}$/.test(phone.replace(/\s/g, ""))) return { statusCode: 400, body: JSON.stringify({ error: "Numéro invalide (format +336...)" }) };
   const niv = parseInt(niveau);
-  if (![1, 2, 3].includes(niv)) {
-    return { statusCode: 400, body: JSON.stringify({ error: "Niveau invalide (1, 2 ou 3)" }) };
-  }
+  if (![1, 2, 3].includes(niv)) return { statusCode: 400, body: JSON.stringify({ error: "Niveau invalide (1, 2 ou 3)" }) };
 
   const cleanPhone = phone.replace(/\s/g, "");
 
   try {
     const sheets = await getSheetsClient();
-
     const exists = await phoneExists(sheets, cleanPhone);
-    if (exists) {
-      return { statusCode: 409, body: JSON.stringify({ error: "Ce numéro est déjà dans la liste" }) };
-    }
+    if (exists) return { statusCode: 409, body: JSON.stringify({ error: "Ce numéro est déjà dans la liste" }) };
 
-    const { guestToken } = await addGuest(sheets, prenom.trim(), cleanPhone, niv);
-    await sendWelcomeWhatsApp(prenom.trim(), cleanPhone, niv, guestToken);
+    const { inviteUrl } = await addGuest(sheets, prenom.trim(), cleanPhone, niv);
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         success: true,
-        message: `${prenom.trim()} ajouté(e) — invitation WhatsApp envoyée sur ${cleanPhone}`,
+        inviteUrl,
+        message: `${prenom.trim()} ajouté(e) — lien prêt à envoyer`,
       }),
     };
   } catch (err) {
