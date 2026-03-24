@@ -253,7 +253,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
     <input class="od" id="d3" maxlength="1" type="tel" inputmode="numeric" autocomplete="off">
   </div>
   <button id="otbtn">Ouvrir mon invitation</button>
-  <div class="oth">Démo : 1234 (accès complet) · 1111 (faire-part seul)</div>
+  <div class="oth">@ Mundo Archi Product</div>
 </div></div>
 
 <div id="main">
@@ -397,6 +397,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
   <div id="lbcap"></div><div id="lbtag"></div><div id="lbctr"></div>
   <button id="lbnx">›</button>
 </div>
+<div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10px;font-style:italic;color:rgba(100,45,20,.35);z-index:1;">© 2026 Mundo Archi - Paris</div>
 </div>
 
 <script>
@@ -426,8 +427,10 @@ g('otbtn').addEventListener('click',chk);
 
 function chk(){
   var c=ds.map(function(d){return d.value;}).join('');
-  if(c==='1234'){go(3);return;}
   if(c==='1111'){go(1);return;}
+  if(c==='1112'){go(2);return;}
+  if(c==='1113'){go(3);return;}
+  if(c==='1234'){go(4);return;}
   if(c.length===4) verifyReal(c);
   else ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
 }
