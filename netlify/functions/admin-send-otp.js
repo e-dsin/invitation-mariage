@@ -60,6 +60,6 @@ exports.handler = async (event) => {
     };
   } catch (err) {
     console.error("admin-send-otp error:", err);
-    return { statusCode: 500, body: JSON.stringify({ error: "Erreur envoi WhatsApp" }) };
+    return { statusCode: 500, body: JSON.stringify({ error: "Erreur envoi Whatsapp" }) };
   }
 };

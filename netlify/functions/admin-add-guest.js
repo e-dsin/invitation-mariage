@@ -1,5 +1,6 @@
 const { google } = require("googleapis");
 const jwt = require("jsonwebtoken");
+const twilio = require("twilio");
 const crypto = require("crypto");
 
 const SHEET_ID = process.env.GOOGLE_SHEETS_ID;
@@ -81,14 +82,24 @@ exports.handler = async (event) => {
 
     const { inviteUrl } = await addGuest(sheets, prenom.trim(), cleanPhone, niv);
 
+    /* Envoi SMS avec le lien d'invitation */
+    const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    await client.messages.create({
+      from: process.env.TWILIO_SMS_FROM,
+      to: cleanPhone,
+      body: `Bonjour ${prenom.trim()} 🌸\n\nLynda & Marcel-Cédric vous invitent à célébrer leur union.\n\nVotre invitation personnelle :\n${inviteUrl}`,
+    });
+
     return {
       statusCode: 200,
       body: JSON.stringify({
         success: true,
         inviteUrl,
-        message: `${prenom.trim()} ajouté(e) — lien prêt à envoyer`,
+        message: `${prenom.trim()} ajouté(e) — SMS envoyé`,
       }),
     };
+    
+    
   } catch (err) {
     console.error("admin-add-guest error:", err);
     return { statusCode: 500, body: JSON.stringify({ error: "Erreur serveur : " + err.message }) };
