@@ -465,6 +465,9 @@ if(l===3){
   g('bno').textContent='Je ne pourrai pas';
 }
 
+/* niveau 3 : pas d'accès au cocktail famille dans l'album */
+if(l===3 && g('af1')) g('af1').classList.add('hidden');
+
   /* Charger l'album dès l'authentification */
   setTimeout(function(){ loadAlbum('once'); }, 300);
 }
@@ -538,7 +541,8 @@ g('rvsub').addEventListener('click',function(){
   var ok=g('rvok');
   ok.style.display='flex';ok.style.animation='successPop .48s cubic-bezier(.2,0,.2,1)';
   g('rvokt').textContent=pr==='yes'?'Merci, à très bientôt !':'Merci de nous avoir prévenus';
-  var txt=pr==='yes'?'Votre présence est confirmée pour le 15 mai 2026.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.':'Votre réponse a bien été transmise.<br>Lynda &amp; Marcel-Cédric vous remercient de vous être manifesté(e).';
+  var dateMsg = lv===3 ? '16 mai 2026' : '15 mai 2026';
+  var txt=pr==='yes'?'Votre présence est confirmée pour le '+dateMsg+'.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.':'Votre réponse a bien été transmise.<br>Lynda &amp; Marcel-Cédric vous remercient de vous être manifesté(e).';
   g('rvokm').innerHTML=txt;
   if(pr==='yes'){var cp=g('ckp');if(cp){cp.style.transition='stroke-dashoffset .6s cubic-bezier(.2,0,.2,1) .1s';cp.style.strokeDashoffset='0';}}
 
@@ -851,7 +855,7 @@ function applyExistingRSVP(data){
     if(lv>=2)g('t2').classList.remove('hidden');
     if(lv>=3)g('t3').classList.remove('hidden');
     g('af-cer').classList.remove('hidden');
-    if(lv>=2)g('af1').classList.remove('hidden');
+    if(lv===2||lv>=4)g('af1').classList.remove('hidden');
     if(lv>=3)g('af2').classList.remove('hidden');
   }
 }
