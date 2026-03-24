@@ -291,7 +291,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
     <div class="pnl" id="p1">
       <div class="rvh"><div class="rvt">Votre réponse</div><div class="rvdl">Répondre avant le 15 avril 2026</div></div>
       <div class="rvc" id="rvf">
-        <div class="rvse"><div class="rvq">Serez-vous présent(e) à la cérémonie ?</div>
+        <div class="rvse"><div class="rvq" id="rvq-ceremonie">Serez-vous présent(e) à la cérémonie ?</div>
           <div class="rvpr">
             <button class="rvb neu" id="byes">Oui, avec joie</button>
             <button class="rvb neu" id="bno">Je ne pourrai pas</button>
@@ -447,7 +447,7 @@ function go(l){
   var fpck=g('fpck-msg');
   if(fpck){
     if(l===2) fpck.textContent="La cérémonie civile sera suivie d'un cocktail uniquement réservé à la famille.";
-    else if(l===3) fpck.textContent="La cérémonie civile se déroulera avec la famille restreinte, un repas de mariage est prévu.";
+    else if(l===3) fpck.textContent="La cérémonie civile se déroulera avec la famille restreinte, un repas de mariage est prévu en votre honneur.";
     else if(l>=4) fpck.textContent="La cérémonie civile sera suivie d'un cocktail réservé à la famille, et un repas de mariage est prévu.";
     else fpck.textContent="La cérémonie civile aura lieu en présence de nos proches.";
   }
@@ -457,6 +457,13 @@ if(l===2 && g('sck1')) g('sck1').style.display='block';
 if(l===3 && g('sck2')) g('sck2').style.display='block';
 if(l>=4 && g('sck1')) g('sck1').style.display='block';
 if(l>=4 && g('sck2')) g('sck2').style.display='block';
+
+if(l===3){
+  var rvqc=g('rvq-ceremonie');
+  if(rvqc) rvqc.textContent='Serez-vous présent(e) au repas de mariage ?';
+  g('byes').textContent='Oui, avec joie';
+  g('bno').textContent='Je ne pourrai pas';
+}
 
   /* Charger l'album dès l'authentification */
   setTimeout(function(){ loadAlbum('once'); }, 300);
