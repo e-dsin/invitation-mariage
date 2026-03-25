@@ -88,34 +88,29 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
 <script>
-(function(){
-  var scannerPin = '';
-  var scanCount = 0;
-  var lastScan = '';
-  var lastScanTime = 0;
-  var scanCooldown = 3000;
-  var scanActive = true;
-  var animTimer = null;
+    (function(){
+  var scannerPin='';
+  var scanCount=0;
+  var lastScan='';
+  var lastScanTime=0;
+  var scanCooldown=3000;
+  var scanActive=true;
+  var animTimer=null;
+  var scanTimer=null;
+  var timeoutTimer=null;
+  var detector=null;
 
   /* ── PIN ── */
-  var pds = ['p0','p1','p2','p3'].map(function(id){return document.getElementById(id);});
+  var pds=['p0','p1','p2','p3'].map(function(id){return document.getElementById(id);});
   pds.forEach(function(inp,i){
     inp.addEventListener('keydown',function(e){
-      if(e.key==='Backspace'){
-        if(inp.value){inp.value='';}
-        else if(i>0){pds[i-1].focus();pds[i-1].value='';}
-        e.preventDefault();
-      }
-      if(e.key==='Enter') checkPin();
+      if(e.key==='Backspace'){if(inp.value){inp.value='';}else if(i>0){pds[i-1].focus();pds[i-1].value='';}e.preventDefault();}
+      if(e.key==='Enter')checkPin();
     });
-    inp.addEventListener('input',function(){
-      var v=inp.value.replace(/\D/g,'').slice(-1);inp.value=v;
-      if(v&&i<3)pds[i+1].focus();
-    });
+    inp.addEventListener('input',function(){var v=inp.value.replace(/\D/g,'').slice(-1);inp.value=v;if(v&&i<3)pds[i+1].focus();});
   });
-  document.getElementById('pin-btn').addEventListener('click', checkPin);
+  document.getElementById('pin-btn').addEventListener('click',checkPin);
 
   function checkPin(){
     var c=pds.map(function(d){return d.value;}).join('');
@@ -127,60 +122,72 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
   /* ── SCANNER ── */
   function startScanner(){
     document.getElementById('pin-screen').style.display='none';
-    var ss=document.getElementById('scan-screen');ss.style.display='flex';
-    var video=document.getElementById('cam');
+    document.getElementById('scan-screen').style.display='flex';
 
-    navigator.mediaDevices.getUserMedia({video:{facingMode:'environment', width:{ideal:640}, height:{ideal:640}}})
+    /* Vérifier support BarcodeDetector */
+    if(!('BarcodeDetector' in window)){
+      document.getElementById('scan-count').textContent='Navigateur non compatible — utilisez Chrome Android';
+      return;
+    }
+
+    detector=new BarcodeDetector({formats:['qr_code']});
+
+    var video=document.getElementById('cam');
+    navigator.mediaDevices.getUserMedia({
+      video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}
+    })
     .then(function(stream){
       video.srcObject=stream;
       video.play();
-      document.getElementById('scan-count').textContent='Caméra active — approchez le QR code';
-      /* Timeout 10 secondes */
-      setTimeout(function(){
-        if(!lastScan){
-          showResult('timeout',{});
-          scanActive=false;
-          setTimeout(function(){
-            document.getElementById('result-wrap').style.display='none';
-            document.getElementById('scan-count').textContent='En attente de scan…';
-            scanActive=true;
-            lastScan='';
-          },3500);
-        }
-      },10000);
-      setInterval(tick, 200);
+      video.addEventListener('playing',function(){
+        document.getElementById('scan-count').textContent='Caméra active — approchez le QR code';
+        startScanLoop();
+        startTimeout();
+      });
     })
     .catch(function(e){
       document.getElementById('scan-count').textContent='Erreur caméra : '+e.message;
     });
   }
 
-  function tick(){
-    var video=document.getElementById('cam');
-    var canvas=document.getElementById('cam-canvas');
-    if(!scanActive) return;
-    if(video.readyState===video.HAVE_ENOUGH_DATA){
-        canvas.width=video.videoWidth||640;
-        canvas.height=video.videoHeight||640;
-        document.getElementById('scan-count').textContent='Flux actif — '+canvas.width+'x'+canvas.height;
-        var ctx=canvas.getContext('2d');
-        ctx.drawImage(video,0,0,canvas.width,canvas.height);
-        var imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
-        var code=jsQR(imageData.data,imageData.width,imageData.height,{inversionAttempts:'attemptBoth'});
-        if(code && code.data){
-        var now=Date.now();
-        if(code.data!==lastScan||now-lastScanTime>scanCooldown){
-            lastScan=code.data;lastScanTime=now;
-            processQR(code.data);
+  function startScanLoop(){
+    scanTimer=setInterval(function(){
+      if(!scanActive) return;
+      var video=document.getElementById('cam');
+      detector.detect(video)
+      .then(function(codes){
+        if(codes.length>0){
+          var data=codes[0].rawValue;
+          var now=Date.now();
+          if(data!==lastScan||now-lastScanTime>scanCooldown){
+            lastScan=data;lastScanTime=now;
+            clearTimeout(timeoutTimer);
+            processQR(data);
+          }
         }
-        }
-    } else {
-        document.getElementById('scan-count').textContent='Initialisation caméra… (state:'+video.readyState+')';
-    }
-    }
+      })
+      .catch(function(){});
+    },300);
+  }
+
+  function startTimeout(){
+    timeoutTimer=setTimeout(function(){
+      if(!lastScan){
+        showResult('timeout',{});
+        scanActive=false;
+        clearTimeout(animTimer);
+        animTimer=setTimeout(function(){
+          document.getElementById('result-wrap').style.display='none';
+          document.getElementById('scan-count').textContent='En attente de scan…';
+          scanActive=true;
+          lastScan='';
+          startTimeout();
+        },3500);
+      }
+    },10000);
+  }
 
   function processQR(data){
-    /* Extraire g= et e= de l'URL */
     try{
       var url=new URL(data);
       var guestToken=url.searchParams.get('g');
@@ -198,8 +205,7 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
           document.getElementById('pin-screen').style.display='flex';
           document.getElementById('scan-screen').style.display='none';
           document.getElementById('pin-err').textContent='PIN invalide — reconnectez-vous';
-          scannerPin='';
-          pds.forEach(function(d){d.value='';});
+          scannerPin='';pds.forEach(function(d){d.value='';});
           return;
         }
         showResult(data.status,data);
@@ -209,9 +215,11 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
         animTimer=setTimeout(function(){
           document.getElementById('result-wrap').style.display='none';
           scanActive=true;
+          lastScan='';
+          startTimeout();
         },3500);
       })
-      .catch(function(e){showResult('invalid',{});scanActive=true;});
+      .catch(function(){showResult('invalid',{});scanActive=true;});
     }catch(e){showResult('invalid',{});scanActive=true;}
   }
 
@@ -222,47 +230,27 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
     var st=document.getElementById('result-status');
     var tm=document.getElementById('result-time');
     wrap.className='';wrap.style.display='block';
-
     var evtLabel=data.event==='ck1'?'Cocktail famille':'Repas de mariage';
-
     if(status==='granted'){
-      wrap.classList.add('granted');
-      icon.textContent='✅';
-      name.textContent=data.prenom||'';
-      st.textContent='Accès '+evtLabel+' autorisé';
-      tm.textContent=data.scanned_at||'';
-    } else if(status==='already_scanned'){
-      wrap.classList.add('already');
-      icon.textContent='🔴';
-      name.textContent=data.prenom||'';
-      st.textContent='Déjà enregistré — '+evtLabel;
-      tm.textContent='Premier accès le '+data.scanned_at;
-    } else if(status==='unconfirmed'){
-      wrap.classList.add('unconfirmed');
-      icon.textContent='⚠️';
-      name.textContent=data.prenom||'';
-      st.textContent='Invité non confirmé';
-      tm.textContent=data.reason||'';
-    } else if(status==='timeout'){
-      wrap.classList.add('invalid');
-      icon.textContent='⏱️';
-      name.textContent='';
-      st.textContent='Aucun QR code détecté';
-      tm.textContent='Réessayez en approchant le QR code';
-    } else {
-      wrap.classList.add('invalid');
-      icon.textContent='❌';
-      name.textContent='';
-      st.textContent='QR code invalide';
-      tm.textContent='';
+      wrap.classList.add('granted');icon.textContent='✅';
+      name.textContent=data.prenom||'';st.textContent='Accès '+evtLabel+' autorisé';tm.textContent=data.scanned_at||'';
+    }else if(status==='already_scanned'){
+      wrap.classList.add('already');icon.textContent='🔴';
+      name.textContent=data.prenom||'';st.textContent='Déjà enregistré — '+evtLabel;tm.textContent='Premier accès le '+data.scanned_at;
+    }else if(status==='unconfirmed'){
+      wrap.classList.add('unconfirmed');icon.textContent='⚠️';
+      name.textContent=data.prenom||'';st.textContent='Invité non confirmé';tm.textContent=data.reason||'';
+    }else if(status==='timeout'){
+      wrap.classList.add('invalid');icon.textContent='⏱️';
+      name.textContent='';st.textContent='Aucun QR code détecté';tm.textContent='Réessayez en approchant le QR code';
+    }else{
+      wrap.classList.add('invalid');icon.textContent='❌';
+      name.textContent='';st.textContent='QR code invalide';tm.textContent='';
     }
-
     wrap.style.animation='none';void wrap.offsetWidth;wrap.style.animation='popIn .35s cubic-bezier(.2,0,.2,1)';
   }
 
-  document.getElementById('logout-btn').addEventListener('click',function(){
-    location.reload();
-  });
+  document.getElementById('logout-btn').addEventListener('click',function(){location.reload();});
 
 })();
 </script>
