@@ -130,7 +130,7 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
     var ss=document.getElementById('scan-screen');ss.style.display='flex';
     var video=document.getElementById('cam');
 
-    navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}})
+    navigator.mediaDevices.getUserMedia({video:{facingMode:'environment', width:{ideal:640}, height:{ideal:640}}})
     .then(function(stream){
       video.srcObject=stream;
       video.play();
@@ -165,7 +165,7 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
     var ctx=canvas.getContext('2d');
     ctx.drawImage(video,0,0,canvas.width,canvas.height);
     var imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
-    var code=jsQR(imageData.data,imageData.width,imageData.height,{inversionAttempts:'dontInvert'});
+    var code=jsQR(imageData.data,imageData.width,imageData.height,{inversionAttempts:'attemptBoth'});
     if(code && code.data){
       var now=Date.now();
       if(code.data!==lastScan||now-lastScanTime>scanCooldown){
