@@ -148,7 +148,7 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
           },3500);
         }
       },10000);
-      requestAnimationFrame(tick);
+      setInterval(tick, 200);
     })
     .catch(function(e){
       document.getElementById('scan-count').textContent='Erreur caméra : '+e.message;
@@ -156,26 +156,28 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
   }
 
   function tick(){
-  var video=document.getElementById('cam');
-  var canvas=document.getElementById('cam-canvas');
-  if(video.readyState===video.HAVE_ENOUGH_DATA && scanActive){
-    canvas.width=video.videoWidth;
-    canvas.height=video.videoHeight;
-    document.getElementById('scan-count').textContent='Flux actif — '+canvas.width+'x'+canvas.height;
-    var ctx=canvas.getContext('2d');
-    ctx.drawImage(video,0,0,canvas.width,canvas.height);
-    var imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
-    var code=jsQR(imageData.data,imageData.width,imageData.height,{inversionAttempts:'attemptBoth'});
-    if(code && code.data){
-      var now=Date.now();
-      if(code.data!==lastScan||now-lastScanTime>scanCooldown){
-        lastScan=code.data;lastScanTime=now;
-        processQR(code.data);
-      }
+    var video=document.getElementById('cam');
+    var canvas=document.getElementById('cam-canvas');
+    if(!scanActive) return;
+    if(video.readyState===video.HAVE_ENOUGH_DATA){
+        canvas.width=video.videoWidth||640;
+        canvas.height=video.videoHeight||640;
+        document.getElementById('scan-count').textContent='Flux actif — '+canvas.width+'x'+canvas.height;
+        var ctx=canvas.getContext('2d');
+        ctx.drawImage(video,0,0,canvas.width,canvas.height);
+        var imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+        var code=jsQR(imageData.data,imageData.width,imageData.height,{inversionAttempts:'attemptBoth'});
+        if(code && code.data){
+        var now=Date.now();
+        if(code.data!==lastScan||now-lastScanTime>scanCooldown){
+            lastScan=code.data;lastScanTime=now;
+            processQR(code.data);
+        }
+        }
+    } else {
+        document.getElementById('scan-count').textContent='Initialisation caméra… (state:'+video.readyState+')';
     }
-  }
-  requestAnimationFrame(tick);
-}
+    }
 
   function processQR(data){
     /* Extraire g= et e= de l'URL */
