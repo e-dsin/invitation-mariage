@@ -150,6 +150,7 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
       ctx.drawImage(video,0,0,canvas.width,canvas.height);
       var imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
       var code=jsQR(imageData.data,imageData.width,imageData.height,{inversionAttempts:'dontInvert'});
+      document.getElementById('scan-count').textContent='W:'+canvas.width+' H:'+canvas.height+' | '+(code?'QR détecté':'En attente…');
       if(code && code.data){
         var now=Date.now();
         if(code.data!==lastScan||now-lastScanTime>scanCooldown){
