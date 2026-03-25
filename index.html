@@ -351,7 +351,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
         <div class="ckr"><svg class="ckic" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="2" stroke="rgba(160,80,40,.65)" stroke-width="1.2"/><line x1="2" y1="6.5" x2="14" y2="6.5" stroke="rgba(160,80,40,.65)" stroke-width="1"/><line x1="5" y1="2" x2="5" y2="4.5" stroke="rgba(160,80,40,.65)" stroke-width="1.2" stroke-linecap="round"/><line x1="11" y1="2" x2="11" y2="4.5" stroke="rgba(160,80,40,.65)" stroke-width="1.2" stroke-linecap="round"/></svg><span class="cktx">Vendredi 15 mai 2026 — 16h à 21h</span></div>
         <div class="cksp"></div>
         <div class="qrw"><div class="qrl">Votre accès</div>
-          <div class="qrc act" id="qr1w"><svg id="qr1" width="130" height="130" viewBox="0 0 130 130" style="display:block;border-radius:10px;background:rgba(255,252,248,.92);padding:8px;"></svg></div>
+          <div class="qrc act" id="qr1w"><div id="qr1" style="width:130px;height:130px;border-radius:10px;overflow:hidden;background:rgba(255,252,248,.92);padding:8px;"></div></div>
           <div class="qrst on">✓ Accès activé</div></div>
       </div>
     </div>
@@ -365,7 +365,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
         <div class="ckr"><svg class="ckic" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="2" stroke="rgba(160,80,40,.65)" stroke-width="1.2"/><line x1="2" y1="6.5" x2="14" y2="6.5" stroke="rgba(160,80,40,.65)" stroke-width="1"/><line x1="5" y1="2" x2="5" y2="4.5" stroke="rgba(160,80,40,.65)" stroke-width="1.2" stroke-linecap="round"/><line x1="11" y1="2" x2="11" y2="4.5" stroke="rgba(160,80,40,.65)" stroke-width="1.2" stroke-linecap="round"/></svg><span class="cktx">Samedi 16 mai 2026 — à partir de 12h</span></div>
         <div class="cksp"></div>
         <div class="qrw"><div class="qrl">Votre accès</div>
-          <div class="qrc" id="qr2w"><svg id="qr2" width="130" height="130" viewBox="0 0 130 130" style="display:block;border-radius:10px;background:rgba(220,215,205,.85);padding:8px;"></svg>
+          <div class="qrc" id="qr2w"><div id="qr2" style="width:130px;height:130px;border-radius:10px;overflow:hidden;background:rgba(220,215,205,.85);padding:8px;"></div>
             <div class="qrlk"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="5" y="13" width="18" height="13" rx="3" fill="rgba(180,100,60,.18)" stroke="rgba(160,80,40,.5)" stroke-width="1.5"/><path d="M9 13V9a5 5 0 0110 0v4" stroke="rgba(160,80,40,.5)" stroke-width="1.5" stroke-linecap="round"/><circle cx="14" cy="19.5" r="1.5" fill="rgba(160,80,40,.6)"/></svg><div class="qrlkt">Accès non activé</div></div>
           </div>
           <div class="qrst off">Accès non autorisé pour ce niveau</div></div>
@@ -446,9 +446,9 @@ function go(l){
   lv=l;
   var o=g('otp');o.style.transition='opacity .42s';o.style.opacity='0';setTimeout(function(){o.remove();},450);
   g('main').classList.add('show');
-  if(l>=2)qr('qr1',true);
-  qr('qr2',l>=3);
-  if(l<3)g('qr2w').classList.add('lkd');
+  var siteUrl = window.location.origin;
+  if(l===2||l>=4) qr('qr1', siteUrl+'/scanner.html?g='+guestToken+'&e=ck1');
+  if(l===3||l>=4) qr('qr2', siteUrl+'/scanner.html?g='+guestToken+'&e=ck2');
 
   /* Message faire-part dynamique selon niveau */
   var fpck=g('fpck-msg');
@@ -730,16 +730,18 @@ g('lbpv').addEventListener('click',function(){lbi=(lbi-1+lbv.length)%lbv.length;
 g('lbnx').addEventListener('click',function(){lbi=(lbi+1)%lbv.length;lbs();});
 g('lb').addEventListener('click',function(e){if(e.target===g('lb'))g('lb').classList.remove('open');});
 
-function qr(id,act){
-  var svg=g(id),sz=114,m=25,c=Math.floor(sz/m),col=act?'#7c3010':'#b0a090';
-  var pat=[];for(var r=0;r<m;r++){pat[r]=[];for(var cc=0;cc<m;cc++)pat[r][cc]=0;}
-  function cor(r0,c0){for(var r=r0;r<r0+7;r++)for(var cc=c0;cc<c0+7;cc++){if(r===r0||r===r0+6||cc===c0||cc===c0+6)pat[r][cc]=1;else if(r>=r0+2&&r<=r0+4&&cc>=c0+2&&cc<=c0+4)pat[r][cc]=1;}}
-  cor(0,0);cor(0,m-7);cor(m-7,0);
-  for(var r=0;r<m;r++)for(var cc=0;cc<m;cc++){var inC=(r<9&&cc<9)||(r<9&&cc>m-9)||(r>m-9&&cc<9);if(!inC&&!pat[r][cc])pat[r][cc]=((r*7+cc*13+r*cc)%3===0)?1:0;}
-  for(var i=8;i<m-8;i++){pat[6][i]=i%2===0?1:0;pat[i][6]=i%2===0?1:0;}
-  var ox=Math.floor((sz-m*c)/2),html='';
-  for(var r=0;r<m;r++)for(var cc=0;cc<m;cc++)if(pat[r][cc])html+='<rect x="'+(ox+cc*c)+'" y="'+(ox+r*c)+'" width="'+c+'" height="'+c+'" fill="'+col+'" rx="1"/>';
-  svg.innerHTML=html;
+function qr(id, url){
+  if(!url) return;
+  if(typeof QRCode === 'undefined'){ setTimeout(function(){ qr(id, url); }, 300); return; }
+  var wrap = g(id);
+  if(!wrap) return;
+  wrap.innerHTML = '';
+  new QRCode(wrap, {
+    text: url,
+    width: 114, height: 114,
+    colorDark: '#7c3010', colorLight: '#fdfaf5',
+    correctLevel: QRCode.CorrectLevel.M
+  });
 }
 
 async function anim(){
@@ -886,5 +888,6 @@ function escHtml(s){
 anim();
 })();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </body>
 </html>

@@ -306,7 +306,7 @@ input::placeholder{color:rgba(160,90,50,.35);}
       var data = await res.json();
       if(!res.ok) throw new Error(data.error);
       /* Afficher le lien à copier */
-      var msgHtml = '✓ '+escHtml(data.message)+'<br><span style="font-size:10px;color:rgba(110,50,20,.55);">SMS envoyé automatiquement</span>';
+      var msgHtml = '✓ '+escHtml(data.message);
       if(data.inviteUrl){
         msgHtml += '<br><br><strong>Lien à envoyer :</strong><br>'
           +'<span style="font-size:10px;word-break:break-all;">'+escHtml(data.inviteUrl)+'</span>'
