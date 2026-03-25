@@ -127,7 +127,7 @@ exports.handler = async (event) => {
     if (otp.trim() !== guest.otpCode.trim()) {
       return {
         statusCode: 401,
-        body: JSON.stringify({ error: "Code incorrect. Vérifiez votre message WhatsApp." }),
+        body: JSON.stringify({ error: "Code incorrect. Vérifiez votre message SMS." }),
       };
     }
 

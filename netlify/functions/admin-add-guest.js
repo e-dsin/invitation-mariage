@@ -87,7 +87,7 @@ exports.handler = async (event) => {
     await client.messages.create({
       from: process.env.TWILIO_SMS_FROM,
       to: cleanPhone,
-      body: `Bonjour ${prenom.trim()} 🌸\n\nLynda & Marcel-Cédric vous invitent à célébrer leur union.\n\nVotre invitation personnelle :\n${inviteUrl}`,
+      body: `Bonjour ${prenom.trim()} 🌸\n\nLynda & Marcel-Cédric ont le bonheur de vous annoncer leur mariage et seraient touchés de vous avoir à leurs côtés pour célébrer ce jour si précieux.\n\nVotre invitation personnelle :\n${inviteUrl}\n\n— Avec tout leur amour 🤍`,
     });
 
     return {
