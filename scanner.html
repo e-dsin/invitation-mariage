@@ -129,10 +129,25 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
     document.getElementById('pin-screen').style.display='none';
     var ss=document.getElementById('scan-screen');ss.style.display='flex';
     var video=document.getElementById('cam');
-    navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}})
+
+    navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}})
     .then(function(stream){
       video.srcObject=stream;
       video.play();
+      document.getElementById('scan-count').textContent='Caméra active — approchez le QR code';
+      /* Timeout 10 secondes */
+      setTimeout(function(){
+        if(!lastScan){
+          showResult('timeout',{});
+          scanActive=false;
+          setTimeout(function(){
+            document.getElementById('result-wrap').style.display='none';
+            document.getElementById('scan-count').textContent='En attente de scan…';
+            scanActive=true;
+            lastScan='';
+          },3500);
+        }
+      },10000);
       requestAnimationFrame(tick);
     })
     .catch(function(e){
@@ -141,26 +156,26 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
   }
 
   function tick(){
-    var video=document.getElementById('cam');
-    var canvas=document.getElementById('cam-canvas');
-    if(video.readyState===video.HAVE_ENOUGH_DATA && scanActive){
-      canvas.width=video.videoWidth;
-      canvas.height=video.videoHeight;
-      var ctx=canvas.getContext('2d');
-      ctx.drawImage(video,0,0,canvas.width,canvas.height);
-      var imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
-      var code=jsQR(imageData.data,imageData.width,imageData.height,{inversionAttempts:'dontInvert'});
-      document.getElementById('scan-count').textContent='W:'+canvas.width+' H:'+canvas.height+' | '+(code?'QR détecté':'En attente…');
-      if(code && code.data){
-        var now=Date.now();
-        if(code.data!==lastScan||now-lastScanTime>scanCooldown){
-          lastScan=code.data;lastScanTime=now;
-          processQR(code.data);
-        }
+  var video=document.getElementById('cam');
+  var canvas=document.getElementById('cam-canvas');
+  if(video.readyState===video.HAVE_ENOUGH_DATA && scanActive){
+    canvas.width=video.videoWidth;
+    canvas.height=video.videoHeight;
+    document.getElementById('scan-count').textContent='Flux actif — '+canvas.width+'x'+canvas.height;
+    var ctx=canvas.getContext('2d');
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
+    var imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+    var code=jsQR(imageData.data,imageData.width,imageData.height,{inversionAttempts:'dontInvert'});
+    if(code && code.data){
+      var now=Date.now();
+      if(code.data!==lastScan||now-lastScanTime>scanCooldown){
+        lastScan=code.data;lastScanTime=now;
+        processQR(code.data);
       }
     }
-    requestAnimationFrame(tick);
   }
+  requestAnimationFrame(tick);
+}
 
   function processQR(data){
     /* Extraire g= et e= de l'URL */
@@ -226,6 +241,12 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
       name.textContent=data.prenom||'';
       st.textContent='Invité non confirmé';
       tm.textContent=data.reason||'';
+    } else if(status==='timeout'){
+      wrap.classList.add('invalid');
+      icon.textContent='⏱️';
+      name.textContent='';
+      st.textContent='Aucun QR code détecté';
+      tm.textContent='Réessayez en approchant le QR code';
     } else {
       wrap.classList.add('invalid');
       icon.textContent='❌';
