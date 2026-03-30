@@ -316,14 +316,20 @@ input::placeholder{color:rgba(160,90,50,.35);}
       if(!res.ok) throw new Error(data.error);
       /* Afficher le lien à copier */
       var msgHtml = '✓ '+escHtml(data.message);
-      if(data.inviteUrl){
-        msgHtml += '<br><br><strong>Lien à envoyer :</strong><br>'
-          +'<span style="font-size:10px;word-break:break-all;">'+escHtml(data.inviteUrl)+'</span>'
-          +'<button onclick="navigator.clipboard.writeText(\''+escHtml(msgWA)+'\').then(function(){this.textContent=\'✓\';}.bind(this))" '
-          +'style="flex-shrink:0;padding:3px 8px;border-radius:6px;border:1px solid rgba(180,90,50,.28);background:rgba(255,252,248,.7);font-size:10px;cursor:pointer;">📋 Copier</button>'
-          +(waUrl?'<a href="'+escHtml(waUrl)+'" target="_blank" '
-          +'style="flex-shrink:0;padding:3px 8px;border-radius:6px;border:1px solid rgba(50,160,50,.35);background:rgba(240,255,240,.7);font-size:10px;cursor:pointer;text-decoration:none;color:rgba(20,100,20,.8);">📲 WhatsApp</a>':'')
-                }
+        if(data.inviteUrl){
+            var inviteUrl = data.inviteUrl;
+            var msgWA = 'Bonjour '+escHtml(prenom)+' 🌸\n\nLynda & Marcel-Cédric ont le bonheur de vous annoncer leur mariage et seraient touchés de vous avoir à leurs côtés pour célébrer ce jour si précieux.\n\nVotre invitation personnelle :\n'+inviteUrl;
+            var phoneClean = phone.replace(/[^0-9]/g,'');
+            var waUrl = 'https://wa.me/'+phoneClean+'?text='+encodeURIComponent(msgWA);
+            msgHtml += '<br><br><strong>Lien à envoyer :</strong><br>'
+              +'<span style="font-size:10px;word-break:break-all;">'+escHtml(inviteUrl)+'</span><br>'
+              +'<div style="display:flex;gap:6px;margin-top:6px;">'
+              +'<button onclick="navigator.clipboard.writeText(decodeURIComponent(\''+encodeURIComponent(msgWA)+'\')).then(function(){this.textContent=\'✓ Copié\';}.bind(this))" '
+              +'style="padding:5px 12px;border-radius:6px;border:1px solid rgba(180,90,50,.28);background:rgba(255,252,248,.7);font-size:11px;cursor:pointer;">📋 Copier le message</button>'
+              +'<a href="'+waUrl+'" target="_blank" '
+              +'style="padding:5px 12px;border-radius:6px;border:1px solid rgba(50,160,50,.35);background:rgba(240,255,240,.7);font-size:11px;cursor:pointer;text-decoration:none;color:rgba(20,100,20,.8);">📲 Ouvrir WhatsApp</a>'
+              +'</div>';
+          }
       document.getElementById('msg-add').innerHTML = msgHtml;
       document.getElementById('msg-add').className = 'msg show ok';
       document.getElementById('new-prenom').value = '';
