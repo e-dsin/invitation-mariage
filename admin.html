@@ -151,7 +151,7 @@ input::placeholder{color:rgba(160,90,50,.35);}
   <!-- AJOUT INVITÉ -->
   <div class="card">
     <div class="section-title">Ajouter un invité</div>
-    <label>Prénom</label>
+    <label>Invités</label>
     <input type="text" id="new-prenom" placeholder="Prénom de l'invité" autocomplete="off">
     <label>Numéro WhatsApp</label>
     <input type="tel" id="new-phone" placeholder="+336 XX XX XX XX" inputmode="tel">
@@ -236,7 +236,7 @@ input::placeholder{color:rgba(160,90,50,.35);}
     inp.addEventListener('input', function(){
       var v=inp.value.replace(/\D/g,'').slice(-1);
       inp.value=v;
-      if(v){inp.classList.add('filled');if(i<3)otpInputs[i+1].focus();}
+      if(v){inp.classList.add('filled');if(i<4)otpInputs[i+1].focus();}
       else inp.classList.remove('filled');
     });
     inp.addEventListener('paste', function(e){
