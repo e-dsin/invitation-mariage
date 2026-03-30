@@ -32,15 +32,15 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
 @keyframes scanLine{0%,100%{top:calc(50% - 90px)}50%{top:calc(50% + 90px)}}
 
 /* Résultat */
-#result-wrap{width:100%;max-width:340px;border-radius:16px;padding:22px 20px;text-align:center;display:none;animation:popIn .35s cubic-bezier(.2,0,.2,1);}
-#result-wrap.granted{background:rgba(40,140,60,.25);border:2px solid rgba(60,180,80,.5);}
-#result-wrap.already{background:rgba(180,80,20,.22);border:2px solid rgba(210,100,40,.45);}
-#result-wrap.unconfirmed{background:rgba(180,140,20,.22);border:2px solid rgba(210,170,40,.45);}
-#result-wrap.invalid{background:rgba(120,20,20,.25);border:2px solid rgba(180,40,40,.45);}
-#result-icon{font-size:48px;margin-bottom:8px;}
-#result-name{font-family:'Dancing Script',cursive;font-size:28px;color:#fff5ee;margin-bottom:4px;}
-#result-status{font-size:13px;color:rgba(255,240,220,.8);line-height:1.6;}
-#result-time{font-size:11px;font-style:italic;color:rgba(255,240,220,.45);margin-top:6px;}
+#result-wrap{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;z-index:50;transition:background .3s;}
+#result-wrap.granted{background:rgba(20,100,40,.96);}
+#result-wrap.already{background:rgba(140,40,20,.96);}
+#result-wrap.unconfirmed{background:rgba(140,100,10,.96);}
+#result-wrap.invalid{background:rgba(40,40,50,.96);}
+#result-icon{font-size:80px;margin-bottom:16px;}
+#result-name{font-family:'Dancing Script',cursive;font-size:42px;color:#fff;margin-bottom:8px;}
+#result-status{font-size:18px;color:rgba(255,255,255,.9);line-height:1.6;font-style:italic;}
+#result-time{font-size:13px;font-style:italic;color:rgba(255,255,255,.55);margin-top:10px;}
 .scan-count{font-size:11px;font-style:italic;color:rgba(255,240,220,.35);text-align:center;}
 
 @keyframes errShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
@@ -57,7 +57,7 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
   <!-- PIN -->
   <div id="pin-screen">
     <div class="pin-title">Contrôle d'accès</div>
-    <div class="pin-sub">Lynda &amp; Marcel-Cédric se marient</div>
+    <div class="pin-sub">Lynda &amp; Marcel-Cédric · 15 mai 2026</div>
     <div id="pin-row">
       <input class="pd" id="p0" maxlength="1" type="tel" inputmode="numeric">
       <input class="pd" id="p1" maxlength="1" type="tel" inputmode="numeric">
@@ -73,6 +73,8 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
     <button id="logout-btn">⏻ Quitter</button>
     <div class="scan-title">Scanner l'invitation</div>
     <div id="cam-wrap">
+      <video id="cam" autoplay playsinline muted></video>
+      <canvas id="cam-canvas" style="display:none;"></canvas>
       <div id="cam-overlay"><div class="scan-frame"></div><div class="scan-line"></div></div>
     </div>
     <div id="result-wrap">
@@ -86,26 +88,34 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
 
 </div>
 
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
 <script>
-    (function(){
-  var scannerPin='';
-  var scanCount=0;
-  var scanner=null;
-  var timeoutTimer=null;
-  var scanning=false;
+(function(){
+  var scannerPin = '';
+  var scanCount = 0;
+  var lastScan = '';
+  var lastScanTime = 0;
+  var scanCooldown = 3000;
+  var scanActive = true;
+  var animTimer = null;
 
   /* ── PIN ── */
-  var pds=['p0','p1','p2','p3'].map(function(id){return document.getElementById(id);});
+  var pds = ['p0','p1','p2','p3'].map(function(id){return document.getElementById(id);});
   pds.forEach(function(inp,i){
     inp.addEventListener('keydown',function(e){
-      if(e.key==='Backspace'){if(inp.value){inp.value='';}else if(i>0){pds[i-1].focus();pds[i-1].value='';}e.preventDefault();}
-      if(e.key==='Enter')checkPin();
+      if(e.key==='Backspace'){
+        if(inp.value){inp.value='';}
+        else if(i>0){pds[i-1].focus();pds[i-1].value='';}
+        e.preventDefault();
+      }
+      if(e.key==='Enter') checkPin();
     });
-    inp.addEventListener('input',function(){var v=inp.value.replace(/\D/g,'').slice(-1);inp.value=v;if(v&&i<3)pds[i+1].focus();});
+    inp.addEventListener('input',function(){
+      var v=inp.value.replace(/\D/g,'').slice(-1);inp.value=v;
+      if(v&&i<3)pds[i+1].focus();
+    });
   });
-  document.getElementById('pin-btn').addEventListener('click',checkPin);
+  document.getElementById('pin-btn').addEventListener('click', checkPin);
 
   function checkPin(){
     var c=pds.map(function(d){return d.value;}).join('');
@@ -114,85 +124,79 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
     startScanner();
   }
 
+  /* ── SCANNER ── */
   function startScanner(){
     document.getElementById('pin-screen').style.display='none';
-    document.getElementById('scan-screen').style.display='flex';
-    document.getElementById('scan-count').textContent='Initialisation…';
-
-    scanner=new Html5Qrcode('cam-wrap');
-    scanner.start(
-      {facingMode:'environment'},
-      {fps:10,qrbox:{width:220,height:220}},
-      function(decodedText){
-        if(!scanning) return;
-        clearTimeout(timeoutTimer);
-        scanning=false;
-        scanner.pause();
-        processQR(decodedText);
-      },
-      function(){}
-    )
-    .then(function(){
-      scanning=true;
-      document.getElementById('scan-count').textContent='Caméra active — approchez le QR code';
-      startTimeout();
+    var ss=document.getElementById('scan-screen');ss.style.display='flex';
+    var video=document.getElementById('cam');
+    navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}})
+    .then(function(stream){
+      video.srcObject=stream;
+      video.play();
+      requestAnimationFrame(tick);
     })
     .catch(function(e){
-      document.getElementById('scan-count').textContent='Erreur caméra : '+e;
+      document.getElementById('scan-count').textContent='Erreur caméra : '+e.message;
     });
   }
 
-  function startTimeout(){
-    clearTimeout(timeoutTimer);
-    timeoutTimer=setTimeout(function(){
-      showResult('timeout',{});
-      setTimeout(function(){
-        document.getElementById('result-wrap').style.display='none';
-        document.getElementById('scan-count').textContent='Caméra active — approchez le QR code';
-        scanning=true;
-        if(scanner) scanner.resume();
-        startTimeout();
-      },3500);
-    },10000);
+  function tick(){
+    var video=document.getElementById('cam');
+    var canvas=document.getElementById('cam-canvas');
+    if(video.readyState===video.HAVE_ENOUGH_DATA && scanActive){
+      canvas.width=video.videoWidth;
+      canvas.height=video.videoHeight;
+      var ctx=canvas.getContext('2d');
+      ctx.drawImage(video,0,0,canvas.width,canvas.height);
+      var imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+      var code=jsQR(imageData.data,imageData.width,imageData.height,{inversionAttempts:'dontInvert'});
+      if(code && code.data){
+        var now=Date.now();
+        if(code.data!==lastScan||now-lastScanTime>scanCooldown){
+          lastScan=code.data;lastScanTime=now;
+          processQR(code.data);
+        }
+      }
+    }
+    requestAnimationFrame(tick);
   }
 
   function processQR(data){
+    /* Extraire g= et e= de l'URL */
     try{
       var url=new URL(data);
       var guestToken=url.searchParams.get('g');
       var evt=url.searchParams.get('e');
-      if(!guestToken||!evt){showResult('invalid',{});resume();return;}
+      if(!guestToken||!evt){showResult('invalid',{});return;}
+      scanActive=false;
       fetch('/.netlify/functions/check-entry',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({guestToken:guestToken,event:evt,pin:scannerPin})
       })
       .then(function(r){return r.json();})
-      .then(function(d){
-        if(d.error==='PIN invalide'){
-          location.reload();return;
+      .then(function(data){
+        if(data.error==='PIN invalide'){
+          document.getElementById('pin-screen').style.display='flex';
+          document.getElementById('scan-screen').style.display='none';
+          document.getElementById('pin-err').textContent='PIN invalide — reconnectez-vous';
+          scannerPin='';
+          pds.forEach(function(d){d.value='';});
+          return;
         }
-        showResult(d.status,d);
+        showResult(data.status,data);
         scanCount++;
         document.getElementById('scan-count').textContent=scanCount+' scan'+(scanCount>1?'s':'')+' effectué'+(scanCount>1?'s':'');
-        setTimeout(function(){
+        clearTimeout(animTimer);
+        animTimer=setTimeout(function(){
           document.getElementById('result-wrap').style.display='none';
-          scanning=true;
-          if(scanner) scanner.resume();
+          scanActive=true;
+          lastScan='';
           startTimeout();
-        },3500);
+        },3000);
       })
-      .catch(function(){showResult('invalid',{});resume();});
-    }catch(e){showResult('invalid',{});resume();}
-  }
-
-  function resume(){
-    setTimeout(function(){
-      document.getElementById('result-wrap').style.display='none';
-      scanning=true;
-      if(scanner) scanner.resume();
-      startTimeout();
-    },2000);
+      .catch(function(e){showResult('invalid',{});scanActive=true;});
+    }catch(e){showResult('invalid',{});scanActive=true;}
   }
 
   function showResult(status,data){
@@ -202,30 +206,42 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
     var st=document.getElementById('result-status');
     var tm=document.getElementById('result-time');
     wrap.className='';wrap.style.display='block';
+
     var evtLabel=data.event==='ck1'?'Cocktail famille':'Repas de mariage';
+
     if(status==='granted'){
-      wrap.classList.add('granted');icon.textContent='✅';
-      name.textContent=data.prenom||'';st.textContent='Accès '+evtLabel+' autorisé';tm.textContent=data.scanned_at||'';
-    }else if(status==='already_scanned'){
-      wrap.classList.add('already');icon.textContent='🔴';
-      name.textContent=data.prenom||'';st.textContent='Déjà enregistré — '+evtLabel;tm.textContent='Premier accès le '+data.scanned_at;
-    }else if(status==='unconfirmed'){
-      wrap.classList.add('unconfirmed');icon.textContent='⚠️';
-      name.textContent=data.prenom||'';st.textContent='Invité non confirmé';tm.textContent=data.reason||'';
-    }else if(status==='timeout'){
-      wrap.classList.add('invalid');icon.textContent='⏱️';
-      name.textContent='';st.textContent='Aucun QR code détecté';tm.textContent='Réessayez en approchant le QR code';
-    }else{
-      wrap.classList.add('invalid');icon.textContent='❌';
-      name.textContent='';st.textContent='QR code invalide';tm.textContent='';
+      wrap.classList.add('granted');
+      icon.textContent='✅';
+      name.textContent=data.prenom||'';
+      st.textContent='Accès '+evtLabel+' autorisé';
+      tm.textContent=data.scanned_at||'';
+    } else if(status==='already_scanned'){
+      wrap.classList.add('already');
+      icon.textContent='🔴';
+      name.textContent=data.prenom||'';
+      st.textContent='Déjà enregistré — '+evtLabel;
+      tm.textContent='Premier accès le '+data.scanned_at;
+    } else if(status==='unconfirmed'){
+      wrap.classList.add('unconfirmed');
+      icon.textContent='⚠️';
+      name.textContent=data.prenom||'';
+      st.textContent='Invité non confirmé';
+      tm.textContent=data.reason||'';
+    } else {
+      wrap.classList.add('invalid');
+      icon.textContent='❌';
+      name.textContent='';
+      st.textContent='QR code invalide';
+      tm.textContent='';
     }
+
     wrap.style.animation='none';void wrap.offsetWidth;wrap.style.animation='popIn .35s cubic-bezier(.2,0,.2,1)';
   }
 
   document.getElementById('logout-btn').addEventListener('click',function(){
-    if(scanner) scanner.stop();
     location.reload();
   });
+
 })();
 </script>
 </body>

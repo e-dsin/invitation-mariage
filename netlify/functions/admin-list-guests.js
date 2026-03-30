@@ -16,22 +16,29 @@ exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") return { statusCode: 200, body: "" };
   if (event.httpMethod !== "POST") return { statusCode: 405, body: JSON.stringify({ error: "Method not allowed" }) };
 
-  let adminToken;
-  try { ({ token: adminToken } = JSON.parse(event.body)); }
+  let adminToken, pin;
+  try { ({ token: adminToken, pin } = JSON.parse(event.body)); }
   catch { return { statusCode: 400, body: JSON.stringify({ error: "Corps invalide" }) }; }
 
-  try {
-    const payload = jwt.verify(adminToken, process.env.OTP_SECRET);
-    if (payload.role !== "admin") throw new Error("Not admin");
-  } catch {
-    return { statusCode: 401, body: JSON.stringify({ error: "Session admin expirée" }) };
+  /* Auth : JWT admin OU PIN scanner */
+  if (pin) {
+    if (pin !== process.env.SCANNER_PIN) {
+      return { statusCode: 401, body: JSON.stringify({ error: "PIN invalide" }) };
+    }
+  } else {
+    try {
+      const payload = jwt.verify(adminToken, process.env.OTP_SECRET);
+      if (payload.role !== "admin") throw new Error("Not admin");
+    } catch {
+      return { statusCode: 401, body: JSON.stringify({ error: "Session admin expirée" }) };
+    }
   }
 
   try {
     const sheets = await getSheetsClient();
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId: SHEET_ID,
-      range: "Invités!A:L",
+      range: "Invités!A:O",
     });
 
     const rows = res.data.values || [];
@@ -52,6 +59,7 @@ exports.handler = async (event) => {
         rsvp_ck1:      row[9] || "",
         rsvp_ck2:      row[10] || "",
         guest_token:   row[11] || "",
+        first_click:   row[14] || "",
       };
     });
 

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#1a1a2e">
+<title>Messages — Lynda & Marcel-Cédric</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:Georgia,serif;}
+body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd8 52%,#f5f0e8 57%,#e8e8c8 67%,#c8d890 80%,#98b455 100%);}
+
+/* ── PIN ── */
+#pin-screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px;background:rgba(0,0,0,.35);z-index:100;}
+.pin-title{font-family:'Dancing Script',cursive;font-size:30px;color:rgba(255,240,220,.95);text-align:center;}
+.pin-sub{font-size:12px;font-style:italic;color:rgba(255,240,220,.55);text-align:center;}
+#pin-row{display:flex;gap:12px;justify-content:center;}
+.pd{width:52px;height:60px;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,220,180,.3);border-radius:12px;text-align:center;font-size:26px;font-weight:700;color:#fff5ee;outline:none;transition:border-color .2s;}
+.pd:focus{border-color:rgba(255,180,100,.7);}
+.pd.err{border-color:rgba(220,60,60,.8);animation:errShake .3s;}
+#pin-btn{padding:13px 40px;background:linear-gradient(135deg,#c2410c,#9a3412);border:none;border-radius:12px;color:#fff5ee;font-family:Georgia,serif;font-size:16px;cursor:pointer;}
+#pin-err{font-size:12px;color:rgba(220,80,60,.9);font-style:italic;min-height:16px;text-align:center;}
+
+/* ── SCÈNE ── */
+#stage{position:fixed;inset:0;display:none;}
+
+/* Titre flottant */
+#stage-title{position:absolute;top:16px;left:0;right:0;text-align:center;font-family:'Dancing Script',cursive;font-size:22px;color:rgba(100,40,15,.55);pointer-events:none;z-index:5;}
+
+/* Bouton quitter */
+#quit-btn{position:absolute;top:12px;right:14px;background:rgba(255,252,248,.45);border:1px solid rgba(180,90,50,.2);border-radius:8px;padding:5px 10px;color:rgba(120,50,20,.6);font-size:10px;cursor:pointer;z-index:10;}
+
+/* ── BULLE ── */
+.bulle{
+  position:absolute;
+  max-width:220px;
+  padding:14px 16px 18px;
+  border-radius:18px 18px 18px 4px;
+  border:2px solid;
+  background:rgba(255,255,255,.12);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  box-shadow:0 4px 24px rgba(0,0,0,.12);
+  opacity:0;
+  transform:scale(.7) translateY(20px);
+  transition:opacity .6s ease, transform .6s cubic-bezier(.2,0,.2,1);
+  pointer-events:none;
+  z-index:4;
+}
+.bulle.show{opacity:1;transform:scale(1) translateY(0);}
+.bulle.hide{opacity:0;transform:scale(.85) translateY(-15px);transition:opacity .8s ease,transform .8s ease;}
+.bulle-msg{font-size:13px;font-style:italic;line-height:1.65;color:rgba(80,30,10,.85);}
+.bulle-from{font-family:'Dancing Script',cursive;font-size:15px;margin-top:7px;text-align:right;opacity:.7;}
+
+/* Fleur décorative de fond */
+#no-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-style:italic;color:rgba(100,40,15,.45);}
+
+@keyframes errShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+</style>
+</head>
+<body>
+
+<!-- PIN -->
+<div id="pin-screen">
+  <div class="pin-title">Messages des invités</div>
+  <div class="pin-sub">Lynda &amp; Marcel-Cédric · 15 mai 2026</div>
+  <div id="pin-row">
+    <input class="pd" id="p0" maxlength="1" type="tel" inputmode="numeric">
+    <input class="pd" id="p1" maxlength="1" type="tel" inputmode="numeric">
+    <input class="pd" id="p2" maxlength="1" type="tel" inputmode="numeric">
+    <input class="pd" id="p3" maxlength="1" type="tel" inputmode="numeric">
+  </div>
+  <div id="pin-err"></div>
+  <button id="pin-btn">Afficher les messages</button>
+</div>
+
+<!-- SCÈNE -->
+<div id="stage">
+  <div id="stage-title">✨ Leurs mots pour Lynda &amp; Marcel-Cédric</div>
+  <button id="quit-btn">✕ Quitter</button>
+  <div id="no-msg" style="display:none;">Aucun message pour l'instant…</div>
+</div>
+
+<script>
+(function(){
+  /* Palette couleurs thème mariage */
+  var palette=[
+    {border:'rgba(210,100,80,.8)', bg:'rgba(210,100,80,.08)'},
+    {border:'rgba(180,130,80,.8)', bg:'rgba(180,130,80,.08)'},
+    {border:'rgba(150,100,160,.8)',bg:'rgba(150,100,160,.08)'},
+    {border:'rgba(80,140,100,.8)', bg:'rgba(80,140,100,.08)'},
+    {border:'rgba(200,80,110,.8)', bg:'rgba(200,80,110,.08)'},
+    {border:'rgba(90,130,170,.8)', bg:'rgba(90,130,170,.08)'},
+    {border:'rgba(160,120,60,.8)', bg:'rgba(160,120,60,.08)'},
+    {border:'rgba(100,160,140,.8)',bg:'rgba(100,160,140,.08)'},
+  ];
+
+  var messages=[];
+  var msgIdx=0;
+  var spawnInterval=null;
+  var adminPin='';
+
+  /* ── PIN ── */
+  var pds=['p0','p1','p2','p3'].map(function(id){return document.getElementById(id);});
+  pds.forEach(function(inp,i){
+    inp.addEventListener('keydown',function(e){
+      if(e.key==='Backspace'){if(inp.value){inp.value='';}else if(i>0){pds[i-1].focus();pds[i-1].value='';}e.preventDefault();}
+      if(e.key==='Enter')checkPin();
+    });
+    inp.addEventListener('input',function(){
+      var v=inp.value.replace(/\D/g,'').slice(-1);inp.value=v;
+      if(v&&i<3)pds[i+1].focus();
+    });
+  });
+  document.getElementById('pin-btn').addEventListener('click',checkPin);
+
+  function checkPin(){
+    var c=pds.map(function(d){return d.value;}).join('');
+    if(c.length<4){
+      pds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},300);});
+      return;
+    }
+    adminPin=c;
+    loadMessages();
+  }
+
+  function loadMessages(){
+    document.getElementById('pin-btn').textContent='Chargement…';
+    document.getElementById('pin-btn').disabled=true;
+
+    fetch('/.netlify/functions/admin-list-guests',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({pin:adminPin})
+    })
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data.error){
+        document.getElementById('pin-err').textContent='PIN invalide';
+        document.getElementById('pin-btn').textContent='Afficher les messages';
+        document.getElementById('pin-btn').disabled=false;
+        adminPin='';
+        pds.forEach(function(d){d.value='';});
+        return;
+      }
+      var guests=data.guests||[];
+      messages=guests
+        .filter(function(g){return g.rsvp_message && g.rsvp_message.trim().length>0;})
+        .map(function(g){return {msg:g.rsvp_message.trim(), prenom:g.prenom};});
+
+      document.getElementById('pin-screen').style.display='none';
+      document.getElementById('stage').style.display='block';
+
+      if(!messages.length){
+        document.getElementById('no-msg').style.display='flex';
+        return;
+      }
+
+      startBulles();
+    })
+    .catch(function(){
+      document.getElementById('pin-err').textContent='Erreur de connexion';
+      document.getElementById('pin-btn').textContent='Afficher les messages';
+      document.getElementById('pin-btn').disabled=false;
+    });
+  }
+
+  function startBulles(){
+    /* Spawn immédiat puis toutes les 4s */
+    spawnBulle();
+    spawnInterval=setInterval(spawnBulle, 4000);
+  }
+
+  function spawnBulle(){
+    if(!messages.length) return;
+
+    var m=messages[msgIdx % messages.length];
+    msgIdx++;
+
+    var col=palette[Math.floor(Math.random()*palette.length)];
+
+    /* Position aléatoire en évitant les bords */
+    var stageW=window.innerWidth;
+    var stageH=window.innerHeight;
+    var bulleW=220;
+    var bulleH=120;
+    var margin=20;
+    var x=margin+Math.random()*(stageW-bulleW-margin*2);
+    var y=60+Math.random()*(stageH-bulleH-80);
+
+    var bulle=document.createElement('div');
+    bulle.className='bulle';
+    bulle.style.left=x+'px';
+    bulle.style.top=y+'px';
+    bulle.style.borderColor=col.border;
+    bulle.style.background='rgba(255,255,255,.15)';
+    bulle.innerHTML='<div class="bulle-msg">« '+escHtml(m.msg)+' »</div>'
+      +'<div class="bulle-from" style="color:'+col.border+'">— '+escHtml(m.prenom)+'</div>';
+
+    document.getElementById('stage').appendChild(bulle);
+
+    /* Apparition */
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){bulle.classList.add('show');});
+    });
+
+    /* Disparition après 15s */
+    setTimeout(function(){
+      bulle.classList.add('hide');
+      setTimeout(function(){
+        if(bulle.parentNode) bulle.parentNode.removeChild(bulle);
+      },900);
+    },15000);
+  }
+
+  document.getElementById('quit-btn').addEventListener('click',function(){
+    clearInterval(spawnInterval);
+    location.reload();
+  });
+
+  function escHtml(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+})();
+</script>
+</body>
+</html>

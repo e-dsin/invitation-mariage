@@ -36,13 +36,13 @@ async function findGuestByPhone(sheets, phone) {
 async function findGuestByToken(sheets, token) {
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: "Invités!A:L",
+    range: "Invités!A:O",
   });
   const rows = res.data.values || [];
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
     if ((row[11] || "") === token) {
-      return { rowIndex: i + 1, prenom: row[0], niveau: parseInt(row[2]) || 1, phone: row[1] };
+      return { rowIndex: i + 1, prenom: row[0], niveau: parseInt(row[2]) || 1, phone: row[1], first_click: row[14] || "" };
     }
   }
   return null;
@@ -97,6 +97,18 @@ exports.handler = async (event) => {
 
     const otp = generateOTP();
     await writeOTP(sheets, guest.rowIndex, otp);
+
+    /* Enregistrer le premier clic si pas encore fait */
+    if (guestToken && !guest.first_click) {
+      const now = new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris", day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" });
+      await sheets.spreadsheets.values.update({
+        spreadsheetId: SHEET_ID,
+        range: `Invités!O${guest.rowIndex}`,
+        valueInputOption: "RAW",
+        requestBody: { values: [[now]] },
+      });
+    }
+
     await sendSMS(guest.phone, guest.prenom, otp);
 
     return {

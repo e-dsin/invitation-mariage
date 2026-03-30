@@ -149,12 +149,11 @@ input::placeholder{color:rgba(160,90,50,.35);}
     <label>Niveau d'accès</label>
     <div class="niveau-grid">
       <button class="niv-btn sel" data-n="1">Niv. 1<br><span style="font-size:10px;">Cérémonie</span></button>
-      <button class="niv-btn" data-n="2">Niv. 2<br><span style="font-size:10px;">Cocktail famille</span></button>
-      <button class="niv-btn" data-n="3">Niv. 3<br><span style="font-size:10px;">Repas de mariage</span></button>
-      <button class="niv-btn" data-n="4">Niv. 4<br><span style="font-size:10px;">Cocktail + Repas</span></button>
+      <button class="niv-btn" data-n="2">Niv. 2<br><span style="font-size:10px;">+ Cocktail famille</span></button>
+      <button class="niv-btn" data-n="3">Niv. 3<br><span style="font-size:10px;">+ Repas de mariage</span></button>
     </div>
     <div class="msg" id="msg-add"></div>
-    <button class="btn btn-primary" id="btn-add-guest">Ajouter &amp; envoyer l'invitation SMS</button>
+    <button class="btn btn-primary" id="btn-add-guest">Ajouter &amp; envoyer l'invitation WhatsApp</button>
   </div>
 
   <div class="sep"></div>
@@ -378,6 +377,7 @@ input::placeholder{color:rgba(160,90,50,.35);}
         +'<span class="guest-badge badge-'+g.niveau+'">Niv. '+g.niveau+' — '+nivLabels[g.niveau]+'</span>'
         +'</div>'
         +'<div class="guest-tel">'+escHtml(g.telephone)+'</div>'
+        +(g.first_click?'<div style="font-size:10px;font-style:italic;color:rgba(110,50,20,.45);margin-bottom:4px;">👁 Premier accès : '+escHtml(g.first_click)+'</div>':'')
         +(lienInvite?'<div style="margin:4px 0 6px;display:flex;align-items:center;gap:6px;">'
           +'<span style="font-size:10px;color:rgba(110,50,20,.45);word-break:break-all;flex:1;">'+escHtml(lienInvite)+'</span>'
           +'<button onclick="navigator.clipboard.writeText(\''+escHtml(lienInvite)+'\').then(function(){this.textContent=\'✓\';}.bind(this))" '
