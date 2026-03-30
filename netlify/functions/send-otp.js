@@ -2,7 +2,7 @@ const { google } = require("googleapis");
 const twilio = require("twilio");
 
 const SHEET_ID = process.env.GOOGLE_SHEETS_ID;
-const OTP_VALIDITY_MS = 10 * 60 * 1000;
+const OTP_VALIDITY_MS = 24 * 60 * 60 * 1000;
 
 function generateOTP() {
   return String(Math.floor(1000 + Math.random() * 9000));
@@ -42,8 +42,7 @@ async function findGuestByToken(sheets, token) {
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
     if ((row[11] || "") === token) {
-      return { rowIndex: i + 1, prenom: row[0], niveau: parseInt(row[2]) || 1, phone: row[1], first_click: row[14] || "" };
-    }
+return { rowIndex: i + 1, prenom: row[0], niveau: parseInt(row[2]) || 1, phone: row[1], first_click: row[14] || "", otpCode: row[3] || "", otpExpires: parseInt(row[4]) || 0 };    }
   }
   return null;
 }
@@ -95,8 +94,14 @@ exports.handler = async (event) => {
       return { statusCode: 400, body: JSON.stringify({ error: "Paramètre manquant." }) };
     }
 
-    const otp = generateOTP();
-    await writeOTP(sheets, guest.rowIndex, otp);
+    /* Réutiliser l'OTP existant s'il est encore valide */
+    let otp;
+    if (guest.otpCode && guest.otpExpires && Date.now() < guest.otpExpires) {
+      otp = guest.otpCode;
+    } else {
+      otp = generateOTP();
+      await writeOTP(sheets, guest.rowIndex, otp);
+    }
 
     /* Enregistrer le premier clic si pas encore fait */
     if (guestToken && !guest.first_click) {
