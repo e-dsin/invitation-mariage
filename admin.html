@@ -3,6 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta property="og:title" content="Lynda &amp; Marcel-Cédric">
+<meta property="og:description" content="Vous êtes invité(e) à célébrer leur union">
+<meta property="og:image" content="https://on-se-marie.ebelle.fr/preview.jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://on-se-marie.ebelle.fr/admin.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://on-se-marie.ebelle.fr/preview.jpeg">
 <title>Admin — Invitation Lynda &amp; Marcel-Cédric</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap');
@@ -310,9 +319,11 @@ input::placeholder{color:rgba(160,90,50,.35);}
       if(data.inviteUrl){
         msgHtml += '<br><br><strong>Lien à envoyer :</strong><br>'
           +'<span style="font-size:10px;word-break:break-all;">'+escHtml(data.inviteUrl)+'</span>'
-          +'<br><button onclick="navigator.clipboard.writeText(\''+escHtml(data.inviteUrl)+'\').then(function(){this.textContent=\'✓ Copié !\';}).bind(this)" '
-          +'style="margin-top:6px;padding:5px 12px;border-radius:8px;border:1px solid rgba(180,90,50,.3);background:rgba(255,252,248,.7);font-size:11px;cursor:pointer;">Copier le lien</button>';
-      }
+          +'<button onclick="navigator.clipboard.writeText(\''+escHtml(msgWA)+'\').then(function(){this.textContent=\'✓\';}.bind(this))" '
+          +'style="flex-shrink:0;padding:3px 8px;border-radius:6px;border:1px solid rgba(180,90,50,.28);background:rgba(255,252,248,.7);font-size:10px;cursor:pointer;">📋 Copier</button>'
+          +(waUrl?'<a href="'+escHtml(waUrl)+'" target="_blank" '
+          +'style="flex-shrink:0;padding:3px 8px;border-radius:6px;border:1px solid rgba(50,160,50,.35);background:rgba(240,255,240,.7);font-size:10px;cursor:pointer;text-decoration:none;color:rgba(20,100,20,.8);">📲 WhatsApp</a>':'')
+                }
       document.getElementById('msg-add').innerHTML = msgHtml;
       document.getElementById('msg-add').className = 'msg show ok';
       document.getElementById('new-prenom').value = '';
@@ -372,6 +383,9 @@ input::placeholder{color:rgba(160,90,50,.35);}
         : '<span style="color:rgba(150,80,30,.45);">En attente</span>';
       var siteUrl = 'https://on-se-marie.ebelle.fr';
       var lienInvite = g.guest_token ? siteUrl+'?t='+g.guest_token : '';
+      var msgWA = 'Bonjour '+g.prenom+' 🌸\n\nLynda & Marcel-Cédric ont le bonheur de vous annoncer leur mariage et seraient touchés de vous avoir à leurs côtés pour célébrer ce jour si précieux.\n\nVotre invitation personnelle :\n'+lienInvite;
+      var waUrl = lienInvite ? 'https://wa.me/'+g.telephone.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(msgWA) : '';
+
       return '<div class="guest-card">'
         +'<div class="guest-top">'
         +'<span class="guest-name">'+escHtml(g.prenom)+'</span>'
