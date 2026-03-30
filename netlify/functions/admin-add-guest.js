@@ -84,11 +84,15 @@ exports.handler = async (event) => {
 
     /* Envoi SMS avec le lien d'invitation */
     const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-    await client.messages.create({
+    const msgParams = {
       from: process.env.TWILIO_SMS_FROM,
       to: cleanPhone,
       body: `Bonjour ${prenom.trim()} 🌸\n\nLynda & Marcel-Cédric ont le bonheur de vous annoncer leur mariage et seraient touchés de vous avoir à leurs côtés pour célébrer ce jour si précieux.\n\nVotre invitation personnelle :\n${inviteUrl}\n\n— Avec tout leur amour 🤍`,
-    });
+      };
+      if (process.env.INVITE_MEDIA_URL) {
+        msgParams.mediaUrl = [process.env.INVITE_MEDIA_URL];
+      }
+    await client.messages.create(msgParams);
 
     return {
       statusCode: 200,

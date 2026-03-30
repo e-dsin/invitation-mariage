@@ -403,7 +403,10 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
   <div id="lbcap"></div><div id="lbtag"></div><div id="lbctr"></div>
   <button id="lbnx">›</button>
 </div>
-<div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10px;font-style:italic;color:rgba(100,45,20,.35);z-index:1;">© Mundo Archi - 2026</div>
+<div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10px;font-style:italic;color:rgba(100,45,20,.35);z-index:1;">© 2026 Mundo Archi - Tous droits réservés</div>
+ 
+<!-- TAB BAR -->
+<div id="tabbar" style="display:none;position:absolute;bottom:0;left:0;right:0;background:rgba(255,252,248,.92);border-top:1px solid rgba(180,90,50,.15);justify-content:space-around;align-items:center;padding:8px 4px 12px;z-index:20;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);"></div>
 </div>
 
 <script>
@@ -573,6 +576,7 @@ g('rvsub').addEventListener('click',function(){
     if(lv===3||lv>=4)g('af2').classList.remove('hidden');
     var bc=g('btn-confirm');
     if(bc){bc.textContent='Présence confirmée ✓';bc.classList.add('done');bc.disabled=true;}
+    buildTabBar(lv);
   }
 });
 
@@ -876,8 +880,41 @@ function applyExistingRSVP(data){
     if(lv===2||lv>=4)g('af-cer').classList.remove('hidden');
     if(lv===2||lv>=4)g('af1').classList.remove('hidden');
     if(lv===3||lv>=4)g('af2').classList.remove('hidden');
+    buildTabBar(lv);
   }
 }
+
+function buildTabBar(l){
+  var tb=g('tabbar');
+  if(!tb)return;
+ 
+  /* Définition des onglets selon niveau */
+  var tabs=[
+    {icon:'🎴',label:'Faire-part',idx:0},
+    {icon:'💌',label:'RSVP',idx:1}
+  ];
+  if(l===2||l>=4) tabs.push({icon:'🥂',label:'Cocktail',idx:2});
+  if(l===3||l>=4) tabs.push({icon:'🍽',label:'Repas',idx:3});
+  tabs.push({icon:'📷',label:'Album',idx:4});
+ 
+  tb.innerHTML='';
+  tabs.forEach(function(t){
+    var btn=document.createElement('button');
+    btn.style.cssText='flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 2px;';
+    btn.innerHTML='<span style="font-size:20px;line-height:1;">'+t.icon+'</span>'
+      +'<span style="font-size:9px;font-style:italic;color:rgba(120,55,20,.65);font-family:Georgia,serif;white-space:nowrap;">'+t.label+'</span>';
+    (function(idx){btn.addEventListener('click',function(){switchTab(idx);});})(t.idx);
+    tb.appendChild(btn);
+  });
+ 
+  tb.style.display='flex';
+ 
+  /* Ajouter padding bas aux panels pour éviter que la tab bar cache le contenu */
+  document.querySelectorAll('.pnl').forEach(function(p){
+    p.style.paddingBottom='70px';
+  });
+}
+
 
 function escHtml(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
