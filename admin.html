@@ -377,7 +377,7 @@ input::placeholder{color:rgba(160,90,50,.35);}
         +'<span class="guest-badge badge-'+g.niveau+'">Niv. '+g.niveau+' — '+nivLabels[g.niveau]+'</span>'
         +'</div>'
         +'<div class="guest-tel">'+escHtml(g.telephone)+'</div>'
-        +(g.first_click?'<div style="font-size:10px;font-style:italic;color:rgba(110,50,20,.45);margin-bottom:4px;">👁 Premier accès : '+escHtml(g.first_click)+'</div>':'')
+        +(g.first_click?'<div style="font-size:10px;font-style:italic;color:rgba(110,50,20,.45);margin-bottom:4px;"> Premier accès : '+escHtml(g.first_click)+'</div>':'')
         +(lienInvite?'<div style="margin:4px 0 6px;display:flex;align-items:center;gap:6px;">'
           +'<span style="font-size:10px;color:rgba(110,50,20,.45);word-break:break-all;flex:1;">'+escHtml(lienInvite)+'</span>'
           +'<button onclick="navigator.clipboard.writeText(\''+escHtml(lienInvite)+'\').then(function(){this.textContent=\'✓\';}.bind(this))" '
