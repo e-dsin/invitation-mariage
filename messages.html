@@ -196,7 +196,7 @@ body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd
 
   function startBulles(){
     spawnBulle();
-    spawnInterval=setInterval(spawnBulle,4000);
+    spawnInterval=setInterval(spawnBulle,2000);
   }
 
   function spawnBulle(){
@@ -234,7 +234,7 @@ body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd
       setTimeout(function(){
         if(bulle.parentNode)bulle.parentNode.removeChild(bulle);
       },900);
-    },10000);
+    },20000);
   }
 
   document.getElementById('quit-btn').addEventListener('click',function(){
