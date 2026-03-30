@@ -39,7 +39,7 @@ body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd
   padding:14px 16px 18px;
   border-radius:18px 18px 18px 4px;
   border:2px solid;
-  background:rgba(255,255,255,.5);
+  background:rgba(255,255,255,.3);
   backdrop-filter:blur(6px);
   -webkit-backdrop-filter:blur(6px);
   box-shadow:0 4px 24px rgba(0,0,0,.12);
@@ -65,7 +65,7 @@ body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd
 <!-- PIN -->
 <div id="pin-screen">
   <div class="pin-title">Messages des invités</div>
-  <div class="pin-sub">Lynda &amp; Marcel-Cédric · 15 mai 2026</div>
+  <div class="pin-sub">Lynda &amp; Marcel-Cédric se marient</div>
   <div id="pin-row">
     <input class="pd" id="p0" maxlength="1" type="tel" inputmode="numeric">
     <input class="pd" id="p1" maxlength="1" type="tel" inputmode="numeric">
@@ -78,7 +78,7 @@ body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd
 
 <!-- SCÈNE -->
 <div id="stage">
-  <div id="stage-title">✨ Leurs mots pour Lynda &amp; Marcel-Cédric</div>
+  <div id="stage-title">✨ Leurs mots d'affection pour Lynda &amp; Marcel-Cédric</div>
   <button id="quit-btn">✕ Quitter</button>
   <div id="no-msg" style="display:none;">Aucun message pour l'instant…</div>
 </div>
@@ -87,14 +87,14 @@ body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd
 (function(){
   /* Palette couleurs thème mariage */
   var palette=[
-    {border:'rgba(210,100,80,.8)', bg:'rgba(210,100,80,.08)'},
-    {border:'rgba(180,130,80,.8)', bg:'rgba(180,130,80,.08)'},
-    {border:'rgba(150,100,160,.8)',bg:'rgba(150,100,160,.08)'},
-    {border:'rgba(80,140,100,.8)', bg:'rgba(80,140,100,.08)'},
-    {border:'rgba(200,80,110,.8)', bg:'rgba(200,80,110,.08)'},
-    {border:'rgba(90,130,170,.8)', bg:'rgba(90,130,170,.08)'},
-    {border:'rgba(160,120,60,.8)', bg:'rgba(160,120,60,.08)'},
-    {border:'rgba(100,160,140,.8)',bg:'rgba(100,160,140,.08)'},
+    {border:'rgba(210,100,80,.6)', bg:'rgba(210,100,80,.08)'},
+    {border:'rgba(180,130,80,.6)', bg:'rgba(180,130,80,.08)'},
+    {border:'rgba(150,100,160,.6)',bg:'rgba(150,100,160,.08)'},
+    {border:'rgba(80,140,100,.6)', bg:'rgba(80,140,100,.08)'},
+    {border:'rgba(200,80,110,.6)', bg:'rgba(200,80,110,.08)'},
+    {border:'rgba(90,130,170,.6)', bg:'rgba(90,130,170,.08)'},
+    {border:'rgba(160,120,60,.6)', bg:'rgba(160,120,60,.08)'},
+    {border:'rgba(100,160,140,.6)',bg:'rgba(100,160,140,.08)'},
   ];
 
   var messages=[];
