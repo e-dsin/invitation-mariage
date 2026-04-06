@@ -291,6 +291,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
         <div class="fpadr"><a href="https://maps.google.com/?q=13+avenue+de+Gros+Bois,+94440+Marolles-en-Brie" target="_blank" rel="noopener">13 avenue de Gros Bois, 94440 Marolles-en-Brie</a></div>
       </div> 
       <div class="fpck" id="fpck-msg">La cérémonie civile aura lieu en présence de nos proches.</div>
+      <div class="fpck" id="fpck-msg">Dress Code : African Chic</div>
       <button id="btn-confirm">Confirmer votre présence</button>
     </div>
 
@@ -442,10 +443,10 @@ g('otbtn').addEventListener('click',chk);
 
 function chk(){
   var c=ds.map(function(d){return d.value;}).join('');
-  if(c==='1111'){go(1);return;}
-  if(c==='1112'){go(2);return;}
-  if(c==='1113'){go(3);return;}
-  if(c==='1234'){go(4);return;}
+  if(c==='2701'){go(1);return;}
+  if(c==='2702'){go(2);return;}
+  if(c==='2703'){go(3);return;}
+  if(c==='2704'){go(4);return;}
   if(c.length===4) verifyReal(c);
   else ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
 }
