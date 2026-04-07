@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/*"
+  to = "/maintenance.html"
+  status = 301
+  force = true
