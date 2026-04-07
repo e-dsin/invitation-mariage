@@ -4,933 +4,133 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#d4845a">
-<meta property="og:title" content="Lynda &amp; Marcel-Cédric">
+<meta property="og:title" content="Lynda & Marcel-Cédric">
 <meta property="og:description" content="Vous êtes invité(e) à célébrer leur union">
 <meta property="og:image" content="https://on-se-marie.ebelle.fr/preview.jpeg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
 <meta property="og:url" content="https://on-se-marie.ebelle.fr">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://on-se-marie.ebelle.fr/preview.jpeg">
-<title>Invitation — Lynda &amp; Marcel-Cédric</title>
-
+<title>Lynda &amp; Marcel-Cédric</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html{height:100%;}
-body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;justify-content:center;font-family:Georgia,serif;background:linear-gradient(158deg,#d4845a 0%,#dc8870 4%,#e09080 7%,#dda0a8 11%,#d890a0 18%,#d88098 26%,#d8a0b0 33%,#e0b8c0 40%,#eac8cc 46%,#f2dcd8 52%,#f5f0e8 57%,#f0ecd8 62%,#e8e8c8 67%,#d8e4a8 73%,#c8d890 80%,#b8cc78 88%,#a8c065 95%,#98b455 100%);}
-#scene{width:100%;max-width:430px;min-height:100vh;min-height:100dvh;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(158deg,#d4845a 0%,#dc8870 4%,#e09080 7%,#dda0a8 11%,#d890a0 18%,#d88098 26%,#d8a0b0 33%,#e0b8c0 40%,#eac8cc 46%,#f2dcd8 52%,#f5f0e8 57%,#f0ecd8 62%,#e8e8c8 67%,#d8e4a8 73%,#c8d890 80%,#b8cc78 88%,#a8c065 95%,#98b455 100%);}
-.au{position:absolute;border-radius:50%;filter:blur(55px);pointer-events:none;}
-#au1{width:320px;height:110px;top:5%;left:-5%;background:rgba(220,120,60,.2);animation:aurora 8s ease-in-out infinite;}
-#au2{width:220px;height:80px;top:16%;right:0%;background:rgba(210,100,50,.15);animation:aurora 10s ease-in-out 2.5s infinite;}
-#au3{width:180px;height:60px;top:28%;left:30%;background:rgba(234,88,12,.1);animation:aurora 12s ease-in-out 5s infinite;}
-@keyframes aurora{0%,100%{opacity:0}50%{opacity:1}}
-@keyframes shake{0%,100%{transform:translateX(0) rotate(0deg)}15%{transform:translateX(-7px) rotate(-2.5deg)}30%{transform:translateX(7px) rotate(2.5deg)}45%{transform:translateX(-5px) rotate(-1.5deg)}60%{transform:translateX(5px) rotate(1.5deg)}75%{transform:translateX(-3px) rotate(-.8deg)}90%{transform:translateX(3px) rotate(.8deg)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-@keyframes tabIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@keyframes errShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+body{
+  min-height:100vh;min-height:100dvh;
+  display:flex;align-items:center;justify-content:center;
+  font-family:Georgia,serif;
+  background:linear-gradient(158deg,#d4845a 0%,#dc8870 4%,#e09080 7%,#dda0a8 11%,#d890a0 18%,#d88098 26%,#d8a0b0 33%,#e0b8c0 40%,#eac8cc 46%,#f2dcd8 52%,#f5f0e8 57%,#f0ecd8 62%,#e8e8c8 67%,#d8e4a8 73%,#c8d890 80%,#b8cc78 88%,#a8c065 95%,#98b455 100%);
+  padding:24px 20px;
+}
+
+#scene{
+  width:100%;max-width:380px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;
+  animation:fadeUp .8s cubic-bezier(.2,0,.8,1) forwards;
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
 @keyframes glowPulse{0%,100%{filter:drop-shadow(0 0 3px rgba(180,70,30,.4))}50%{filter:drop-shadow(0 0 11px rgba(180,70,30,.85))}}
-@keyframes qrGlow{0%,100%{opacity:.82}50%{opacity:1;filter:drop-shadow(0 0 7px rgba(160,80,30,.6))}}
-@keyframes successPop{0%{opacity:0;transform:scale(.75)}65%{transform:scale(1.07)}100%{opacity:1;transform:scale(1)}}
 @keyframes deadlinePulse{0%,100%{opacity:.65}50%{opacity:1}}
-@keyframes photoIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
-@keyframes lbIn{from{opacity:0}to{opacity:1}}
-@keyframes btnPulse{0%,100%{box-shadow:0 0 0 0 rgba(180,83,9,.35)}70%{box-shadow:0 0 0 8px rgba(180,83,9,0)}}
 
-.fl{position:absolute;pointer-events:none;z-index:3;}
-#fl1{top:14px;left:8px;width:110px;height:110px;}
-#fl2{top:120px;right:8px;width:94px;height:94px;}
-#fl3{bottom:72px;left:50%;transform:translateX(-50%);width:80px;height:80px;}
-.pp{fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:700;stroke-dashoffset:700;}
+.fp-sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;font-style:italic;color:rgba(110,45,20,.48);margin-bottom:6px;}
+.fp-div{color:rgba(180,90,50,.3);}
 
-#bprev{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .5s;z-index:2;padding:20px;}
-#bprev.show{opacity:1;}
-.bpi{width:100%;max-width:300px;padding:26px 22px 22px;background:rgba(255,252,248,.4);border:1px solid rgba(180,90,50,.15);border-radius:18px;text-align:center;filter:blur(5px) brightness(.92);pointer-events:none;}
-.bpsd{font-family:'Dancing Script',cursive;font-size:80px;color:#922010;line-height:.9;}
-.bpye{font-family:'Dancing Script',cursive;font-size:28px;color:#7c3010;margin-bottom:7px;}
-.bpna{font-family:'Dancing Script',cursive;font-size:22px;color:#7c3010;margin-bottom:5px;}
-.bpdt{font-size:13px;letter-spacing:1px;color:rgba(100,40,20,.75);font-weight:700;}
+.fp-oui{font-family:'Dancing Script',cursive;font-size:92px;font-weight:700;color:#922010;line-height:.9;text-shadow:0 0 30px rgba(180,70,30,.22);margin-bottom:-2px;}
+.fp-vie{font-family:'Dancing Script',cursive;font-size:34px;font-weight:600;color:#7c3010;line-height:1;letter-spacing:.5px;margin-bottom:12px;}
 
-#ewrap{position:absolute;width:280px;display:flex;flex-direction:column;align-items:center;transition:opacity .55s ease,transform .55s ease;z-index:5;}
-#env{position:relative;width:280px;height:182px;}
-.eb{position:absolute;bottom:0;width:280px;height:148px;background:linear-gradient(165deg,#f8ede0 0%,#f0e0cc 60%,#e8d4b8 100%);border-radius:4px 4px 12px 12px;border:1.5px solid rgba(180,110,70,.3);}
-.el{position:absolute;bottom:0;left:0;width:0;height:0;border-bottom:74px solid #f0e0c8;border-right:140px solid transparent;}
-.er{position:absolute;bottom:0;right:0;width:0;height:0;border-bottom:74px solid #e4d4b4;border-left:140px solid transparent;}
-.ebt{position:absolute;bottom:0;width:0;height:0;border-left:140px solid transparent;border-right:140px solid transparent;border-bottom:80px solid #ead8b8;}
-#eflap{position:absolute;top:0;left:0;width:0;height:0;border-left:140px solid transparent;border-right:140px solid transparent;border-top:82px solid #f0e0cc;transform-origin:top center;transition:transform .78s cubic-bezier(.35,.05,.2,1);}
-#wax{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#d4845a,#a05030);border:2.5px solid rgba(255,220,180,.5);display:flex;align-items:center;justify-content:center;color:rgba(255,245,230,.95);font-size:17px;font-family:Georgia,serif;font-style:italic;transition:opacity .35s;}
-#ribl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:280px;height:18px;pointer-events:none;}
-#rl{position:absolute;left:0;top:0;width:140px;height:18px;background:linear-gradient(90deg,#d890a0,#e8b8c0,#f5f0e8);border-radius:9px 0 0 9px;box-shadow:0 0 10px rgba(210,130,150,.5);transform-origin:right center;transition:transform .68s cubic-bezier(.38,0,.22,1),opacity .68s;}
-#rr{position:absolute;right:0;top:0;width:140px;height:18px;background:linear-gradient(90deg,#f5f0e8,#c8d890,#a8c065);border-radius:0 9px 9px 0;box-shadow:0 0 10px rgba(160,192,100,.45);transform-origin:left center;transition:transform .68s cubic-bezier(.38,0,.22,1),opacity .68s;}
-#bow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:54px;pointer-events:none;transition:transform .52s cubic-bezier(.38,0,.22,1),opacity .42s;}
+.fp-fleur{width:44px;height:44px;margin:2px 0 14px;overflow:visible;}
 
-#otp{position:absolute;inset:0;z-index:15;display:flex;align-items:center;justify-content:center;padding:28px 20px;opacity:0;pointer-events:none;transition:opacity .45s;}
-#otp.show{opacity:1;pointer-events:auto;}
-#otpb{background:rgba(255,252,248,.72);border:1px solid rgba(180,90,50,.22);border-radius:20px;padding:30px 26px 26px;width:100%;max-width:300px;text-align:center;box-shadow:0 8px 40px rgba(180,90,50,.15);}
-.ott{font-family:'Dancing Script',cursive;font-size:23px;color:#7c3010;margin-bottom:5px;}
-.ots{font-size:12px;font-style:italic;color:rgba(100,40,20,.58);margin-bottom:22px;line-height:1.5;}
-#otr{display:flex;gap:10px;justify-content:center;margin-bottom:20px;}
-.od{width:46px;height:54px;background:rgba(255,255,255,.8);border:1.5px solid rgba(180,90,50,.3);border-radius:12px;text-align:center;font-size:23px;font-weight:700;color:#7c3010;outline:none;-webkit-user-select:text;user-select:text;transition:border-color .2s,background .2s,box-shadow .2s;}
-.od:focus{border-color:rgba(160,70,30,.65);background:#fff;box-shadow:0 0 0 3px rgba(180,90,50,.18);}
-.od.filled{background:rgba(255,240,225,.9);border-color:rgba(160,80,40,.45);}
-.od.err{border-color:rgba(200,50,50,.7)!important;animation:errShake .32s;}
-#otbtn{width:100%;padding:13px;background:linear-gradient(135deg,#c2410c,#9a3412);border:none;border-radius:12px;color:#fff5ee;font-family:'Dancing Script',cursive;font-size:19px;cursor:pointer;margin-bottom:11px;transition:transform .12s,filter .2s;}
-#otbtn:hover{filter:brightness(1.1);}
-#otbtn:active{transform:scale(.975);}
-.oth{font-size:11px;font-style:italic;color:rgba(140,60,20,.42);}
+.fp-noms{font-size:14px;font-style:italic;color:rgba(100,40,20,.7);margin-bottom:4px;}
+.fp-phrase{font-size:13.5px;font-style:italic;color:rgba(100,40,20,.62);line-height:1.7;margin-bottom:18px;}
 
-#main{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;z-index:12;overflow:hidden;}
-#main.show{opacity:1;pointer-events:auto;animation:fadeUp .62s cubic-bezier(.2,0,.8,1) forwards;}
-#tabs{display:flex;flex-shrink:0;border-bottom:1px solid rgba(180,90,50,.18);background:rgba(255,252,248,.55);overflow-x:auto;-webkit-overflow-scrolling:touch;}
-#tabs::-webkit-scrollbar{display:none;}
-.tab{flex:0 0 auto;padding:11px 10px 9px;text-align:center;font-family:'Dancing Script',cursive;font-size:16px;color:rgba(130,55,25,.38);cursor:pointer;border-bottom:2.5px solid transparent;transition:color .22s,border-color .22s;white-space:nowrap;}
-.tab.on{color:#b45309;border-bottom-color:#b45309;background:rgba(255,252,248,.7);}
-.tab.off{opacity:.28;pointer-events:none;}
-.tab.hidden{display:none;}
-.albf.hidden{display:none;}
-#panels{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-.pnl{display:none;flex-direction:column;align-items:center;padding:18px 16px 28px;}
-.pnl.on{display:flex;animation:tabIn .28s ease;}
+.fp-sep{display:flex;align-items:center;gap:8px;width:72%;margin:0 auto 18px;}
+.fp-sep-line{flex:1;height:1px;background:rgba(160,80,40,.18);}
+.fp-sep-dot{width:5px;height:5px;border-radius:50%;background:rgba(160,80,40,.38);}
 
-/* FAIRE-PART */
-.fps{font-size:10px;letter-spacing:3px;text-transform:uppercase;font-style:italic;color:rgba(110,45,20,.48);margin-bottom:4px;}
-.fpd{color:rgba(180,90,50,.3);}
-.fpsa{font-family:'Dancing Script',cursive;font-size:100px;font-weight:700;color:#922010;line-height:.9;text-shadow:0 0 30px rgba(180,70,30,.22);margin-bottom:-2px;}
-.fpye{font-family:'Dancing Script',cursive;font-size:36px;font-weight:600;color:#7c3010;line-height:1;letter-spacing:.5px;margin-bottom:8px;}
-.fpi{font-size:13.5px;font-style:italic;color:rgba(100,40,20,.68);text-align:center;line-height:1.7;}
-.fpi2{font-size:13.5px;font-style:italic;color:rgba(100,40,20,.68);text-align:center;line-height:1.7;margin-bottom:10px;}
-.fpadr{font-size:11px;font-style:italic;text-align:center;margin-bottom:14px;}
-.fpadr a{color:#b45309;text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(180,83,9,.35);}
-.fpadr a:hover{text-decoration-color:rgba(180,83,9,.8);}
-.fpsp{display:flex;align-items:center;gap:8px;width:78%;margin:4px 0 10px;}
-.fpsl{flex:1;height:1px;background:rgba(160,80,40,.18);}
-.fpsd{width:5px;height:5px;border-radius:50%;background:rgba(160,80,40,.38);}
-.fpdt{font-size:15px;font-weight:700;letter-spacing:1px;color:#7c3010;margin-bottom:2px;text-align:center;width:100%;}
-.fplc{font-size:12px;font-style:italic;color:rgba(100,50,20,.6);margin-bottom:3px;}
-.fpck{font-size:11px;font-style:italic;color:rgba(100,50,20,.5);text-align:center;line-height:1.65;border-top:1px solid rgba(160,80,40,.12);padding-top:11px;width:100%;margin-bottom:14px;}
+.fp-maintenance{
+  background:rgba(255,252,248,.55);
+  border:1px solid rgba(180,90,50,.18);
+  border-radius:16px;
+  padding:20px 22px;
+  width:100%;
+  margin-bottom:20px;
+}
+.fp-maintenance-icon{font-size:32px;margin-bottom:10px;}
+.fp-maintenance-title{font-family:'Dancing Script',cursive;font-size:22px;color:#7c3010;margin-bottom:8px;}
+.fp-maintenance-msg{
+  font-size:12.5px;font-style:italic;
+  color:rgba(100,40,20,.68);
+  line-height:1.75;
+}
+.fp-maintenance-contact{
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid rgba(160,80,40,.12);
+  font-size:11px;font-style:italic;
+  color:rgba(130,60,25,.55);
+  animation:deadlinePulse 3s ease-in-out infinite;
+}
 
-/* BOUTON CONFIRMER PRÉSENCE */
-#btn-confirm{width:100%;padding:13px;background:linear-gradient(135deg,#c2410c,#9a3412);border:none;border-radius:12px;color:#fff5ee;font-family:'Dancing Script',cursive;font-size:18px;cursor:pointer;transition:transform .12s,filter .2s;animation:btnPulse 2.5s ease-in-out infinite;}
-#btn-confirm:hover{filter:brightness(1.1);}
-#btn-confirm:active{transform:scale(.975);}
-#btn-confirm.done{background:linear-gradient(135deg,#3a7020,#2d5518);animation:none;}
-
-/* COCKTAIL */
-.ckl{font-size:10px;letter-spacing:3px;text-transform:uppercase;font-style:italic;color:rgba(130,55,25,.45);margin-bottom:5px;}
-.ckt{font-family:'Dancing Script',cursive;font-size:31px;font-weight:700;color:#7c3010;margin-bottom:4px;}
-.ckc{background:rgba(255,252,248,.55);border:1px solid rgba(180,90,50,.18);border-radius:15px;padding:16px 18px;width:100%;text-align:center;}
-.cki{font-size:12.5px;font-style:italic;color:rgba(100,45,20,.7);line-height:1.68;margin-bottom:13px;}
-.ckr{display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:5px;}
-.ckic{width:15px;height:15px;opacity:.6;flex-shrink:0;}
-.cktx{font-size:12px;color:rgba(110,50,20,.72);}
-.cksp{width:48px;height:1px;background:rgba(160,80,40,.15);margin:10px auto;}
-.qrw{display:flex;flex-direction:column;align-items:center;margin-top:2px;}
-.qrl{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-style:italic;color:rgba(130,60,25,.45);margin-bottom:9px;}
-.qrc{position:relative;display:inline-block;border-radius:12px;overflow:hidden;}
-.qrc.act svg{animation:qrGlow 2.6s ease-in-out infinite;}
-.qrc.lkd{filter:grayscale(1) opacity(.35);}
-.qrlk{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(245,240,232,.7);border-radius:12px;}
-.qrlkt{font-size:10px;font-style:italic;color:rgba(120,50,20,.65);letter-spacing:1px;margin-top:4px;}
-.qrst{margin-top:7px;font-size:11px;font-style:italic;}
-.qrst.on{color:#3a7020;}
-.qrst.off{color:rgba(150,60,40,.6);}
-
-/* RSVP */
-.rvh{width:100%;text-align:center;margin-bottom:14px;}
-.rvt{font-family:'Dancing Script',cursive;font-size:29px;font-weight:700;color:#7c3010;margin-bottom:2px;}
-.rvdl{font-size:11px;font-style:italic;color:#b45309;animation:deadlinePulse 3s ease-in-out infinite;}
-.rvc{background:rgba(255,252,248,.55);border:1px solid rgba(180,90,50,.18);border-radius:15px;padding:18px 16px 20px;width:100%;}
-.rvse{margin-bottom:15px;}
-.rvq{font-size:11.5px;font-style:italic;color:rgba(110,45,20,.68);margin-bottom:10px;text-align:center;}
-.rvpr{display:flex;gap:10px;}
-.rvb{flex:1;padding:11px 6px;border-radius:10px;font-family:'Dancing Script',cursive;font-size:17px;cursor:pointer;transition:all .22s;text-align:center;border:1.5px solid transparent;}
-.rvb.yes{background:rgba(150,192,100,.28);border-color:rgba(110,160,50,.48);color:#2d6010;}
-.rvb.no{background:rgba(210,120,140,.25);border-color:rgba(185,90,110,.42);color:#8c1030;}
-.rvb.neu{background:rgba(255,252,248,.5);border-color:rgba(180,90,50,.22);color:rgba(120,50,20,.65);}
-.rvdg{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.rvdb{padding:9px 5px;border-radius:9px;border:1.5px solid rgba(180,90,50,.22);background:rgba(255,252,248,.38);color:rgba(110,45,20,.62);font-size:11px;cursor:pointer;transition:all .22s;text-align:center;font-style:italic;}
-.rvdb.sel{background:rgba(200,120,70,.28);border-color:rgba(180,90,40,.48);color:#7c3010;}
-.rvmg{width:100%;background:rgba(255,255,255,.6);border:1.5px solid rgba(180,90,50,.22);border-radius:10px;color:rgba(100,40,20,.82);font-size:12px;font-style:italic;padding:10px 12px;resize:none;outline:none;line-height:1.62;min-height:78px;transition:border-color .2s;}
-.rvmg:focus{border-color:rgba(160,80,40,.5);}
-.rvmg::placeholder{color:rgba(160,90,50,.32);}
-.rvmg.err-field{border-color:rgba(200,50,50,.6);}
-.rv-count{font-size:10px;font-style:italic;text-align:right;margin-top:3px;transition:color .2s;}
-.rv-count.ok{color:rgba(50,110,20,.6);}
-.rv-count.ko{color:rgba(180,50,30,.6);}
-.rvsb{width:100%;padding:13px;background:linear-gradient(135deg,#c2410c,#9a3412);border:none;border-radius:12px;color:#fff5ee;font-family:'Dancing Script',cursive;font-size:18px;cursor:pointer;margin-top:13px;transition:transform .12s,filter .2s;}
-.rvsb:hover{filter:brightness(1.08);}
-.rvsb:active{transform:scale(.975);}
-.rver{font-size:11px;color:rgba(180,40,30,.65);font-style:italic;text-align:center;margin-top:7px;min-height:15px;}
-#rvok{display:none;flex-direction:column;align-items:center;justify-content:center;padding:28px 18px;text-align:center;min-height:280px;}
-.rvokc{width:68px;height:68px;border-radius:50%;background:rgba(120,180,80,.22);border:2px solid rgba(100,160,60,.45);display:flex;align-items:center;justify-content:center;margin-bottom:15px;}
-.rvokt{font-family:'Dancing Script',cursive;font-size:26px;color:#7c3010;margin-bottom:7px;}
-.rvokm{font-size:12px;font-style:italic;color:rgba(100,45,20,.65);line-height:1.7;}
-.rv-priv{font-size:10px;font-style:italic;color:rgba(130,60,25,.42);margin-top:8px;border-top:1px solid rgba(160,80,40,.12);padding-top:8px;}
-.rved{margin-top:15px;padding:8px 20px;border-radius:20px;border:1px solid rgba(180,90,50,.22);background:rgba(255,252,248,.5);color:rgba(120,50,20,.6);font-size:11px;font-style:italic;cursor:pointer;}
-
-/* ALBUM */
-#p5{padding:14px 12px 24px;}
-.albt{font-family:'Dancing Script',cursive;font-size:27px;font-weight:700;color:#7c3010;text-align:center;margin-bottom:10px;}
-.albfs{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:9px;}
-.albf{padding:5px 12px;border-radius:20px;font-size:11px;font-style:italic;cursor:pointer;transition:all .2s;white-space:nowrap;}
-.albf.on{background:rgba(194,65,12,.25);border:1px solid rgba(180,70,20,.48);color:#7c2d12;}
-.albf.off{background:rgba(255,252,248,.5);border:1px solid rgba(180,90,50,.2);color:rgba(120,55,20,.55);}
-.albf.lk{opacity:.28;pointer-events:none;}
-/* Filtre spécial "Il était une fois" — doré/sépia */
-.albf.once{background:rgba(160,110,40,.18);border:1px solid rgba(140,90,30,.35);color:rgba(110,70,20,.75);}
-.albf.once.on{background:rgba(160,110,40,.28);border-color:rgba(140,90,30,.55);color:#7c4a10;}
-.albct{font-size:10px;font-style:italic;color:rgba(130,60,25,.42);text-align:center;margin-bottom:9px;}
-.albg{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;width:100%;}
-.albc{position:relative;aspect-ratio:1;border-radius:4px;overflow:hidden;cursor:pointer;}
-.albc:hover .albov{opacity:1;}
-.albov{position:absolute;inset:0;background:rgba(255,252,248,.28);opacity:0;transition:opacity .18s;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:6px;}
-.alb-tag{font-size:9px;font-style:italic;color:rgba(255,252,248,.9);background:rgba(100,40,10,.45);padding:2px 6px;border-radius:8px;max-width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.albph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
-.albph-tag{font-size:9px;font-style:italic;color:rgba(255,252,248,.65);background:rgba(0,0,0,.2);padding:2px 5px;border-radius:6px;}
-.albup{width:100%;margin-top:11px;display:flex;justify-content:center;}
-.albub{display:flex;align-items:center;gap:6px;padding:10px 18px;border-radius:12px;border:1.5px dashed rgba(180,90,50,.3);background:rgba(255,252,248,.38);color:rgba(120,55,20,.65);font-size:12px;font-style:italic;cursor:pointer;transition:all .2s;}
-.albub:hover{background:rgba(255,252,248,.6);border-color:rgba(180,90,50,.5);}
-.albno-upload{width:100%;margin-top:10px;text-align:center;font-size:10px;font-style:italic;color:rgba(130,70,25,.42);}
-.albem{width:100%;text-align:center;padding:28px 0;font-size:12px;font-style:italic;color:rgba(130,60,25,.38);}
-#alfi{display:none;}
-
-/* LIGHTBOX */
-#lb{position:absolute;inset:0;z-index:30;background:rgba(245,240,232,.95);display:none;flex-direction:column;align-items:center;justify-content:center;animation:lbIn .22s ease;}
-#lb.open{display:flex;}
-#lbimg{max-width:90%;max-height:65vh;border-radius:10px;object-fit:contain;}
-#lbph{border-radius:10px;display:none;align-items:center;justify-content:center;}
-#lbcap{font-size:12px;font-style:italic;color:rgba(100,45,20,.65);margin-top:10px;text-align:center;}
-#lbtag{font-size:11px;font-style:italic;color:#b45309;margin-top:3px;text-align:center;}
-#lbctr{font-size:11px;font-style:italic;color:rgba(140,65,25,.45);margin-top:2px;}
-#lbx{position:absolute;top:14px;right:15px;background:rgba(255,252,248,.8);border:1px solid rgba(180,90,50,.25);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#7c3010;font-size:15px;}
-#lbpv,#lbnx{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,252,248,.75);border:1px solid rgba(180,90,50,.22);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#7c3010;font-size:18px;transition:background .18s;}
-#lbpv{left:8px;}#lbnx{right:8px;}
-#lbpv:hover,#lbnx:hover{background:rgba(255,252,248,.95);}
+.fp-copy{
+  font-size:10px;font-style:italic;
+  color:rgba(100,45,20,.32);
+  margin-top:8px;
+}
 </style>
 </head>
 <body>
 <div id="scene">
-<div class="au" id="au1"></div><div class="au" id="au2"></div><div class="au" id="au3"></div>
 
-<svg class="fl" id="fl1" viewBox="0 0 100 100">
-  <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d890a0"/><stop offset="45%" stop-color="#f5f0e8"/><stop offset="100%" stop-color="#90b840"/></linearGradient></defs>
-  <path class="pp" id="p1" stroke="url(#g1)" d="M50,50 C40,30 18,20 28,9 C38,-2 50,14 50,24 C50,14 62,-2 72,9 C82,20 60,30 50,50 C62,28 80,36 79,52 C78,68 58,58 50,50 C60,62 68,80 53,84 C38,88 38,68 50,50 C38,68 18,78 13,62 C8,46 30,42 50,50"/>
-</svg>
-<svg class="fl" id="fl2" viewBox="0 0 90 90">
-  <defs><linearGradient id="g2" x1="1" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#90b840"/><stop offset="50%" stop-color="#f0e8d8"/><stop offset="100%" stop-color="#d880a0"/></linearGradient></defs>
-  <path class="pp" id="p2" stroke="url(#g2)" d="M45,45 C36,27 18,19 26,9 C34,-1 45,13 45,22 C45,13 56,-1 64,9 C72,19 54,27 45,45 C54,29 70,36 68,49 C66,62 50,53 45,45 C52,56 60,72 47,76 C34,80 34,62 45,45 C34,62 16,70 13,56 C10,42 29,39 45,45"/>
-</svg>
-<svg class="fl" id="fl3" viewBox="0 0 78 78">
-  <defs><linearGradient id="g3" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#a0c050"/><stop offset="40%" stop-color="#f5f0e8"/><stop offset="100%" stop-color="#c06080"/></linearGradient></defs>
-  <path class="pp" id="p3" stroke="url(#g3)" d="M39,39 C31,23 18,17 23,9 C28,1 39,13 39,21 C39,13 50,1 55,9 C60,17 47,23 39,39 C47,25 61,30 59,41 C57,52 44,44 39,39 C45,49 52,61 40,65 C28,69 29,56 39,39 C29,56 15,63 11,50 C7,37 25,35 39,39 M39,50 L37,64"/>
-</svg>
+  <!-- En-tête faire-part -->
+  <svg viewBox="0 0 155 5" style="width:155px;margin-bottom:10px;overflow:visible">
+    <line x1="0" y1="2.5" x2="155" y2="2.5" stroke="rgba(160,80,40,.2)" stroke-width=".8" stroke-dasharray="3 4"/>
+  </svg>
+  <div class="fp-sub"><span class="fp-div">— </span>Save the date<span class="fp-div"> —</span></div>
 
-<div id="bprev"><div class="bpi">
-  <div class="bpsd">Oui</div><div class="bpye">pour la vie</div>
-  <div class="bpna">Lynda &amp; Marcel-Cédric</div><div class="bpdt">15 / 05 / 2026</div>
-</div></div>
+  <div class="fp-oui">Oui</div>
+  <div class="fp-vie">pour la vie</div>
 
-<div id="ewrap">
-  <div id="env"><div class="ebt"></div><div class="el"></div><div class="er"></div><div class="eb"><div id="wax">E</div></div><div id="eflap"></div></div>
-  <div id="ribl"><div id="rl"></div><div id="rr"></div></div>
-  <div id="bow"><svg viewBox="0 0 64 54" width="64" height="54" style="overflow:visible">
-    <path d="M32,27 C23,19 7,15 9,23 C11,31 25,29 32,27 C25,29 19,40 25,42 C31,44 32,31 32,27" fill="rgba(216,144,160,.9)" stroke="rgba(240,180,190,.75)" stroke-width="1"/>
-    <path d="M32,27 C41,19 57,15 55,23 C53,31 39,29 32,27 C39,29 45,40 39,42 C33,44 32,31 32,27" fill="rgba(168,192,100,.85)" stroke="rgba(200,220,140,.7)" stroke-width="1"/>
-    <line x1="32" y1="30" x2="29" y2="47" stroke="rgba(200,165,130,.7)" stroke-width="1.6" stroke-linecap="round"/>
-    <line x1="32" y1="30" x2="35" y2="47" stroke="rgba(185,155,120,.65)" stroke-width="1.3" stroke-linecap="round"/>
-    <circle cx="32" cy="27" r="4.5" fill="rgba(245,240,232,.95)" stroke="rgba(200,170,140,.5)" stroke-width="1.2"/>
-  </svg></div>
-</div>
+  <!-- Fleur décorative -->
+  <svg class="fp-fleur" viewBox="0 0 78 78">
+    <defs>
+      <linearGradient id="gf" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#d890a0"/>
+        <stop offset="45%" stop-color="#f5f0e8"/>
+        <stop offset="100%" stop-color="#90b840"/>
+      </linearGradient>
+    </defs>
+    <path fill="none" stroke="url(#gf)" stroke-width="1.5" stroke-linecap="round"
+      stroke-dasharray="700" stroke-dashoffset="0"
+      d="M39,39 C31,23 18,17 23,9 C28,1 39,13 39,21 C39,13 50,1 55,9 C60,17 47,23 39,39 C47,25 61,30 59,41 C57,52 44,44 39,39 C45,49 52,61 40,65 C28,69 29,56 39,39 C29,56 15,63 11,50 C7,37 25,35 39,39 M39,50 L37,64"
+      style="animation:glowPulse 2.6s ease-in-out infinite"/>
+  </svg>
 
-<div id="otp"><div id="otpb">
-  <div class="ott">Votre invitation vous attend</div>
-  <div class="ots">Entrez le code reçu par SMS</div>
-  <div id="otr">
-    <input class="od" id="d0" maxlength="1" type="tel" inputmode="numeric" autocomplete="one-time-code">
-    <input class="od" id="d1" maxlength="1" type="tel" inputmode="numeric" autocomplete="off">
-    <input class="od" id="d2" maxlength="1" type="tel" inputmode="numeric" autocomplete="off">
-    <input class="od" id="d3" maxlength="1" type="tel" inputmode="numeric" autocomplete="off">
+  <div class="fp-noms">Lynda &amp; Marcel-Cédric</div>
+  <div class="fp-phrase">seront ravis de vous compter parmi leurs convives</div>
+
+  <div class="fp-sep">
+    <div class="fp-sep-line"></div>
+    <div class="fp-sep-dot"></div>
+    <div class="fp-sep-line"></div>
   </div>
-  <button id="otbtn">Ouvrir mon invitation</button>
-  <div class="oth">@ Mundo Archi Product</div>
-</div></div>
 
-<div id="main">
-  <div id="tabs">
-    <div class="tab on"  id="t0">Faire-part</div>
-    <div class="tab"     id="t1">RSVP</div>
-    <div class="tab hidden" id="t2">Cocktail famille</div>
-    <div class="tab hidden" id="t3">Repas de mariage</div>
-    <div class="tab"     id="t4">Album</div>
+  <!-- Message maintenance -->
+  <div class="fp-maintenance">
+    <div class="fp-maintenance-icon">🌸</div>
+    <div class="fp-maintenance-title">Pas de Panique</div>
+    <div class="fp-maintenance-msg">
+      Votre invitation personnelle reste inchangée, elle est en cours de finalisation.<br>
+      Vous la recevrez très prochainement.
+    </div>
+    <div class="fp-maintenance-contact">
+      Veuillez contacter les mariés pour toute<br>préoccupation liée à votre invitation.
+    </div>
   </div>
-  <div id="panels">
 
-    <!-- P0 : FAIRE-PART -->
-    <div class="pnl on" id="p0">
-      <svg viewBox="0 0 155 5" style="width:155px;margin-bottom:8px;overflow:visible"><line x1="0" y1="2.5" x2="155" y2="2.5" stroke="rgba(160,80,40,.2)" stroke-width=".8" stroke-dasharray="3 4"/></svg>
-      <div class="fps"><span class="fpd">— </span>Save the date<span class="fpd"> —</span></div>
-      <div class="fpsa">Oui</div><div class="fpye">pour la vie</div>
-      <svg viewBox="0 0 78 78" style="width:46px;height:46px;margin:2px 0 9px;overflow:visible">
-        <defs><linearGradient id="gf" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d890a0"/><stop offset="45%" stop-color="#f5f0e8"/><stop offset="100%" stop-color="#90b840"/></linearGradient></defs>
-        <path fill="none" stroke="url(#gf)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="700" stroke-dashoffset="0"
-          d="M39,39 C31,23 18,17 23,9 C28,1 39,13 39,21 C39,13 50,1 55,9 C60,17 47,23 39,39 C47,25 61,30 59,41 C57,52 44,44 39,39 C45,49 52,61 40,65 C28,69 29,56 39,39 C29,56 15,63 11,50 C7,37 25,35 39,39 M39,50 L37,64"
-          style="animation:glowPulse 2.6s ease-in-out infinite"/>
-      </svg>
-      <div class="fpi">Lynda &amp; Marcel-Cédric</div>
-      <div class="fpi2">seront ravis de vous compter parmi leurs convives</div>
-      <div class="fpsp"><div class="fpsl"></div><div class="fpsd"></div><div class="fpsl"></div></div>
-      <div id="fp-ceremonie-bloc">
-        <div class="fpdt"><span style="font-weight:400;font-style:italic;">Vendredi</span> 15 / 05 / 2026</div>
-        <div class="fplc">Mairie du 11 ème arrondissement de Paris à 15h précises</div>
-        <div class="fpadr"><a href="https://maps.google.com/?q=1+Place+Léon+Blum,+75011+Paris" target="_blank" rel="noopener">1 place Léon Blum, 75011 Paris</a></div>
-      </div>
-      <div id="fp-repas-bloc" style="display:none;">
-        <div class="fpdt"><span style="font-weight:400;font-style:italic;">Samedi</span> 16 / 05 / 2026</div>
-        <div class="fplc">Salle du Parvis de Marolles en Brie</div>
-        <div class="fpadr"><a href="https://maps.google.com/?q=13+avenue+de+Gros+Bois,+94440+Marolles-en-Brie" target="_blank" rel="noopener">13 avenue de Gros Bois, 94440 Marolles-en-Brie</a></div>
-      </div> 
-      <div class="fpck" id="fpck-msg">La cérémonie civile aura lieu en présence de nos proches.</div>
-      <div class="fpck" id="fpck-msg">Dress Code : African Chic</div>
-      <button id="btn-confirm">Confirmer votre présence</button>
-    </div>
+  <div class="fp-copy"> 2026 · Mundo Archi - Tous droits réservés</div>
 
-    <!-- P1 : RSVP -->
-    <div class="pnl" id="p1">
-      <div class="rvh"><div class="rvt">Votre réponse</div><div class="rvdl">Répondre avant le 15 avril 2026</div></div>
-      <div class="rvc" id="rvf">
-        <div class="rvse"><div class="rvq" id="rvq-ceremonie">Serez-vous présent(e) à la cérémonie ?</div>
-          <div class="rvpr">
-            <button class="rvb neu" id="byes">Oui, avec joie</button>
-            <button class="rvb neu" id="bno">Je ne pourrai pas</button>
-          </div></div>
-        <!-- Section cocktail famille — visible niveau 2 et 2+3 -->
-        <div class="rvse" id="sck1" style="display:none;">
-          <div class="rvq">Serez-vous présent(e) au cocktail famille ?</div>
-          <div class="rvpr">
-            <button class="rvb neu" id="bck1yes">Oui, avec joie</button>
-            <button class="rvb neu" id="bck1no">Je ne pourrai pas</button>
-          </div>
-        </div>
-        <!-- Section repas de mariage — visible niveau 3 et 2+3 -->
-        <div class="rvse" id="sck2" style="display:none;">
-          <div class="rvq">Serez-vous présent(e) au repas de mariage ?</div>
-          <div class="rvpr">
-            <button class="rvb neu" id="bck2yes">Oui, avec joie</button>
-            <button class="rvb neu" id="bck2no">Je ne pourrai pas</button>
-          </div>
-        </div>
-        <div class="rvse" id="sdiet" style="display:none;"><div class="rvq">Régime alimentaire</div>
-          <div class="rvdg" id="dgrid">
-            <button class="rvdb" data-v="std">Aucune restriction</button><button class="rvdb" data-v="veg">Végétarien</button>
-            <button class="rvdb" data-v="vgn">Vegan</button><button class="rvdb" data-v="hal">Halal</button>
-            <button class="rvdb" data-v="sgl">Sans gluten</button><button class="rvdb" data-v="alg">Allergie(s)</button>
-          </div></div>
-        <div class="rvse">
-          <div class="rvq">Un mot pour Lynda &amp; Marcel-Cédric <span style="color:rgba(180,50,30,.6);font-size:10px;">(min. 20 caractères)</span></div>
-          <textarea class="rvmg" id="rvmsg" rows="3" placeholder="Votre message pour les mariés…"></textarea>
-          <div class="rv-count ko" id="rv-count">0 / 20 caractères minimum</div>
-        </div>
-        <div class="rver" id="rverr"></div>
-        <button class="rvsb" id="rvsub">Envoyer ma réponse</button>
-      </div>
-      <div id="rvok">
-        <div class="rvokc"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><path id="ckp" d="M9 18l6 6 12-12" stroke="rgba(80,160,50,.9)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="60" stroke-dashoffset="60"/></svg></div>
-        <div class="rvokt" id="rvokt">Merci !</div>
-        <div class="rvokm" id="rvokm"></div>
-        <div class="rv-priv">Votre message a été transmis en privé à Lynda &amp; Marcel-Cédric.</div>
-        <button class="rved" id="rved">Modifier ma réponse</button>
-      </div>
-    </div>
-
-    <!-- P2 : COCKTAIL 1 -->
-    <div class="pnl" id="p2">
-      <div class="ckl">Invitation exclusive</div><div class="ckt">Cocktail famille</div>
-      <div class="ckc">
-        <div class="cki">Vous êtes invité(e) au Cocktail famille<br>qui se tiendra à l'adresse suivante</div>
-        <div class="ckr"><svg class="ckic" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5s4.5-5 4.5-8.5c0-2.5-2-4.5-4.5-4.5zm0 6a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" fill="rgba(160,80,40,.65)"/></svg><a href="https://maps.google.com/?q=22+avenue+de+Paris,+94300+Vincennes" target="_blank" rel="noopener" class="cktx" style="color:inherit;text-decoration:underline;text-underline-offset:2px;">Restaurant Absolu — 22 av. de Paris, 94300 Vincennes</a></div>
-        <div class="ckr"><svg class="ckic" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="2" stroke="rgba(160,80,40,.65)" stroke-width="1.2"/><line x1="2" y1="6.5" x2="14" y2="6.5" stroke="rgba(160,80,40,.65)" stroke-width="1"/><line x1="5" y1="2" x2="5" y2="4.5" stroke="rgba(160,80,40,.65)" stroke-width="1.2" stroke-linecap="round"/><line x1="11" y1="2" x2="11" y2="4.5" stroke="rgba(160,80,40,.65)" stroke-width="1.2" stroke-linecap="round"/></svg><span class="cktx">Vendredi 15 mai 2026 — 16h à 21h</span></div>
-        <div class="cksp"></div>
-        <div class="qrw"><div class="qrl">Votre accès</div>
-        <div style="position:relative;display:inline-block;border-radius:12px;overflow:hidden;">
-            <img src="/preview.jpeg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.45);border-radius:12px;">  
-            <div class="qrc act" id="qr1w" style="position:relative;z-index:1;"><div id="qr1" style="width:130px;height:130px;border-radius:10px;overflow:hidden;background:rgba(255,252,248,.15);padding:8px;"></div></div>
-          </div>
-          <div class="qrst on">✓ Accès activé</div></div>
-      </div>
-    </div>
-
-    <!-- P3 : Repas de famille -->
-    <div class="pnl" id="p3">
-      <div class="ckl">Invitation exclusive</div><div class="ckt">Repas de mariage</div>
-      <div class="ckc">
-        <div class="cki">Vous êtes invité(e) au Repas de mariage<br>qui se tiendra à l'adresse suivante</div>
-        <div class="ckr"><svg class="ckic" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5s4.5-5 4.5-8.5c0-2.5-2-4.5-4.5-4.5zm0 6a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" fill="rgba(160,80,40,.65)"/></svg><a href="https://maps.google.com/?q=13+avenue+de+Gros+Bois,+94440+Marolles-en-Brie" target="_blank" rel="noopener" class="cktx" style="color:inherit;text-decoration:underline;text-underline-offset:2px;">Salle du Parvis — 13 av. de Gros Bois, 94440 Marolles-en-Brie</a></div>
-        <div class="ckr"><svg class="ckic" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="2" stroke="rgba(160,80,40,.65)" stroke-width="1.2"/><line x1="2" y1="6.5" x2="14" y2="6.5" stroke="rgba(160,80,40,.65)" stroke-width="1"/><line x1="5" y1="2" x2="5" y2="4.5" stroke="rgba(160,80,40,.65)" stroke-width="1.2" stroke-linecap="round"/><line x1="11" y1="2" x2="11" y2="4.5" stroke="rgba(160,80,40,.65)" stroke-width="1.2" stroke-linecap="round"/></svg><span class="cktx">Samedi 16 mai 2026 — à partir de 12h</span></div>
-        <div class="cksp"></div>
-        <div class="qrw"><div class="qrl">Votre accès</div>
-          <div style="position:relative;display:inline-block;border-radius:12px;overflow:hidden;">
-            <img src="/preview.jpeg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.45);border-radius:12px;"> 
-            <div class="qrc act" id="qr2w" style="position:relative;z-index:1;"><div id="qr2" style="width:130px;height:130px;border-radius:10px;overflow:hidden;background:rgba(255,252,248,.15);padding:8px;"></div></div>
-            </div>
-          </div> 
-          <div class="qrst on">Accès activé</div></div>
-      </div>
-    </div>
-
-    <!-- P4 : ALBUM -->
-    <div class="pnl" id="p4" style="padding:14px 12px 24px;">
-      <div class="albt">Notre album</div>
-      <div class="albfs" id="afs">
-        <button class="albf once on" data-c="once">Il était une fois</button>
-        <button class="albf off hidden" data-c="cer" id="af-cer">Cérémonie</button>
-        <button class="albf off hidden" data-c="ck1" id="af1">Cocktail famille</button>
-        <button class="albf off hidden" data-c="ck2" id="af2">Repas de mariage</button>
-      </div>
-      <div class="albct" id="alct"></div>
-      <div class="albg" id="alg"></div>
-      <div class="albem" id="alem" style="display:none;">Aucune photo dans cette catégorie</div>
-      <div id="alb-upload-zone">
-        <div class="albup"><label class="albub" for="alfi">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 5l3-3 3 3" stroke="rgba(140,65,25,.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="2" y="11" width="12" height="3" rx="1.5" fill="rgba(140,65,25,.35)"/></svg>
-          Ajouter une photo
-        </label><input type="file" id="alfi" accept="image/*" multiple></div>
-        <div id="alb-no-upload" class="albno-upload" style="display:none;">
-          Cet album est géré par les mariés
-        </div>
-      </div>
-    </div>
-
-  </div>
 </div>
-
-<div id="lb">
-  <button id="lbx">✕</button><button id="lbpv">‹</button>
-  <img id="lbimg" src="" alt=""><div id="lbph"></div>
-  <div id="lbcap"></div><div id="lbtag"></div><div id="lbctr"></div>
-  <button id="lbnx">›</button>
-</div>
-<div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10px;font-style:italic;color:rgba(100,45,20,.35);z-index:1;">© 2026 · Mundo Archi - Tous droits réservés</div>
- 
-<!-- TAB BAR -->
-<div id="tabbar" style="display:none;position:absolute;bottom:0;left:0;right:0;background:rgba(255,252,248,.92);border-top:1px solid rgba(180,90,50,.15);justify-content:space-around;align-items:center;padding:8px 4px 12px;z-index:20;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);"></div>
-</div>
-
-<script>
-(function(){
-var pr=null,di=[],lv=3,af='once',lbi=0,lbv=[],confirmed=false;
-var guestToken='';
-var guestJwt='';
-var prCk1=null, prCk2=null;
-
-var photos=[];  /* tableau vide — les photos viennent de Google Drive */
-
-
-function g(id){return document.getElementById(id);}
-function w(ms){return new Promise(function(r){setTimeout(r,ms);});}
-
-var ds=['d0','d1','d2','d3'].map(function(id){return g(id);});
-ds.forEach(function(inp,i){
-  inp.addEventListener('keydown',function(e){
-    if(e.key==='Backspace'){if(inp.value){inp.value='';inp.classList.remove('filled');}else if(i>0){ds[i-1].focus();ds[i-1].value='';ds[i-1].classList.remove('filled');}e.preventDefault();}
-    if(e.key==='Enter')chk();
-  });
-  inp.addEventListener('input',function(){var v=inp.value.replace(/\D/g,'').slice(-1);inp.value=v;if(v){inp.classList.add('filled');if(i<3)ds[i+1].focus();}else inp.classList.remove('filled');});
-  inp.addEventListener('paste',function(e){var t=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'');if(t.length>=4){ds.forEach(function(d,j){d.value=t[j]||'';t[j]?d.classList.add('filled'):d.classList.remove('filled');});ds[3].focus();e.preventDefault();}});
-  inp.addEventListener('click',function(){inp.select();});
-});
-g('otbtn').addEventListener('click',chk);
-
-function chk(){
-  var c=ds.map(function(d){return d.value;}).join('');
-  if(c==='2701'){go(1);return;}
-  if(c==='2702'){go(2);return;}
-  if(c==='2703'){go(3);return;}
-  if(c==='2704'){go(4);return;}
-  if(c.length===4) verifyReal(c);
-  else ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
-}
-
-function go(l){
-  lv=l;
-  var o=g('otp');o.style.transition='opacity .42s';o.style.opacity='0';setTimeout(function(){o.remove();},450);
-  g('main').classList.add('show');
-  var siteUrl = window.location.origin;
-  if(l===2||l>=4) qr('qr1', siteUrl+'/scanner.html?g='+guestToken+'&e=ck1');
-  if(l===3||l>=4) qr('qr2', siteUrl+'/scanner.html?g='+guestToken+'&e=ck2');
-
-  /* Message faire-part dynamique selon niveau */
-  var fpck=g('fpck-msg');
-  if(fpck){
-    if(l===2) fpck.textContent="La cérémonie civile sera suivie d'un cocktail réservé à la famille, et nous serons ravis de vous savoir parmi nous afin de célébrer cette union.";
-    else if(l===3) fpck.textContent="La cérémonie civile se déroulera avec la famille restreinte, et nous serons ravis de vous compter parmi nous pour célébrer notre union autour d'un repas.";
-    else if(l>=4) fpck.textContent="La cérémonie civile sera suivie d'un cocktail réservé à la famille à la sortie de la mairie, et un repas de mariage est prévu le jour d'après. Nous serons ravis de vous savoir parmi nous pour célébrer cette union.";
-    else fpck.textContent="La cérémonie civile aura lieu en présence de nos proches.";
-  }
-
-  /* Affichage date/lieu selon niveau */
-var fcb = g('fp-ceremonie-bloc');
-var frb = g('fp-repas-bloc');
-if(l===3){
-  if(fcb) fcb.style.display='none';
-  if(frb) frb.style.display='block';
-} else {
-  if(fcb) fcb.style.display='block';
-  if(frb) frb.style.display='none';
-}
-
-  /* Afficher les sections RSVP cocktail selon niveau */
-if(l===2 && g('sck1')) g('sck1').style.display='block';
-if(l===3 && g('sck2')) g('sck2').style.display='none';
-if(l>=4 && g('sck1')) g('sck1').style.display='block';
-if(l>=4 && g('sck2')) g('sck2').style.display='block';
-
-if(l===3){
-  var rvqc=g('rvq-ceremonie');
-  if(rvqc) rvqc.textContent='Serez-vous présent(e) au repas de mariage ?';
-  g('byes').textContent='Oui, avec joie';
-  g('bno').textContent='Je ne pourrai pas';
-}
-
-/* niveau 3 : pas d'accès au cocktail famille dans l'album */
-if(l===3 && g('af1')) g('af1').classList.add('hidden');
-
-  /* Charger l'album dès l'authentification */
-  setTimeout(function(){ loadAlbum('once'); }, 300);
-}
-
-/* Bouton "Confirmer votre présence" → va au RSVP */
-g('btn-confirm').addEventListener('click',function(){
-  switchTab(1);
-});
-
-/* Tabs */
-g('tabs').addEventListener('click',function(e){
-  var t=e.target.closest('.tab');
-  if(!t||t.classList.contains('off')||t.classList.contains('hidden'))return;
-  var ids=['t0','t1','t2','t3','t4'],i=ids.indexOf(t.id);if(i<0)return;
-  switchTab(i);
-});
-
-function switchTab(idx){
-  var ids=['t0','t1','t2','t3','t4'];
-  document.querySelectorAll('.tab').forEach(function(x,j){x.classList.toggle('on',j===idx);});
-  document.querySelectorAll('.pnl').forEach(function(x,j){
-    if(j===idx){x.style.display='flex';x.classList.remove('on');void x.offsetWidth;x.classList.add('on');}
-    else{x.classList.remove('on');x.style.display='none';}
-  });
-}
-
-/* RSVP — compteur 20 caractères */
-g('rvmsg').addEventListener('input',function(){
-  var n=g('rvmsg').value.trim().length;
-  var cnt=g('rv-count');
-  if(n>=20){cnt.textContent=n+' caractères ✓';cnt.className='rv-count ok';}
-  else{cnt.textContent=n+' / 20 caractères minimum';cnt.className='rv-count ko';}
-  g('rvmsg').classList.remove('err-field');
-});
-
-g('byes').addEventListener('click',function(){pr='yes';g('byes').className='rvb yes';g('bno').className='rvb neu';g('sdiet').style.display='block';g('rverr').textContent='';});
-g('bno').addEventListener('click',function(){pr='no';g('bno').className='rvb no';g('byes').className='rvb neu';g('sdiet').style.display='none';g('rverr').textContent='';});
-
-/* Boutons cocktail famille */
-if(g('bck1yes')) g('bck1yes').addEventListener('click',function(){prCk1='yes';g('bck1yes').className='rvb yes';g('bck1no').className='rvb neu';});
-if(g('bck1no'))  g('bck1no').addEventListener('click',function(){prCk1='no';g('bck1no').className='rvb no';g('bck1yes').className='rvb neu';});
-
-/* Boutons repas de mariage */
-if(g('bck2yes')) g('bck2yes').addEventListener('click',function(){prCk2='yes';g('bck2yes').className='rvb yes';g('bck2no').className='rvb neu';});
-if(g('bck2no'))  g('bck2no').addEventListener('click',function(){prCk2='no';g('bck2no').className='rvb no';g('bck2yes').className='rvb neu';});
-
-g('dgrid').addEventListener('click',function(e){
-  var b=e.target.closest('.rvdb');if(!b)return;
-  var v=b.getAttribute('data-v'),i=di.indexOf(v);
-  if(i>-1){di.splice(i,1);b.classList.remove('sel');}
-  else{if(v==='std'){di=[];document.querySelectorAll('.rvdb').forEach(function(x){x.classList.remove('sel');});}else{var s=di.indexOf('std');if(s>-1){di.splice(s,1);document.querySelector('.rvdb[data-v="std"]').classList.remove('sel');}}di.push(v);b.classList.add('sel');}
-});
-
-g('rvsub').addEventListener('click',function(){
-  if(!pr){g('rverr').textContent='Veuillez indiquer votre présence à la cérémonie.';return;}
-  /* Vérifier les confirmations cocktail si visible */
-  if((lv===2||lv>=4) && g('sck1') && g('sck1').style.display!=='none' && !prCk1){
-    g('rverr').textContent='Veuillez indiquer votre présence au cocktail famille.';return;
-  }
-  if(lv>=4 && g('sck2') && g('sck2').style.display!=='none' && !prCk2){
-    g('rverr').textContent='Veuillez indiquer votre présence au repas de mariage.';return;
-  }
-
-  var msg=g('rvmsg').value.trim();
-  if(msg.length<20){
-    g('rverr').textContent='Votre message doit contenir au moins 20 caractères.';
-    g('rvmsg').classList.add('err-field');
-    g('rvmsg').focus();return;
-  }
-  g('rverr').textContent='';g('rvf').style.display='none';
-  var ok=g('rvok');
-  ok.style.display='flex';ok.style.animation='successPop .48s cubic-bezier(.2,0,.2,1)';
-  g('rvokt').textContent=pr==='yes'?'Merci, à très bientôt !':'Merci de nous avoir prévenus';
-  var dateMsg = lv===3 ? '16 mai 2026' : '15 mai 2026';
-  var txt=pr==='yes'?'Votre présence est confirmée pour le '+dateMsg+'.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.':'Votre réponse a bien été transmise.<br>Lynda &amp; Marcel-Cédric vous remercient de vous être manifesté(e).';
-  g('rvokm').innerHTML=txt;
-  if(pr==='yes'){var cp=g('ckp');if(cp){cp.style.transition='stroke-dashoffset .6s cubic-bezier(.2,0,.2,1) .1s';cp.style.strokeDashoffset='0';}}
-
-  /* Révéler les onglets après confirmation */
-  if(pr==='yes'&&!confirmed){
-    confirmed=true;
-    if(lv===2||lv>=4)g('t2').classList.remove('hidden');
-    if(lv===3||lv>=4)g('t3').classList.remove('hidden');
-    g('af-cer').classList.remove('hidden');
-    if(lv===2||lv>=4)g('af1').classList.remove('hidden');
-    if(lv===3||lv>=4)g('af2').classList.remove('hidden');
-    var bc=g('btn-confirm');
-    if(bc){bc.textContent='Présence confirmée ✓';bc.classList.add('done');bc.disabled=true;}
-    buildTabBar(lv);
-  }
-});
-
-g('rved').addEventListener('click',function(){g('rvf').style.display='block';g('rvok').style.display='none';var cp=g('ckp');if(cp){cp.style.transition='none';cp.style.strokeDashoffset='60';}});
-
-/* ── ALBUM CLOUDINARY ── */
-var af_current='once';
-var cldCache={};
-
-function catName(c){
-  return c==='once'?'Il était une fois':c==='cer'?'Cérémonie · 15 mai 2026':c==='ck1'?'Cocktail famille':'Repas de mariage';
-}
-
-/* Changer de filtre */
-g('afs').addEventListener('click',function(e){
-  var b=e.target.closest('.albf');
-  if(!b||b.classList.contains('lk')||b.classList.contains('hidden'))return;
-  af_current=b.getAttribute('data-c');
-  document.querySelectorAll('.albf').forEach(function(x){
-    if(x.classList.contains('hidden'))return;
-    x.classList.remove('on');
-    x.getAttribute('data-c')==='once'?x.classList.remove('off'):x.classList.add('off');
-  });
-  b.classList.remove('off');b.classList.add('on');
-  var upbtn=g('alfi')?g('alfi').parentElement:null;
-  var noup=g('alb-no-upload');
-  if(af_current==='once'){
-    if(upbtn)upbtn.style.display='none';
-    if(noup)noup.style.display='block';
-  }else{
-    if(upbtn)upbtn.style.display='flex';
-    if(noup)noup.style.display='none';
-  }
-  loadAlbum(af_current);
-});
-
-function loadAlbum(cat){
-  var grid=g('alg'),em=g('alem'),ct=g('alct');
-  if(!guestJwt){
-    grid.innerHTML='';em.style.display='none';
-    ct.textContent='0 photo · '+catName(cat);
-    return;
-  }
-  grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:24px;font-size:11px;font-style:italic;color:rgba(130,60,25,.42);">Chargement…</div>';
-  em.style.display='none';
-  fetch('/.netlify/functions/cloudinary-list',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({token:guestJwt,category:cat})
-  })
-  .then(function(r){return r.json();})
-  .then(function(data){
-    var photos=data.photos||[];
-    cldCache[cat]=photos;
-    lbv=photos;
-    ct.textContent=photos.length+' photo'+(photos.length>1?'s':'')+' · '+catName(cat);
-    if(!photos.length){grid.innerHTML='';em.style.display='block';return;}
-    em.style.display='none';grid.innerHTML='';
-    photos.forEach(function(p,i){
-      var cell=document.createElement('div');cell.className='albc';
-      cell.style.animation='photoIn .28s ease '+(i*0.038)+'s both';
-      var img=document.createElement('img');
-      img.src=p.thumbnailUrl;
-      img.alt=p.uploader||'';
-      img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;';
-      img.onerror=function(){this.style.display='none';buildPlaceholder(cell,p);};
-      cell.appendChild(img);
-      var ov=document.createElement('div');ov.className='albov';
-      if(p.uploader){var tgov=document.createElement('div');tgov.className='alb-tag';tgov.textContent=p.uploader;ov.appendChild(tgov);}
-      cell.appendChild(ov);
-      (function(idx){cell.addEventListener('click',function(){lbi=idx;g('lb').classList.add('open');lbs();});})(i);
-      grid.appendChild(cell);
-    });
-  })
-  .catch(function(e){
-    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:24px;font-size:11px;font-style:italic;color:rgba(180,50,30,.55);">Erreur de chargement</div>';
-    console.warn('cloudinary-list:',e);
-  });
-}
-
-function buildPlaceholder(cell,p){
-  var colors={once:'#c8a070',cer:'#b89060',ck1:'#c06840',ck2:'#906080'};
-  var ph=document.createElement('div');ph.className='albph';
-  ph.style.cssText='width:100%;height:100%;background:'+(colors[p.c||af_current]||'#b89060')+';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;';
-  ph.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15l-5-5L5 21" stroke="rgba(255,252,248,.45)" stroke-width="1.5" stroke-linecap="round"/><circle cx="8.5" cy="8.5" r="2.5" stroke="rgba(255,252,248,.45)" stroke-width="1.5"/><rect x="3" y="3" width="18" height="18" rx="3" stroke="rgba(255,252,248,.38)" stroke-width="1.5"/></svg>';
-  if(p.uploader){var tg=document.createElement('div');tg.className='albph-tag';tg.textContent=p.uploader;ph.appendChild(tg);}
-  cell.appendChild(ph);
-}
-
-g('alfi').addEventListener('change',function(e){
-  var files=Array.from(e.target.files);
-  if(!files.length)return;
-  if(!guestJwt){alert('Session expirée, veuillez recharger la page.');return;}
-  var upbtn=g('alfi')?g('alfi').parentElement:null;
-  if(upbtn){upbtn.style.opacity='.5';upbtn.style.pointerEvents='none';}
-  var promises=files.map(function(f){
-    return new Promise(function(resolve){
-      fetch('/.netlify/functions/cloudinary-sign',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({token:guestJwt,category:af_current})
-      })
-      .then(function(r){return r.json();})
-      .then(function(sig){
-        if(sig.error){alert(sig.error);resolve();return;}
-        var fd=new FormData();
-        fd.append('file',f);
-        fd.append('api_key',sig.api_key);
-        fd.append('timestamp',sig.timestamp);
-        fd.append('signature',sig.signature);
-        fd.append('folder',sig.folder);
-        fd.append('context',sig.context);
-        return fetch('https://api.cloudinary.com/v1_1/'+sig.cloud_name+'/image/upload',{method:'POST',body:fd});
-      })
-      .then(function(r){if(r)return r.json();})
-      .then(function(data){
-        if(data&&data.secure_url){delete cldCache[af_current];}
-        else if(data&&data.error){alert('Erreur upload: '+data.error.message);}
-        resolve();
-      })
-      .catch(function(err){console.warn('upload:',err);resolve();});
-    });
-  });
-  Promise.all(promises).then(function(){
-    if(upbtn){upbtn.style.opacity='';upbtn.style.pointerEvents='';}
-    loadAlbum(af_current);
-  });
-  e.target.value='';
-});
-
-function lbs(){
-  var p=lbv[lbi];if(!p)return;
-  var im=g('lbimg'),ph=g('lbph');
-  if(p.fullUrl){
-    im.src=p.fullUrl;im.style.display='block';ph.style.display='none';
-    im.onerror=function(){im.style.display='none';buildLbPlaceholder(ph,p);};
-  } else {
-    im.style.display='none';buildLbPlaceholder(ph,p);
-  }
-  g('lbcap').textContent=catName(p.c||af_current);
-  g('lbtag').textContent=p.uploader||'';
-  g('lbctr').textContent=(lbi+1)+' / '+lbv.length;
-}
-
-function buildLbPlaceholder(ph,p){
-  var colors={once:'#c8a070',cer:'#b89060',ck1:'#c06840',ck2:'#906080'};
-  ph.style.cssText='width:260px;height:260px;background:'+(colors[p.c||af_current]||'#b89060')+';border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;';
-  ph.innerHTML='<svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M21 15l-5-5L5 21" stroke="rgba(255,252,248,.45)" stroke-width="1.5" stroke-linecap="round"/><circle cx="8.5" cy="8.5" r="2.5" stroke="rgba(255,252,248,.45)" stroke-width="1.5"/><rect x="3" y="3" width="18" height="18" rx="3" stroke="rgba(255,252,248,.4)" stroke-width="1.5"/></svg>'+(p.uploader?'<div style="font-size:12px;font-style:italic;color:rgba(255,252,248,.7);font-family:Georgia,serif;">'+p.uploader+'</div>':'');
-  ph.style.display='flex';
-}
-
-g('lbx').addEventListener('click',function(){g('lb').classList.remove('open');});
-g('lbpv').addEventListener('click',function(){lbi=(lbi-1+lbv.length)%lbv.length;lbs();});
-g('lbnx').addEventListener('click',function(){lbi=(lbi+1)%lbv.length;lbs();});
-g('lb').addEventListener('click',function(e){if(e.target===g('lb'))g('lb').classList.remove('open');});
-
-function qr(id, url){
-  if(!url) return;
-  if(typeof QRCode === 'undefined'){ setTimeout(function(){ qr(id, url); }, 300); return; }
-  var wrap = g(id);
-  if(!wrap) return;
-  wrap.innerHTML = '';
-  new QRCode(wrap, {
-    text: url,
-    width: 114, height: 114,
-    colorDark: '#1a0a00', colorLight: 'rgba(255,252,248,0.75)',
-    correctLevel: QRCode.CorrectLevel.M
-  });
-}
-
-async function anim(){
-  var wrap=g('ewrap'),flap=g('eflap'),seal=g('wax'),rl=g('rl'),rr=g('rr'),bow=g('bow'),prev=g('bprev'),otp=g('otp');
-  prev.classList.add('show');
-  await w(900);
-  wrap.style.animation='shake .62s ease-in-out';await w(660);wrap.style.animation='';await w(320);
-  wrap.style.animation='shake .52s ease-in-out';await w(560);wrap.style.animation='';await w(380);
-  flap.style.transform='perspective(600px) rotateX(-185deg)';seal.style.opacity='0';await w(880);
-  rl.style.transform='translateX(-200px) rotate(-18deg)';rl.style.opacity='0';
-  rr.style.transform='translateX(200px) rotate(18deg)';rr.style.opacity='0';
-  bow.style.transform='translate(-50%,-50%) scale(0)';bow.style.opacity='0';await w(720);
-  wrap.style.opacity='0';wrap.style.transform='scale(.86) translateY(22px)';prev.classList.remove('show');await w(560);
-  otp.classList.add('show');
-  ['p1','p2','p3'].forEach(function(id,i){
-    var el=document.getElementById(id);if(!el)return;
-    el.style.transition='stroke-dashoffset '+(1.35+i*.28)+'s ease '+(i*.22)+'s';el.style.strokeDashoffset='0';
-    setTimeout(function(){el.style.animation='glowPulse '+(2.3+i*.4)+'s ease-in-out '+(0.9+i*.2)+'s infinite';},1350+i*500);
-  });
-  await w(380);ds[0].focus();
-}
-
-/* ── API : vérification OTP réel ── */
-async function verifyReal(code){
-  var btn=g('otbtn');
-  btn.textContent='Vérification…';btn.disabled=true;
-  try{
-    var body={otp:code};
-    if(guestToken) body.guestToken=guestToken;
-    var res=await fetch('/.netlify/functions/verify-otp',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(body)
-    });
-    var data=await res.json();
-    if(!res.ok) throw new Error(data.error);
-    guestJwt=data.token;
-    go(data.niveau);
-    /* Si RSVP déjà soumis → afficher directement l'écran "déjà confirmé" */
-    fetch('/.netlify/functions/check-rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:data.token})})
-    .then(function(r){return r.json();})
-    .then(function(rsvp){if(rsvp.rsvp_submitted){setTimeout(function(){applyExistingRSVP(rsvp);},400);}})
-    .catch(function(e){console.warn('check-rsvp:',e);});
-  }catch(e){
-    ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
-    var errEl=g('rverr');if(errEl) errEl.textContent=e.message;
-    btn.textContent='Ouvrir mon invitation';btn.disabled=false;
-  }
-}
-
-/* ── API : lecture ?t= au chargement → send-otp automatique ── */
-(function(){
-  var params=new URLSearchParams(window.location.search);
-  var t=params.get('t');
-  if(!t) return;
-  guestToken=t;
-  fetch('/.netlify/functions/send-otp',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({guestToken:t})
-  })
-  .then(function(r){return r.json();})
-  .then(function(data){
-    if(data.success){
-      var otpb=g('otpb');
-      if(otpb){
-        var sub=otpb.querySelector('.ots');
-        if(sub) sub.textContent='Bonjour '+data.prenom+' \u2014 votre code a \u00e9t\u00e9 envoy\u00e9 par SMS';
-      }
-    }
-  })
-  .catch(function(e){console.warn('send-otp auto:',e);});
-})();
-
-/* ── API : sauvegarde RSVP dans Google Sheets ── */
-(function(){
-  var rvs=g('rvsub');
-  if(!rvs) return;
-  rvs.addEventListener('click',function(){
-    if(!guestJwt) return;
-    var msg=(g('rvmsg')&&g('rvmsg').value)||'';
-    if(!pr||msg.trim().length<20) return;
-    fetch('/.netlify/functions/save-rsvp',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({token:guestJwt,presence:pr,regime:di,message:msg.trim(),rsvp_ck1:prCk1,rsvp_ck2:prCk2})
-    }).catch(function(e){console.warn('save-rsvp:',e);});
-  });
-})();
-
-
-/* ── RSVP déjà soumis : afficher "Vous avez déjà confirmé" ── */
-function applyExistingRSVP(data){
-  if(!data.rsvp_presence||data.rsvp_presence==='') return;
-
-  var p1=document.getElementById('p1');
-  if(p1)p1.style.display='flex';
-
-  var rvf=g('rvf'), rvok=g('rvok');
-  if(!rvf||!rvok) return;
-
-  var okt=g('rvokt'), okm=g('rvokm');
-  var estPresent = data.rsvp_presence==='oui';
-
-  if(okt) okt.textContent = estPresent ? 'Présence confirmée ✓' : 'Absence confirmée';
-
-  var txt = estPresent
-    ? 'Votre présence est enregistrée pour le 15 mai 2026.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.'
-    : 'Votre absence a bien été enregistrée.<br>Lynda &amp; Marcel-Cédric vous remercient de les avoir prévenus.';
-  if(data.rsvp_ck1) txt+='<br>Cocktail famille : '+(data.rsvp_ck1==='oui'?'✓ Présent(e)':'✗ Absent(e)');
-  if(data.rsvp_ck2) txt+='<br>Repas de mariage : '+(data.rsvp_ck2==='oui'?'✓ Présent(e)':'✗ Absent(e)');
-  if(data.rsvp_message) txt+='<br><br><em>« '+escHtml(data.rsvp_message)+' »</em>';
-  if(okm) okm.innerHTML=txt;
-
-  rvf.style.display='none';
-  rvok.style.display='flex';
-
-  if(estPresent){
-    var cp=g('ckp');
-    if(cp){cp.style.transition='stroke-dashoffset .6s cubic-bezier(.2,0,.2,1) .1s';cp.style.strokeDashoffset='0';}
-  }
-
-  var bc=g('btn-confirm');
-  if(bc){bc.textContent=estPresent?'Présence confirmée ✓':'Absence confirmée';bc.classList.add('done');bc.disabled=true;}
-
-  var rved=g('rved');
-  if(rved){rved.textContent='Modifier votre réservation';rved.style.display='block';}
-
-  if(estPresent&&!confirmed){
-    confirmed=true;
-    if(lv===2||lv>=4)g('t2').classList.remove('hidden');
-    if(lv===3||lv>=4)g('t3').classList.remove('hidden');
-    if(lv===2||lv>=4)g('af-cer').classList.remove('hidden');
-    if(lv===2||lv>=4)g('af1').classList.remove('hidden');
-    if(lv===3||lv>=4)g('af2').classList.remove('hidden');
-    buildTabBar(lv);
-  }
-}
-
-function buildTabBar(l){
-  var tb=g('tabbar');
-  if(!tb)return;
- 
-  /* Définition des onglets selon niveau */
-  var tabs=[
-    {icon:'🎴',label:'Faire-part',idx:0},
-    {icon:'💌',label:'RSVP',idx:1}
-  ];
-  if(l===2||l>=4) tabs.push({icon:'🥂',label:'Cocktail',idx:2});
-  if(l===3||l>=4) tabs.push({icon:'🍽',label:'Repas',idx:3});
-  tabs.push({icon:'📷',label:'Album',idx:4});
- 
-  tb.innerHTML='';
-  tabs.forEach(function(t){
-    var btn=document.createElement('button');
-    btn.style.cssText='flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 2px;';
-    btn.innerHTML='<span style="font-size:20px;line-height:1;">'+t.icon+'</span>'
-      +'<span style="font-size:9px;font-style:italic;color:rgba(120,55,20,.65);font-family:Georgia,serif;white-space:nowrap;">'+t.label+'</span>';
-    (function(idx){btn.addEventListener('click',function(){switchTab(idx);});})(t.idx);
-    tb.appendChild(btn);
-  });
- 
-  tb.style.display='flex';
- 
-  /* Ajouter padding bas aux panels pour éviter que la tab bar cache le contenu */
-  document.querySelectorAll('.pnl').forEach(function(p){
-    p.style.paddingBottom='70px';
-  });
-}
-
-
-function escHtml(s){
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-
-anim();
-})();
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </body>
 </html>
