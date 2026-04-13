@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#d4845a">
+<meta property="og:title" content="Lynda & Marcel-Cédric">
+<meta property="og:description" content="Vous êtes invité(e) à célébrer leur union">
+<meta property="og:image" content="https://on-se-marie.ebelle.fr/preview.jpeg">
+<meta property="og:url" content="https://on-se-marie.ebelle.fr">
+<meta property="og:type" content="website">
+<title>Lynda &amp; Marcel-Cédric</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{height:100%;}
+body{
+  min-height:100vh;min-height:100dvh;
+  display:flex;align-items:center;justify-content:center;
+  font-family:Georgia,serif;
+  background:linear-gradient(158deg,#d4845a 0%,#dc8870 4%,#e09080 7%,#dda0a8 11%,#d890a0 18%,#d88098 26%,#d8a0b0 33%,#e0b8c0 40%,#eac8cc 46%,#f2dcd8 52%,#f5f0e8 57%,#f0ecd8 62%,#e8e8c8 67%,#d8e4a8 73%,#c8d890 80%,#b8cc78 88%,#a8c065 95%,#98b455 100%);
+  padding:24px 20px;
+}
+
+#scene{
+  width:100%;max-width:380px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;
+  animation:fadeUp .8s cubic-bezier(.2,0,.8,1) forwards;
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes glowPulse{0%,100%{filter:drop-shadow(0 0 3px rgba(180,70,30,.4))}50%{filter:drop-shadow(0 0 11px rgba(180,70,30,.85))}}
+@keyframes deadlinePulse{0%,100%{opacity:.65}50%{opacity:1}}
+
+.fp-sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;font-style:italic;color:rgba(110,45,20,.48);margin-bottom:6px;}
+.fp-div{color:rgba(180,90,50,.3);}
+
+.fp-oui{font-family:'Dancing Script',cursive;font-size:92px;font-weight:700;color:#922010;line-height:.9;text-shadow:0 0 30px rgba(180,70,30,.22);margin-bottom:-2px;}
+.fp-vie{font-family:'Dancing Script',cursive;font-size:34px;font-weight:600;color:#7c3010;line-height:1;letter-spacing:.5px;margin-bottom:12px;}
+
+.fp-fleur{width:44px;height:44px;margin:2px 0 14px;overflow:visible;}
+
+.fp-noms{font-size:14px;font-style:italic;color:rgba(100,40,20,.7);margin-bottom:4px;}
+.fp-phrase{font-size:13.5px;font-style:italic;color:rgba(100,40,20,.62);line-height:1.7;margin-bottom:18px;}
+
+.fp-sep{display:flex;align-items:center;gap:8px;width:72%;margin:0 auto 18px;}
+.fp-sep-line{flex:1;height:1px;background:rgba(160,80,40,.18);}
+.fp-sep-dot{width:5px;height:5px;border-radius:50%;background:rgba(160,80,40,.38);}
+
+.fp-maintenance{
+  background:rgba(255,252,248,.55);
+  border:1px solid rgba(180,90,50,.18);
+  border-radius:16px;
+  padding:20px 22px;
+  width:100%;
+  margin-bottom:20px;
+}
+.fp-maintenance-icon{font-size:32px;margin-bottom:10px;}
+.fp-maintenance-title{font-family:'Dancing Script',cursive;font-size:22px;color:#7c3010;margin-bottom:8px;}
+.fp-maintenance-msg{
+  font-size:12.5px;font-style:italic;
+  color:rgba(100,40,20,.68);
+  line-height:1.75;
+}
+.fp-maintenance-contact{
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid rgba(160,80,40,.12);
+  font-size:11px;font-style:italic;
+  color:rgba(130,60,25,.55);
+  animation:deadlinePulse 3s ease-in-out infinite;
+}
+
+.fp-copy{
+  font-size:10px;font-style:italic;
+  color:rgba(100,45,20,.32);
+  margin-top:8px;
+}
+</style>
+</head>
+<body>
+<div id="scene">
+
+  <!-- En-tête faire-part -->
+  <svg viewBox="0 0 155 5" style="width:155px;margin-bottom:10px;overflow:visible">
+    <line x1="0" y1="2.5" x2="155" y2="2.5" stroke="rgba(160,80,40,.2)" stroke-width=".8" stroke-dasharray="3 4"/>
+  </svg>
+  <div class="fp-sub"><span class="fp-div">— </span>Save the date<span class="fp-div"> —</span></div>
+
+  <div class="fp-oui">Oui</div>
+  <div class="fp-vie">pour la vie</div>
+
+  <!-- Fleur décorative -->
+  <svg class="fp-fleur" viewBox="0 0 78 78">
+    <defs>
+      <linearGradient id="gf" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#d890a0"/>
+        <stop offset="45%" stop-color="#f5f0e8"/>
+        <stop offset="100%" stop-color="#90b840"/>
+      </linearGradient>
+    </defs>
+    <path fill="none" stroke="url(#gf)" stroke-width="1.5" stroke-linecap="round"
+      stroke-dasharray="700" stroke-dashoffset="0"
+      d="M39,39 C31,23 18,17 23,9 C28,1 39,13 39,21 C39,13 50,1 55,9 C60,17 47,23 39,39 C47,25 61,30 59,41 C57,52 44,44 39,39 C45,49 52,61 40,65 C28,69 29,56 39,39 C29,56 15,63 11,50 C7,37 25,35 39,39 M39,50 L37,64"
+      style="animation:glowPulse 2.6s ease-in-out infinite"/>
+  </svg>
+
+  <div class="fp-noms">Lynda &amp; Marcel-Cédric</div>
+  <div class="fp-phrase">seront ravis de vous compter parmi leurs convives</div>
+
+  <div class="fp-sep">
+    <div class="fp-sep-line"></div>
+    <div class="fp-sep-dot"></div>
+    <div class="fp-sep-line"></div>
+  </div>
+
+  <!-- Message maintenance -->
+  <div class="fp-maintenance">
+    <div class="fp-maintenance-icon">🌸</div>
+    <div class="fp-maintenance-title">Pas de Panique</div>
+    <div class="fp-maintenance-msg">
+      Votre invitation personnelle reste inchangée, elle est en cours de finalisation.<br>
+      Vous la recevrez très prochainement.
+    </div>
+    <div class="fp-maintenance-contact">
+      Veuillez contacter les mariés pour toute<br>préoccupation liée à votre invitation.
+    </div>
+  </div>
+
+  <div class="fp-copy"> 2026 · Mundo Archi - Tous droits réservés</div>
+
+</div>
+</body>
+</html>
