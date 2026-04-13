@@ -859,7 +859,7 @@ function applyExistingRSVP(data){
   if(okt) okt.textContent = estPresent ? 'Présence confirmée ✓' : 'Absence confirmée';
 
   var txt = estPresent
-    ? 'Votre présence est enregistrée pour le 15 mai 2026.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.'
+    ? 'Votre présence a bien été enregistrée.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.'
     : 'Votre absence a bien été enregistrée.<br>Lynda &amp; Marcel-Cédric vous remercient de les avoir prévenus.';
   if(data.rsvp_ck1) txt+='<br>Cocktail famille : '+(data.rsvp_ck1==='oui'?'✓ Présent(e)':'✗ Absent(e)');
   if(data.rsvp_ck2) txt+='<br>Repas de mariage : '+(data.rsvp_ck2==='oui'?'✓ Présent(e)':'✗ Absent(e)');
