@@ -131,7 +131,6 @@ exports.handler = async (event) => {
       };
     }
 
-    await clearOTP(sheets, guest.rowIndex);
 
     const token = jwt.sign(
       { prenom: guest.prenom, phone: guest.phone, niveau: guest.niveau },
