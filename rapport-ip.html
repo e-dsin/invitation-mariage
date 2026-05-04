@@ -11,14 +11,14 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;height:100%;overflow:hidden;font-family:Georgia,serif;}
-body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd8 52%,#f5f0e8 57%,#e8e8c8 67%,#c8d890 80%,#98b455 100%);}
+body{background:#1a1a2e;}
 
 /* ── PIN ── */
-#pin-screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px;background:rgba(0,0,0,.35);z-index:100;}
+#pin-screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px;background:rgba(0,0,0,.55);z-index:200;}
 .pin-title{font-family:'Dancing Script',cursive;font-size:30px;color:rgba(255,240,220,.95);text-align:center;}
-.pin-sub{font-size:12px;font-style:italic;color:rgba(255,240,220,.55);text-align:center;}
+.pin-sub{font-size:12px;font-style:italic;color:rgba(255,240,220,.5);text-align:center;}
 #pin-row{display:flex;gap:12px;justify-content:center;}
-.pd{width:52px;height:60px;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,220,180,.3);border-radius:12px;text-align:center;font-size:26px;font-weight:700;color:#fff5ee;outline:none;transition:border-color .2s;}
+.pd{width:52px;height:60px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,220,180,.25);border-radius:12px;text-align:center;font-size:26px;font-weight:700;color:#fff5ee;outline:none;transition:border-color .2s;}
 .pd:focus{border-color:rgba(255,180,100,.7);}
 .pd.err{border-color:rgba(220,60,60,.8);animation:errShake .3s;}
 #pin-btn{padding:13px 40px;background:linear-gradient(135deg,#c2410c,#9a3412);border:none;border-radius:12px;color:#fff5ee;font-family:Georgia,serif;font-size:16px;cursor:pointer;}
@@ -28,51 +28,47 @@ body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd
 #stage{position:fixed;inset:0;display:none;flex-direction:column;}
 
 /* Header */
-#stage-header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(255,252,248,.55);border-bottom:1px solid rgba(180,90,50,.15);}
-#stage-title{font-family:'Dancing Script',cursive;font-size:22px;color:rgba(100,40,15,.7);}
-#quit-btn{background:rgba(255,252,248,.6);border:1px solid rgba(180,90,50,.2);border-radius:8px;padding:5px 12px;color:rgba(120,50,20,.65);font-size:11px;cursor:pointer;}
+#stage-header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(20,15,35,.85);border-bottom:1px solid rgba(255,220,180,.08);z-index:20;}
+#stage-title{font-family:'Dancing Script',cursive;font-size:20px;color:rgba(255,230,180,.8);}
+#quit-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,220,180,.12);border-radius:8px;padding:5px 12px;color:rgba(255,230,180,.5);font-size:11px;cursor:pointer;}
 
-/* Onglets */
-#tabs{flex-shrink:0;display:flex;border-bottom:1px solid rgba(180,90,50,.15);background:rgba(255,252,248,.4);}
-.tab{flex:1;padding:10px 8px;text-align:center;font-size:12px;font-style:italic;cursor:pointer;color:rgba(120,50,20,.45);border-bottom:2.5px solid transparent;transition:all .2s;}
-.tab.on{color:#b45309;border-bottom-color:#b45309;background:rgba(255,252,248,.5);}
+/* ── CARTE plein écran ── */
+#map{flex:1;width:100%;min-height:0;}
 
-/* Contenu */
-#content{flex:1;overflow:hidden;position:relative;}
+/* ── PANNEAU TABLEAU intégré à la carte (Leaflet Control) ── */
+.lf-panel{background:rgba(20,15,35,.92);border:1px solid rgba(255,220,180,.12);border-radius:12px;width:290px;max-height:55vh;display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(8px);}
+.lf-panel-header{padding:9px 12px;border-bottom:1px solid rgba(255,220,180,.08);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.lf-panel-title{font-family:'Dancing Script',cursive;font-size:16px;color:rgba(255,230,180,.8);}
+.lf-panel-count{font-size:10px;font-style:italic;color:rgba(255,220,180,.38);}
+.lf-panel-body{overflow-y:auto;flex:1;}
+.lf-panel-body::-webkit-scrollbar{width:3px;}
+.lf-panel-body::-webkit-scrollbar-thumb{background:rgba(255,180,80,.2);border-radius:2px;}
 
-/* VUE CARTE */
-#vue-carte{position:absolute;inset:0;display:none;}
-#vue-carte.on{display:block;}
-#map{width:100%;height:100%;}
-
-/* Légende carte */
-#map-legend{position:absolute;bottom:16px;left:12px;z-index:1000;background:rgba(255,252,248,.88);border:1px solid rgba(180,90,50,.2);border-radius:10px;padding:8px 12px;font-size:11px;font-style:italic;color:rgba(110,50,20,.7);}
-.leg-row{display:flex;align-items:center;gap:6px;margin-bottom:3px;}
-.leg-row:last-child{margin-bottom:0;}
-.leg-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(255,255,255,.7);}
-
-/* VUE TABLEAU */
-#vue-tableau{position:absolute;inset:0;overflow-y:auto;display:none;padding:12px 14px;}
-#vue-tableau.on{display:block;}
-.log-card{background:rgba(255,252,248,.62);border:1px solid rgba(180,90,50,.18);border-radius:12px;padding:11px 14px;margin-bottom:8px;cursor:pointer;transition:background .18s;}
-.log-card:hover{background:rgba(255,252,248,.85);}
-.log-card.highlight{background:rgba(194,65,12,.1);border-color:rgba(180,70,20,.35);}
-.log-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
-.log-name{font-family:'Dancing Script',cursive;font-size:18px;color:#7c3010;}
-.log-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-style:italic;padding:2px 8px;border-radius:6px;}
-.log-badge.green{background:rgba(80,160,50,.15);color:#2d6010;border:1px solid rgba(80,160,50,.28);}
-.log-badge.orange{background:rgba(200,140,20,.15);color:#7a5008;border:1px solid rgba(200,140,20,.28);}
-.log-badge.red{background:rgba(200,50,30,.15);color:#8c1010;border:1px solid rgba(200,50,30,.28);}
-.log-dot{width:7px;height:7px;border-radius:50%;}
+/* Lignes du tableau intégré */
+.log-row{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;border-bottom:1px solid rgba(255,220,180,.05);transition:background .15s;}
+.log-row:hover{background:rgba(255,180,80,.08);}
+.log-row.active{background:rgba(255,140,40,.15);border-left:2.5px solid rgba(255,160,60,.7);}
+.log-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(255,255,255,.25);}
 .log-dot.green{background:#3a7020;}.log-dot.orange{background:#c87010;}.log-dot.red{background:#c02020;}
-.log-ip{font-size:10px;color:rgba(110,50,20,.48);font-style:italic;margin-bottom:2px;}
-.log-ts{font-size:10px;color:rgba(110,50,20,.38);font-style:italic;}
-.log-empty{text-align:center;font-style:italic;font-size:12px;color:rgba(130,60,25,.42);padding:28px 0;}
+.log-name{font-family:'Dancing Script',cursive;font-size:14px;color:rgba(255,230,180,.85);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.log-ip{font-size:9px;color:rgba(255,220,180,.32);font-style:italic;flex-shrink:0;}
+.log-ts{font-size:9px;color:rgba(255,180,80,.5);margin-top:1px;}
 
-/* Tooltip Leaflet custom */
-.lf-tooltip{background:rgba(255,252,248,.95)!important;border:1px solid rgba(180,90,50,.3)!important;border-radius:8px!important;padding:5px 10px!important;font-family:Georgia,serif!important;font-size:12px!important;box-shadow:0 2px 8px rgba(180,90,50,.15)!important;color:#7c3010!important;}
-.lf-tooltip::before{border-top-color:rgba(180,90,50,.3)!important;}
+/* Légende */
+.lf-legend{background:rgba(20,15,35,.88);border:1px solid rgba(255,220,180,.1);border-radius:10px;padding:8px 12px;}
+.leg-row{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:10px;font-style:italic;color:rgba(255,220,180,.55);}
+.leg-row:last-child{margin-bottom:0;}
+.leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(255,255,255,.2);}
 
+/* Tooltip Leaflet */
+.lf-tip{background:rgba(20,15,35,.96)!important;border:1px solid rgba(255,180,80,.3)!important;border-radius:8px!important;padding:6px 10px!important;font-family:Georgia,serif!important;font-size:12px!important;color:rgba(255,230,180,.9)!important;box-shadow:0 3px 12px rgba(0,0,0,.4)!important;white-space:nowrap!important;}
+.lf-tip.leaflet-tooltip-top::before{border-top-color:rgba(255,180,80,.3)!important;}
+
+/* Loading overlay */
+#loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(20,15,35,.75);z-index:50;gap:12px;}
+.load-txt{font-style:italic;font-size:13px;color:rgba(255,220,180,.6);}
+.load-spinner{width:32px;height:32px;border:2.5px solid rgba(255,180,80,.15);border-top-color:rgba(255,180,80,.7);border-radius:50%;animation:spin .9s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
 @keyframes errShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 </style>
 </head>
@@ -95,26 +91,10 @@ body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd
 <!-- STAGE -->
 <div id="stage">
   <div id="stage-header">
-    <div id="stage-title">Rapport IP</div>
+    <div id="stage-title">Rapport IP · Connexions</div>
     <button id="quit-btn">✕ Quitter</button>
   </div>
-  <div id="tabs">
-    <div class="tab on" onclick="switchTab('carte')">🗺 Carte</div>
-    <div class="tab" onclick="switchTab('tableau')">📋 Tableau</div>
-  </div>
-  <div id="content">
-    <div id="vue-carte" class="on">
-      <div id="map"></div>
-      <div id="map-legend">
-        <div class="leg-row"><div class="leg-dot" style="background:#3a7020;"></div>IP stable</div>
-        <div class="leg-row"><div class="leg-dot" style="background:#c87010;"></div>Changement &lt; 100m</div>
-        <div class="leg-row"><div class="leg-dot" style="background:#c02020;"></div>Changement &gt; 100m</div>
-      </div>
-    </div>
-    <div id="vue-tableau">
-      <div id="log-list"></div>
-    </div>
-  </div>
+  <div id="map"></div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -122,14 +102,14 @@ body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd
 (function(){
   var adminPin = '';
   var allGuests = [];
-  var markers = {};   /* prenom → marker Leaflet */
+  var markers = {};
   var leafletMap = null;
-  var currentTab = 'carte';
+  var activeIdx = -1;
 
   var IP_COLORS = {green:'#3a7020', orange:'#c87010', red:'#c02020'};
   var IP_LABELS = {green:'IP stable', orange:'Changement < 100m', red:'Changement > 100m'};
 
-  /* ── PIN — même logique que messages.html ── */
+  /* ── PIN ── */
   var pds = ['p0','p1','p2','p3'].map(function(id){ return document.getElementById(id); });
   pds.forEach(function(inp, i){
     inp.addEventListener('keydown', function(e){
@@ -137,7 +117,7 @@ body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd
       if(e.key==='Enter') checkPin();
     });
     inp.addEventListener('input', function(){
-      var v = inp.value.replace(/\D/g,'').slice(-1); inp.value = v;
+      var v = inp.value.replace(/\D/g,'').slice(-1); inp.value=v;
       if(v && i<3) pds[i+1].focus();
     });
   });
@@ -156,10 +136,8 @@ body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd
   function loadData(){
     document.getElementById('pin-btn').textContent = 'Chargement…';
     document.getElementById('pin-btn').disabled = true;
-
     fetch('/.netlify/functions/admin-list-guests',{
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({pin: adminPin})
     })
     .then(function(r){ return r.json(); })
@@ -168,21 +146,19 @@ body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd
         document.getElementById('pin-err').textContent = 'PIN invalide';
         document.getElementById('pin-btn').textContent = 'Accéder au rapport';
         document.getElementById('pin-btn').disabled = false;
-        adminPin = '';
-        pds.forEach(function(d){ d.value = ''; });
+        adminPin=''; pds.forEach(function(d){ d.value=''; });
         return;
       }
-      allGuests = (data.guests || []).filter(function(g){ return g.ip_status && g.adr_ip; });
-      /* Trier : rouge d'abord, puis orange, puis vert */
+      allGuests = (data.guests||[]).filter(function(g){ return g.ip_status && g.adr_ip; });
+      /* Trier : rouge → orange → vert */
       var order = {red:0, orange:1, green:2};
-      allGuests.sort(function(a,b){ return (order[a.ip_status]||2) - (order[b.ip_status]||2); });
+      allGuests.sort(function(a,b){ return (order[a.ip_status]||2)-(order[b.ip_status]||2); });
 
-      document.getElementById('pin-screen').style.display = 'none';
-      document.getElementById('stage').style.display = 'flex';
+      document.getElementById('pin-screen').style.display='none';
+      var stage = document.getElementById('stage');
+      stage.style.display='flex';
 
-      renderTableau();
       initMap();
-      geolocateAll();
     })
     .catch(function(){
       document.getElementById('pin-err').textContent = 'Erreur de connexion';
@@ -191,134 +167,178 @@ body{background:linear-gradient(158deg,#d4845a 0%,#dda0a8 11%,#d8a0b0 33%,#f2dcd
     });
   }
 
-  /* ── ONGLETS ── */
-  window.switchTab = function(tab){
-    currentTab = tab;
-    document.querySelectorAll('.tab').forEach(function(t, i){
-      t.classList.toggle('on', ['carte','tableau'][i] === tab);
-    });
-    document.getElementById('vue-carte').classList.toggle('on', tab==='carte');
-    document.getElementById('vue-tableau').classList.toggle('on', tab==='tableau');
-    if(tab==='carte' && leafletMap){
-      setTimeout(function(){ leafletMap.invalidateSize(); }, 50);
-    }
-  };
-
-  /* ── TABLEAU ── */
-  function renderTableau(){
-    var list = document.getElementById('log-list');
-    if(!allGuests.length){
-      list.innerHTML = '<div class="log-empty">Aucun accès enregistré</div>';
-      return;
-    }
-    list.innerHTML = allGuests.map(function(g, i){
-      var st = g.ip_status || 'green';
-      /* Extraire le timestamp depuis ip_log si changement */
-      var ts = '';
-      if(st !== 'green' && g.ip_log){
-        ts = g.ip_log.split(' — ')[0] || '';
-      }
-      return '<div class="log-card" id="log-'+i+'" onclick="highlightFromTableau('+i+')">'
-        +'<div class="log-top">'
-        +'<span class="log-name">'+escH(g.prenom)+'</span>'
-        +'<span class="log-badge '+st+'"><span class="log-dot '+st+'"></span>'+IP_LABELS[st]+'</span>'
-        +'</div>'
-        +'<div class="log-ip">'+escH(g.adr_ip||'—')+'</div>'
-        +(ts?'<div class="log-ts">Changement : '+escH(ts)+'</div>':'')
-        +(g.timestamp_first_click?'<div class="log-ts">Premier accès : '+escH(g.timestamp_first_click)+'</div>':'')
-        +'</div>';
-    }).join('');
-  }
-
   /* ── CARTE ── */
   function initMap(){
-    leafletMap = L.map('map', {zoomControl:true}).setView([46.5, 2.5], 5);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-      attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
-      maxZoom: 18
+    leafletMap = L.map('map',{zoomControl:false, attributionControl:false}).setView([46.5, 2.5], 5);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+      maxZoom:18
     }).addTo(leafletMap);
+
+    /* Contrôle zoom en bas à droite */
+    L.control.zoom({position:'bottomright'}).addTo(leafletMap);
+
+    /* Attribution discrète */
+    L.control.attribution({position:'bottomright', prefix:false})
+      .addAttribution('© <a href="https://carto.com" style="color:rgba(255,180,80,.4)">CARTO</a> © <a href="https://openstreetmap.org" style="color:rgba(255,180,80,.4)">OSM</a>')
+      .addTo(leafletMap);
+
+    /* ── PANNEAU TABLEAU comme Leaflet Control ── */
+    var PanelControl = L.Control.extend({
+      options:{position:'topleft'},
+      onAdd: function(){
+        var div = L.DomUtil.create('div','lf-panel');
+        L.DomEvent.disableScrollPropagation(div);
+        L.DomEvent.disableClickPropagation(div);
+
+        var header = L.DomUtil.create('div','lf-panel-header',div);
+        header.innerHTML = '<span class="lf-panel-title">Connexions</span>'
+          +'<span class="lf-panel-count" id="panel-count">'+allGuests.length+' invité'+(allGuests.length>1?'s':'')+'</span>';
+
+        var body = L.DomUtil.create('div','lf-panel-body',div);
+        body.id = 'panel-body';
+        renderRows(body);
+        return div;
+      }
+    });
+    new PanelControl().addTo(leafletMap);
+
+    /* ── LÉGENDE comme Leaflet Control ── */
+    var LegendControl = L.Control.extend({
+      options:{position:'bottomleft'},
+      onAdd: function(){
+        var div = L.DomUtil.create('div','lf-legend');
+        L.DomEvent.disableClickPropagation(div);
+        div.innerHTML =
+          '<div class="leg-row"><div class="leg-dot" style="background:#3a7020;"></div>IP stable</div>'
+          +'<div class="leg-row"><div class="leg-dot" style="background:#c87010;"></div>Changement &lt; 100m</div>'
+          +'<div class="leg-row"><div class="leg-dot" style="background:#c02020;"></div>Changement &gt; 100m</div>';
+        return div;
+      }
+    });
+    new LegendControl().addTo(leafletMap);
+
+    /* ── LOADING overlay temporaire ── */
+    var mapEl = document.getElementById('map');
+    var loading = document.createElement('div');
+    loading.id='loading';
+    loading.innerHTML='<div class="load-spinner"></div><div class="load-txt">Géolocalisation des adresses IP…</div>';
+    mapEl.appendChild(loading);
+
+    geolocateAll(loading);
   }
 
-  async function geolocateAll(){
-    var bounds = [];
-    var promises = allGuests.map(function(g, i){
-      return fetch('https://ip-api.com/json/'+encodeURIComponent(g.adr_ip)+'?fields=lat,lon,status,city')
-        .then(function(r){ return r.json(); })
-        .then(function(geo){
-          if(geo.status !== 'success') return;
-          var st = g.ip_status || 'green';
-          var color = IP_COLORS[st];
+  /* Render lignes dans le panneau */
+  function renderRows(body){
+    if(!allGuests.length){
+      body.innerHTML='<div style="padding:16px;text-align:center;font-style:italic;font-size:11px;color:rgba(255,220,180,.35);">Aucun accès enregistré</div>';
+      return;
+    }
+    allGuests.forEach(function(g, i){
+      var row = document.createElement('div');
+      row.className = 'log-row';
+      row.id = 'row-'+i;
+      var st = g.ip_status||'green';
+      var ts = (st!=='green' && g.ip_log) ? g.ip_log.split(' — ')[0]||'' : '';
+      row.innerHTML =
+        '<div class="log-dot '+st+'"></div>'
+        +'<div style="flex:1;min-width:0;">'
+        +'<div class="log-name">'+escH(g.prenom)+'</div>'
+        +(ts?'<div class="log-ts">'+escH(ts)+'</div>':'')
+        +'</div>'
+        +'<div class="log-ip">'+escH((g.adr_ip||'').split(',')[0])+'</div>';
 
-          var marker = L.circleMarker([geo.lat, geo.lon],{
-            radius: 10,
-            fillColor: color,
-            color: 'rgba(255,255,255,.85)',
-            weight: 2,
-            fillOpacity: 0.92
-          }).addTo(leafletMap);
-
-          /* Tooltip : prénom + timestamp si changement */
-          var tipContent = '<strong>'+escH(g.prenom)+'</strong>';
-          if(st !== 'green' && g.ip_log){
-            var ts = g.ip_log.split(' — ')[0] || '';
-            if(ts) tipContent += '<br><span style="font-size:10px;color:#7a5008;">'+escH(ts)+'</span>';
-          }
-          marker.bindTooltip(tipContent, {
-            permanent: false,
-            direction: 'top',
-            offset: [0, -10],
-            opacity: 0.97,
-            className: 'lf-tooltip'
-          });
-
-          /* Clic → zoom + highlight ligne tableau */
-          marker.on('click', function(){
-            leafletMap.flyTo([geo.lat, geo.lon], 13, {duration: 0.9});
-            highlightFromMap(i);
-          });
-
-          markers[i] = marker;
-          bounds.push([geo.lat, geo.lon]);
-        })
-        .catch(function(){});
+      row.addEventListener('click', function(){
+        selectGuest(i, true);
+      });
+      body.appendChild(row);
     });
+  }
 
-    await Promise.all(promises);
+  /* Sélection : highlight ligne + zoom carte */
+  function selectGuest(idx, fromRow){
+    /* Déselectionner le précédent */
+    if(activeIdx >= 0){
+      var prevRow = document.getElementById('row-'+activeIdx);
+      if(prevRow) prevRow.classList.remove('active');
+      if(markers[activeIdx]) markers[activeIdx].setStyle({radius:10, weight:2});
+    }
+    activeIdx = idx;
+    var row = document.getElementById('row-'+idx);
+    if(row){
+      row.classList.add('active');
+      if(fromRow) row.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+    if(markers[idx]){
+      markers[idx].setStyle({radius:14, weight:3});
+      markers[idx].openTooltip();
+      if(!fromRow || true) leafletMap.flyTo(markers[idx].getLatLng(), 13, {duration:0.8});
+    }
+  }
 
+  /* Géolocalisation séquentielle pour respecter la rate limit ip-api */
+  async function geolocateAll(loadingEl){
+    var bounds = [];
+
+    for(var i=0; i<allGuests.length; i++){
+      var g = allGuests[i];
+      var idx = i;
+      try{
+        var r = await fetch('https://ip-api.com/json/'+encodeURIComponent(g.adr_ip.split(',')[0].trim())+'?fields=lat,lon,status,city,country');
+        var geo = await r.json();
+        if(geo.status !== 'success') continue;
+
+        var st = g.ip_status||'green';
+        var color = IP_COLORS[st];
+
+        /* Marker cercle plein */
+        var marker = L.circleMarker([geo.lat, geo.lon],{
+          radius: 10,
+          fillColor: color,
+          color: 'rgba(255,255,255,.7)',
+          weight: 2,
+          fillOpacity: 0.92,
+          interactive: true
+        }).addTo(leafletMap);
+
+        /* Tooltip : prénom + timestamp si changement */
+        var ts = (st!=='green' && g.ip_log) ? g.ip_log.split(' — ')[0]||'' : '';
+        var tipHtml = '<strong>'+escH(g.prenom)+'</strong>'
+          +(ts?'<br><span style="font-size:10px;color:rgba(255,180,80,.7);">'+escH(ts)+'</span>':'')
+          +'<br><span style="font-size:9px;color:rgba(255,220,180,.4);">'+escH(geo.city||'')+(geo.country?' · '+escH(geo.country):'')+'</span>';
+
+        marker.bindTooltip(tipHtml,{
+          permanent: false, direction:'top', offset:[0,-10],
+          opacity:0.98, className:'lf-tip'
+        });
+
+        /* Clic marker → sélectionner la ligne */
+        (function(capturedIdx){ marker.on('click', function(){ selectGuest(capturedIdx, false); }); })(idx);
+
+        markers[idx] = marker;
+        bounds.push([geo.lat, geo.lon]);
+
+        /* Pause 250ms entre requêtes pour éviter le rate limit ip-api */
+        if(i < allGuests.length-1) await new Promise(function(res){ setTimeout(res, 250); });
+
+      }catch(e){ console.warn('geolocate:', e); }
+    }
+
+    /* Supprimer le loading */
+    if(loadingEl && loadingEl.parentNode) loadingEl.parentNode.removeChild(loadingEl);
+
+    /* Ajuster la vue */
     if(bounds.length > 0){
       leafletMap.fitBounds(bounds, {padding:[40,40], maxZoom:9});
     }
-  }
 
-  /* Highlight depuis le tableau → zoome la carte */
-  window.highlightFromTableau = function(idx){
-    /* Highlight visuel du card */
-    document.querySelectorAll('.log-card').forEach(function(c){ c.classList.remove('highlight'); });
-    var card = document.getElementById('log-'+idx);
-    if(card) card.classList.add('highlight');
-
-    /* Passer sur la carte et zoomer */
-    switchTab('carte');
-    if(markers[idx]){
-      markers[idx].openTooltip();
-      leafletMap.flyTo(markers[idx].getLatLng(), 13, {duration: 0.9});
-    }
-  };
-
-  /* Highlight depuis la carte → scroll le tableau */
-  function highlightFromMap(idx){
-    document.querySelectorAll('.log-card').forEach(function(c){ c.classList.remove('highlight'); });
-    var card = document.getElementById('log-'+idx);
-    if(card){
-      card.classList.add('highlight');
-      /* Scroll vers la ligne dans le tableau sans changer d'onglet */
-      card.scrollIntoView({behavior:'smooth', block:'center'});
+    /* Sélectionner le premier automatiquement si rouge */
+    if(allGuests.length && allGuests[0].ip_status==='red'){
+      setTimeout(function(){ selectGuest(0, false); }, 400);
     }
   }
 
-  document.getElementById('quit-btn').addEventListener('click', function(){
-    location.reload();
-  });
+  document.getElementById('quit-btn').addEventListener('click', function(){ location.reload(); });
 
   function escH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
