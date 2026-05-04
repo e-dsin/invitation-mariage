@@ -30,44 +30,50 @@ body{background:#1a1a2e;}
 /* Header */
 #stage-header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(20,15,35,.85);border-bottom:1px solid rgba(255,220,180,.08);z-index:20;}
 #stage-title{font-family:'Dancing Script',cursive;font-size:20px;color:rgba(255,230,180,.8);}
+.header-right{display:flex;align-items:center;gap:10px;}
+#refresh-btn{background:rgba(255,180,80,.12);border:1px solid rgba(255,180,80,.2);border-radius:7px;padding:4px 10px;color:rgba(255,200,120,.7);font-size:10px;cursor:pointer;font-style:italic;}
 #quit-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,220,180,.12);border-radius:8px;padding:5px 12px;color:rgba(255,230,180,.5);font-size:11px;cursor:pointer;}
 
 /* ── CARTE plein écran ── */
 #map{flex:1;width:100%;min-height:0;}
 
-/* ── PANNEAU TABLEAU intégré à la carte (Leaflet Control) ── */
-.lf-panel{background:rgba(20,15,35,.92);border:1px solid rgba(255,220,180,.12);border-radius:12px;width:290px;max-height:55vh;display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(8px);}
-.lf-panel-header{padding:9px 12px;border-bottom:1px solid rgba(255,220,180,.08);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.lf-panel-title{font-family:'Dancing Script',cursive;font-size:16px;color:rgba(255,230,180,.8);}
-.lf-panel-count{font-size:10px;font-style:italic;color:rgba(255,220,180,.38);}
+/* ── PANNEAU TABLEAU — Leaflet Control ── */
+.lf-panel{background:rgba(20,15,35,.92);border:1px solid rgba(255,220,180,.12);border-radius:12px;width:270px;max-height:52vh;display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(8px);}
+.lf-panel-header{padding:8px 12px;border-bottom:1px solid rgba(255,220,180,.08);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.lf-panel-title{font-family:'Dancing Script',cursive;font-size:15px;color:rgba(255,230,180,.8);}
+.lf-panel-count{font-size:10px;font-style:italic;color:rgba(255,220,180,.35);}
 .lf-panel-body{overflow-y:auto;flex:1;}
 .lf-panel-body::-webkit-scrollbar{width:3px;}
 .lf-panel-body::-webkit-scrollbar-thumb{background:rgba(255,180,80,.2);border-radius:2px;}
 
-/* Lignes du tableau intégré */
-.log-row{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;border-bottom:1px solid rgba(255,220,180,.05);transition:background .15s;}
-.log-row:hover{background:rgba(255,180,80,.08);}
+/* Lignes tableau */
+.log-row{display:flex;align-items:flex-start;gap:8px;padding:7px 12px;cursor:pointer;border-bottom:1px solid rgba(255,220,180,.05);transition:background .15s;}
+.log-row:hover{background:rgba(255,180,80,.07);}
 .log-row.active{background:rgba(255,140,40,.15);border-left:2.5px solid rgba(255,160,60,.7);}
-.log-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(255,255,255,.25);}
+.log-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:3px;border:1.5px solid rgba(255,255,255,.2);}
 .log-dot.green{background:#3a7020;}.log-dot.orange{background:#c87010;}.log-dot.red{background:#c02020;}
-.log-name{font-family:'Dancing Script',cursive;font-size:14px;color:rgba(255,230,180,.85);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.log-ip{font-size:9px;color:rgba(255,220,180,.32);font-style:italic;flex-shrink:0;}
-.log-ts{font-size:9px;color:rgba(255,180,80,.5);margin-top:1px;}
+.log-info{flex:1;min-width:0;}
+.log-name{font-family:'Dancing Script',cursive;font-size:14px;color:rgba(255,230,180,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.log-city{font-size:9px;color:rgba(255,220,180,.38);font-style:italic;margin-top:1px;}
+.log-ts{font-size:9px;color:rgba(255,180,80,.55);margin-top:1px;}
+.log-ip-txt{font-size:9px;color:rgba(255,220,180,.25);flex-shrink:0;margin-top:3px;}
 
-/* Légende */
+/* ── LÉGENDE — Leaflet Control ── */
 .lf-legend{background:rgba(20,15,35,.88);border:1px solid rgba(255,220,180,.1);border-radius:10px;padding:8px 12px;}
 .leg-row{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:10px;font-style:italic;color:rgba(255,220,180,.55);}
 .leg-row:last-child{margin-bottom:0;}
 .leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(255,255,255,.2);}
 
+/* ── LOADING overlay ── */
+#loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(20,15,35,.8);z-index:50;gap:14px;pointer-events:none;}
+.load-spinner{width:34px;height:34px;border:2.5px solid rgba(255,180,80,.15);border-top-color:rgba(255,180,80,.75);border-radius:50%;animation:spin .9s linear infinite;}
+.load-txt{font-style:italic;font-size:12px;color:rgba(255,220,180,.55);}
+.load-prog{font-size:11px;color:rgba(255,180,80,.5);}
+
 /* Tooltip Leaflet */
 .lf-tip{background:rgba(20,15,35,.96)!important;border:1px solid rgba(255,180,80,.3)!important;border-radius:8px!important;padding:6px 10px!important;font-family:Georgia,serif!important;font-size:12px!important;color:rgba(255,230,180,.9)!important;box-shadow:0 3px 12px rgba(0,0,0,.4)!important;white-space:nowrap!important;}
 .lf-tip.leaflet-tooltip-top::before{border-top-color:rgba(255,180,80,.3)!important;}
 
-/* Loading overlay */
-#loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(20,15,35,.75);z-index:50;gap:12px;}
-.load-txt{font-style:italic;font-size:13px;color:rgba(255,220,180,.6);}
-.load-spinner{width:32px;height:32px;border:2.5px solid rgba(255,180,80,.15);border-top-color:rgba(255,180,80,.7);border-radius:50%;animation:spin .9s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes errShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 </style>
@@ -92,7 +98,10 @@ body{background:#1a1a2e;}
 <div id="stage">
   <div id="stage-header">
     <div id="stage-title">Rapport IP · Connexions</div>
-    <button id="quit-btn">✕ Quitter</button>
+    <div class="header-right">
+      <button id="refresh-btn">↺ Actualiser</button>
+      <button id="quit-btn">✕ Quitter</button>
+    </div>
   </div>
   <div id="map"></div>
 </div>
@@ -100,16 +109,28 @@ body{background:#1a1a2e;}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function(){
-  var adminPin = '';
-  var allGuests = [];
-  var markers = {};
+
+  /* ════════════════════════════════════════════
+     CONSTANTES
+  ════════════════════════════════════════════ */
+  var SESSION_KEY = 'rapport_ip_dict';
+  var IP_COLORS   = {green:'#3a7020', orange:'#c87010', red:'#c02020'};
+  var IP_LABELS   = {green:'IP stable', orange:'Changement < 100m', red:'Changement > 100m'};
+  var ORDER       = {red:0, orange:1, green:2};
+
+  /* ════════════════════════════════════════════
+     ÉTAT
+  ════════════════════════════════════════════ */
+  var adminPin   = '';
+  var guestDict  = null;   /* dictionnaire JSON source de vérité */
   var leafletMap = null;
-  var activeIdx = -1;
+  var geoLayer   = null;   /* L.geoJSON feature layer */
+  var activeIdx  = -1;
+  var markerMap  = {};     /* idx → Leaflet layer */
 
-  var IP_COLORS = {green:'#3a7020', orange:'#c87010', red:'#c02020'};
-  var IP_LABELS = {green:'IP stable', orange:'Changement < 100m', red:'Changement > 100m'};
-
-  /* ── PIN ── */
+  /* ════════════════════════════════════════════
+     PIN — même logique que messages.html
+  ════════════════════════════════════════════ */
   var pds = ['p0','p1','p2','p3'].map(function(id){ return document.getElementById(id); });
   pds.forEach(function(inp, i){
     inp.addEventListener('keydown', function(e){
@@ -130,86 +151,248 @@ body{background:#1a1a2e;}
       return;
     }
     adminPin = c;
-    loadData();
+    loadData(false);
   }
 
-  function loadData(){
-    document.getElementById('pin-btn').textContent = 'Chargement…';
-    document.getElementById('pin-btn').disabled = true;
-    fetch('/.netlify/functions/admin-list-guests',{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({pin: adminPin})
-    })
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      if(data.error){
-        document.getElementById('pin-err').textContent = 'PIN invalide';
-        document.getElementById('pin-btn').textContent = 'Accéder au rapport';
-        document.getElementById('pin-btn').disabled = false;
-        adminPin=''; pds.forEach(function(d){ d.value=''; });
-        return;
+  /* ════════════════════════════════════════════
+     FONCTION 1 — buildGuestData(rawGuests)
+     Reçoit la liste brute, géolocalise chaque IP,
+     retourne un dictionnaire JSON structuré.
+     Persisté en sessionStorage.
+  ════════════════════════════════════════════ */
+  async function buildGuestData(rawGuests, loadingEl, progEl) {
+    var withIp = rawGuests.filter(function(g){ return g.ip_status && g.adr_ip; });
+    withIp.sort(function(a,b){ return (ORDER[a.ip_status]||2)-(ORDER[b.ip_status]||2); });
+
+    var total = withIp.length;
+    var result = { guests: [], generated_at: new Date().toISOString() };
+
+    /* Géoloc en parallèle par batch de 4 pour respecter ip-api (45 req/min gratuit) */
+    var BATCH = 4;
+    for(var i=0; i<withIp.length; i+=BATCH){
+      var batch = withIp.slice(i, i+BATCH);
+      var batchResults = await Promise.all(batch.map(function(g){
+        return fetch('https://ip-api.com/json/'+encodeURIComponent(g.adr_ip.split(',')[0].trim())
+          +'?fields=lat,lon,status,city,country,regionName')
+          .then(function(r){ return r.json(); })
+          .then(function(geo){
+            var entry = {
+              prenom:               g.prenom               || '',
+              adr_ip:               g.adr_ip               || '',
+              ip_status:            g.ip_status            || 'green',
+              ip_log:               g.ip_log               || '',
+              timestamp_first_click:g.timestamp_first_click|| '',
+              lat:  null,
+              lon:  null,
+              city:    '',
+              region:  '',
+              country: ''
+            };
+            if(geo.status === 'success'){
+              entry.lat     = geo.lat;
+              entry.lon     = geo.lon;
+              entry.city    = geo.city    || '';
+              entry.region  = geo.regionName || '';
+              entry.country = geo.country || '';
+            }
+            return entry;
+          })
+          .catch(function(){ return null; });
+      }));
+
+      batchResults.forEach(function(e){ if(e) result.guests.push(e); });
+
+      /* Mise à jour progression */
+      if(progEl){
+        var done = Math.min(i+BATCH, total);
+        progEl.textContent = done + ' / ' + total + ' adresses traitées';
       }
-      allGuests = (data.guests||[]).filter(function(g){ return g.ip_status && g.adr_ip; });
-      /* Trier : rouge → orange → vert */
-      var order = {red:0, orange:1, green:2};
-      allGuests.sort(function(a,b){ return (order[a.ip_status]||2)-(order[b.ip_status]||2); });
 
-      document.getElementById('pin-screen').style.display='none';
-      var stage = document.getElementById('stage');
-      stage.style.display='flex';
+      /* Pause entre batches */
+      if(i+BATCH < withIp.length) await pause(400);
+    }
 
-      initMap();
-    })
-    .catch(function(){
-      document.getElementById('pin-err').textContent = 'Erreur de connexion';
-      document.getElementById('pin-btn').textContent = 'Accéder au rapport';
-      document.getElementById('pin-btn').disabled = false;
-    });
+    /* Persister en sessionStorage */
+    try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(result)); }
+    catch(e){ console.warn('sessionStorage write error:', e); }
+
+    return result;
   }
 
-  /* ── CARTE ── */
-  function initMap(){
-    leafletMap = L.map('map',{zoomControl:false, attributionControl:false}).setView([46.5, 2.5], 5);
+  /* ════════════════════════════════════════════
+     FONCTION 2 — renderFeatures(dict)
+     Crée le GeoJSON FeatureCollection,
+     l'ajoute à la carte via L.geoJSON,
+     et construit le tableau dans le panneau.
+  ════════════════════════════════════════════ */
+  function renderFeatures(dict) {
+    if(!dict || !dict.guests || !dict.guests.length) return;
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-      maxZoom:18
+    /* Nettoyer l'ancien layer si existant */
+    if(geoLayer){ leafletMap.removeLayer(geoLayer); geoLayer=null; }
+    markerMap = {};
+    activeIdx = -1;
+
+    /* ── Construire le GeoJSON FeatureCollection ── */
+    var features = dict.guests
+      .filter(function(g){ return g.lat !== null && g.lon !== null; })
+      .map(function(g, i){
+        return {
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: [g.lon, g.lat] },
+          properties: {
+            idx:                  i,
+            prenom:               g.prenom,
+            ip_status:            g.ip_status,
+            ip_log:               g.ip_log,
+            timestamp_first_click:g.timestamp_first_click,
+            adr_ip:               g.adr_ip,
+            city:                 g.city,
+            region:               g.region,
+            country:              g.country
+          }
+        };
+      });
+
+    var featureCollection = { type: 'FeatureCollection', features: features };
+
+    /* ── Ajouter le layer GeoJSON à la carte ── */
+    geoLayer = L.geoJSON(featureCollection, {
+      pointToLayer: function(feature, latlng){
+        var st    = feature.properties.ip_status || 'green';
+        var color = IP_COLORS[st];
+        var marker = L.circleMarker(latlng, {
+          radius:      10,
+          fillColor:   color,
+          color:       'rgba(255,255,255,.75)',
+          weight:      2,
+          fillOpacity: 0.92,
+          interactive: true
+        });
+
+        /* Tooltip */
+        var p   = feature.properties;
+        var ts  = (p.ip_status !== 'green' && p.ip_log) ? p.ip_log.split(' — ')[0]||'' : '';
+        var loc = [p.city, p.country].filter(Boolean).join(' · ');
+        var tip = '<strong>'+escH(p.prenom)+'</strong>'
+          +(ts ? '<br><span style="font-size:10px;color:rgba(255,180,80,.75);">'+escH(ts)+'</span>' : '')
+          +(loc ? '<br><span style="font-size:9px;color:rgba(255,220,180,.4);">'+escH(loc)+'</span>' : '');
+
+        marker.bindTooltip(tip,{
+          permanent:false, direction:'top', offset:[0,-10],
+          opacity:0.97, className:'lf-tip'
+        });
+
+        /* Clic marker → sélectionner ligne tableau */
+        marker.on('click', function(){
+          selectGuest(p.idx, false);
+        });
+
+        markerMap[p.idx] = marker;
+        return marker;
+      }
     }).addTo(leafletMap);
 
-    /* Contrôle zoom en bas à droite */
-    L.control.zoom({position:'bottomright'}).addTo(leafletMap);
+    /* ── Construire le tableau dans le panneau ── */
+    var body = document.getElementById('panel-body');
+    var count = document.getElementById('panel-count');
+    if(count) count.textContent = dict.guests.length + ' invité'+(dict.guests.length>1?'s':'');
+    if(body){
+      body.innerHTML = '';
+      dict.guests.forEach(function(g, i){
+        var st  = g.ip_status || 'green';
+        var ts  = (st !== 'green' && g.ip_log) ? g.ip_log.split(' — ')[0]||'' : '';
+        var loc = [g.city, g.country].filter(Boolean).join(' · ');
+        var row = document.createElement('div');
+        row.className = 'log-row';
+        row.id = 'row-'+i;
+        row.innerHTML =
+          '<div class="log-dot '+st+'"></div>'
+          +'<div class="log-info">'
+          +'<div class="log-name">'+escH(g.prenom)+'</div>'
+          +(loc  ? '<div class="log-city">'+escH(loc)+'</div>' : '')
+          +(ts   ? '<div class="log-ts">'+escH(ts)+'</div>' : '')
+          +'</div>'
+          +'<div class="log-ip-txt">'+escH((g.adr_ip||'').split('.').slice(0,2).join('.')+'.x.x')+'</div>';
+        row.addEventListener('click', function(){ selectGuest(i, true); });
+        body.appendChild(row);
+      });
+    }
 
-    /* Attribution discrète */
+    /* Ajuster la vue sur tous les points */
+    var bounds = features
+      .map(function(f){ return [f.geometry.coordinates[1], f.geometry.coordinates[0]]; });
+    if(bounds.length > 0){
+      leafletMap.fitBounds(bounds, {padding:[40,40], maxZoom:9});
+    }
+
+    /* Auto-sélectionner le premier rouge */
+    if(dict.guests.length && dict.guests[0].ip_status === 'red'){
+      setTimeout(function(){ selectGuest(0, false); }, 350);
+    }
+  }
+
+  /* ════════════════════════════════════════════
+     SÉLECTION CROISÉE
+  ════════════════════════════════════════════ */
+  function selectGuest(idx, fromRow) {
+    /* Désélectionner le précédent */
+    if(activeIdx >= 0){
+      var prevRow = document.getElementById('row-'+activeIdx);
+      if(prevRow) prevRow.classList.remove('active');
+      if(markerMap[activeIdx]) markerMap[activeIdx].setStyle({radius:10, weight:2});
+    }
+    activeIdx = idx;
+
+    /* Surligner la ligne */
+    var row = document.getElementById('row-'+idx);
+    if(row){
+      row.classList.add('active');
+      if(fromRow) row.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+
+    /* Agrandir le marker et zoomer */
+    if(markerMap[idx]){
+      markerMap[idx].setStyle({radius:14, weight:3});
+      markerMap[idx].openTooltip();
+      leafletMap.flyTo(markerMap[idx].getLatLng(), 12, {duration:0.8});
+    }
+  }
+
+  /* ════════════════════════════════════════════
+     INITIALISATION CARTE
+  ════════════════════════════════════════════ */
+  function initMap() {
+    leafletMap = L.map('map',{zoomControl:false, attributionControl:false}).setView([46.5,2.5],5);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(leafletMap);
+    L.control.zoom({position:'bottomright'}).addTo(leafletMap);
     L.control.attribution({position:'bottomright', prefix:false})
-      .addAttribution('© <a href="https://carto.com" style="color:rgba(255,180,80,.4)">CARTO</a> © <a href="https://openstreetmap.org" style="color:rgba(255,180,80,.4)">OSM</a>')
+      .addAttribution('© <a href="https://carto.com" style="color:rgba(255,180,80,.35)">CARTO</a> © <a href="https://openstreetmap.org" style="color:rgba(255,180,80,.35)">OSM</a>')
       .addTo(leafletMap);
 
-    /* ── PANNEAU TABLEAU comme Leaflet Control ── */
+    /* Panneau tableau */
     var PanelControl = L.Control.extend({
       options:{position:'topleft'},
-      onAdd: function(){
+      onAdd:function(){
         var div = L.DomUtil.create('div','lf-panel');
         L.DomEvent.disableScrollPropagation(div);
         L.DomEvent.disableClickPropagation(div);
-
-        var header = L.DomUtil.create('div','lf-panel-header',div);
-        header.innerHTML = '<span class="lf-panel-title">Connexions</span>'
-          +'<span class="lf-panel-count" id="panel-count">'+allGuests.length+' invité'+(allGuests.length>1?'s':'')+'</span>';
-
+        var hdr = L.DomUtil.create('div','lf-panel-header',div);
+        hdr.innerHTML='<span class="lf-panel-title">Connexions</span><span class="lf-panel-count" id="panel-count">—</span>';
         var body = L.DomUtil.create('div','lf-panel-body',div);
         body.id = 'panel-body';
-        renderRows(body);
         return div;
       }
     });
     new PanelControl().addTo(leafletMap);
 
-    /* ── LÉGENDE comme Leaflet Control ── */
+    /* Légende */
     var LegendControl = L.Control.extend({
       options:{position:'bottomleft'},
-      onAdd: function(){
+      onAdd:function(){
         var div = L.DomUtil.create('div','lf-legend');
         L.DomEvent.disableClickPropagation(div);
-        div.innerHTML =
+        div.innerHTML=
           '<div class="leg-row"><div class="leg-dot" style="background:#3a7020;"></div>IP stable</div>'
           +'<div class="leg-row"><div class="leg-dot" style="background:#c87010;"></div>Changement &lt; 100m</div>'
           +'<div class="leg-row"><div class="leg-dot" style="background:#c02020;"></div>Changement &gt; 100m</div>';
@@ -217,129 +400,90 @@ body{background:#1a1a2e;}
       }
     });
     new LegendControl().addTo(leafletMap);
-
-    /* ── LOADING overlay temporaire ── */
-    var mapEl = document.getElementById('map');
-    var loading = document.createElement('div');
-    loading.id='loading';
-    loading.innerHTML='<div class="load-spinner"></div><div class="load-txt">Géolocalisation des adresses IP…</div>';
-    mapEl.appendChild(loading);
-
-    geolocateAll(loading);
   }
 
-  /* Render lignes dans le panneau */
-  function renderRows(body){
-    if(!allGuests.length){
-      body.innerHTML='<div style="padding:16px;text-align:center;font-style:italic;font-size:11px;color:rgba(255,220,180,.35);">Aucun accès enregistré</div>';
+  /* ════════════════════════════════════════════
+     CHARGEMENT PRINCIPAL
+  ════════════════════════════════════════════ */
+  async function loadData(forceRefresh) {
+    document.getElementById('pin-btn') && (document.getElementById('pin-btn').textContent='Chargement…');
+    document.getElementById('pin-btn') && (document.getElementById('pin-btn').disabled=true);
+
+    /* Récupérer la liste brute */
+    var raw;
+    try {
+      var r = await fetch('/.netlify/functions/admin-list-guests',{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({pin: adminPin})
+      });
+      raw = await r.json();
+    } catch(e) {
+      document.getElementById('pin-err') && (document.getElementById('pin-err').textContent='Erreur de connexion');
+      document.getElementById('pin-btn') && (document.getElementById('pin-btn').textContent='Accéder au rapport');
+      document.getElementById('pin-btn') && (document.getElementById('pin-btn').disabled=false);
       return;
     }
-    allGuests.forEach(function(g, i){
-      var row = document.createElement('div');
-      row.className = 'log-row';
-      row.id = 'row-'+i;
-      var st = g.ip_status||'green';
-      var ts = (st!=='green' && g.ip_log) ? g.ip_log.split(' — ')[0]||'' : '';
-      row.innerHTML =
-        '<div class="log-dot '+st+'"></div>'
-        +'<div style="flex:1;min-width:0;">'
-        +'<div class="log-name">'+escH(g.prenom)+'</div>'
-        +(ts?'<div class="log-ts">'+escH(ts)+'</div>':'')
-        +'</div>'
-        +'<div class="log-ip">'+escH((g.adr_ip||'').split(',')[0])+'</div>';
 
-      row.addEventListener('click', function(){
-        selectGuest(i, true);
-      });
-      body.appendChild(row);
-    });
-  }
-
-  /* Sélection : highlight ligne + zoom carte */
-  function selectGuest(idx, fromRow){
-    /* Déselectionner le précédent */
-    if(activeIdx >= 0){
-      var prevRow = document.getElementById('row-'+activeIdx);
-      if(prevRow) prevRow.classList.remove('active');
-      if(markers[activeIdx]) markers[activeIdx].setStyle({radius:10, weight:2});
+    if(raw.error){
+      document.getElementById('pin-err') && (document.getElementById('pin-err').textContent='PIN invalide');
+      document.getElementById('pin-btn') && (document.getElementById('pin-btn').textContent='Accéder au rapport');
+      document.getElementById('pin-btn') && (document.getElementById('pin-btn').disabled=false);
+      adminPin=''; pds.forEach(function(d){ d.value=''; });
+      return;
     }
-    activeIdx = idx;
-    var row = document.getElementById('row-'+idx);
-    if(row){
-      row.classList.add('active');
-      if(fromRow) row.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+    /* Afficher le stage */
+    document.getElementById('pin-screen').style.display='none';
+    var stage = document.getElementById('stage');
+    stage.style.display='flex';
+    if(!leafletMap) initMap();
+
+    /* ── Vérifier sessionStorage ── */
+    var cached = null;
+    if(!forceRefresh){
+      try {
+        var stored = sessionStorage.getItem(SESSION_KEY);
+        if(stored) cached = JSON.parse(stored);
+      } catch(e){}
     }
-    if(markers[idx]){
-      markers[idx].setStyle({radius:14, weight:3});
-      markers[idx].openTooltip();
-      if(!fromRow || true) leafletMap.flyTo(markers[idx].getLatLng(), 13, {duration:0.8});
+
+    if(cached && cached.guests && cached.guests.length){
+      /* Utiliser le dictionnaire en cache — pas de géoloc */
+      guestDict = cached;
+      renderFeatures(guestDict);
+      return;
     }
-  }
 
-  /* Géolocalisation séquentielle pour respecter la rate limit ip-api */
-  async function geolocateAll(loadingEl){
-    var bounds = [];
+    /* ── Pas de cache : construire le dictionnaire ── */
+    var mapEl = document.getElementById('map');
+    var loadingEl = document.createElement('div');
+    loadingEl.id='loading';
+    loadingEl.innerHTML=
+      '<div class="load-spinner"></div>'
+      +'<div class="load-txt">Géolocalisation des adresses IP…</div>'
+      +'<div class="load-prog" id="load-prog"></div>';
+    mapEl.appendChild(loadingEl);
 
-    for(var i=0; i<allGuests.length; i++){
-      var g = allGuests[i];
-      var idx = i;
-      try{
-        var r = await fetch('https://ip-api.com/json/'+encodeURIComponent(g.adr_ip.split(',')[0].trim())+'?fields=lat,lon,status,city,country');
-        var geo = await r.json();
-        if(geo.status !== 'success') continue;
-
-        var st = g.ip_status||'green';
-        var color = IP_COLORS[st];
-
-        /* Marker cercle plein */
-        var marker = L.circleMarker([geo.lat, geo.lon],{
-          radius: 10,
-          fillColor: color,
-          color: 'rgba(255,255,255,.7)',
-          weight: 2,
-          fillOpacity: 0.92,
-          interactive: true
-        }).addTo(leafletMap);
-
-        /* Tooltip : prénom + timestamp si changement */
-        var ts = (st!=='green' && g.ip_log) ? g.ip_log.split(' — ')[0]||'' : '';
-        var tipHtml = '<strong>'+escH(g.prenom)+'</strong>'
-          +(ts?'<br><span style="font-size:10px;color:rgba(255,180,80,.7);">'+escH(ts)+'</span>':'')
-          +'<br><span style="font-size:9px;color:rgba(255,220,180,.4);">'+escH(geo.city||'')+(geo.country?' · '+escH(geo.country):'')+'</span>';
-
-        marker.bindTooltip(tipHtml,{
-          permanent: false, direction:'top', offset:[0,-10],
-          opacity:0.98, className:'lf-tip'
-        });
-
-        /* Clic marker → sélectionner la ligne */
-        (function(capturedIdx){ marker.on('click', function(){ selectGuest(capturedIdx, false); }); })(idx);
-
-        markers[idx] = marker;
-        bounds.push([geo.lat, geo.lon]);
-
-        /* Pause 250ms entre requêtes pour éviter le rate limit ip-api */
-        if(i < allGuests.length-1) await new Promise(function(res){ setTimeout(res, 250); });
-
-      }catch(e){ console.warn('geolocate:', e); }
-    }
+    guestDict = await buildGuestData(raw.guests||[], loadingEl, document.getElementById('load-prog'));
 
     /* Supprimer le loading */
-    if(loadingEl && loadingEl.parentNode) loadingEl.parentNode.removeChild(loadingEl);
+    if(loadingEl.parentNode) loadingEl.parentNode.removeChild(loadingEl);
 
-    /* Ajuster la vue */
-    if(bounds.length > 0){
-      leafletMap.fitBounds(bounds, {padding:[40,40], maxZoom:9});
-    }
-
-    /* Sélectionner le premier automatiquement si rouge */
-    if(allGuests.length && allGuests[0].ip_status==='red'){
-      setTimeout(function(){ selectGuest(0, false); }, 400);
-    }
+    renderFeatures(guestDict);
   }
+
+  /* Bouton actualiser — vide le cache et recharge */
+  document.getElementById('refresh-btn').addEventListener('click', function(){
+    try { sessionStorage.removeItem(SESSION_KEY); } catch(e){}
+    loadData(true);
+  });
 
   document.getElementById('quit-btn').addEventListener('click', function(){ location.reload(); });
 
+  /* ════════════════════════════════════════════
+     UTILITAIRES
+  ════════════════════════════════════════════ */
+  function pause(ms){ return new Promise(function(res){ setTimeout(res, ms); }); }
   function escH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 })();
