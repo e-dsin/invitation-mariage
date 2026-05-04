@@ -284,7 +284,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
 
     <!-- P1 : RSVP -->
     <div class="pnl" id="p1">
-      <div class="rvh"><div class="rvt">Votre réponse</div><div class="rvdl">Répondre avant le 15 avril 2026</div></div>
+      <div class="rvh"><div class="rvt">Votre invitation vous sera exigée</div><div class="rvdl">pour contrôle d'accès</div></div>
       <div class="rvc" id="rvf">
         <div class="rvse"><div class="rvq" id="rvq-ceremonie">Serez-vous présent(e) à la cérémonie ?</div>
           <div class="rvpr">
@@ -533,9 +533,11 @@ g('rvsub').addEventListener('click',function(){
   g('rverr').textContent='';g('rvf').style.display='none';
   var ok=g('rvok');
   ok.style.display='flex';ok.style.animation='successPop .48s cubic-bezier(.2,0,.2,1)';
-  g('rvokt').textContent=pr==='yes'?'Merci, à très bientôt !':'Merci de nous avoir prévenus';
+  g('rvokt').textContent=pr==='yes'?'Merci pour votre réponse':'Merci de nous avoir prévenus';
   var dateMsg = lv===3 ? '16 mai 2026' : '15 mai 2026';
-  var txt=pr==='yes'?'Votre présence est confirmée pour le '+dateMsg+'.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.':'Votre réponse a bien été transmise.<br>Lynda &amp; Marcel-Cédric vous remercient de vous être manifesté(e).';
+  var txt=pr==='yes'
+    ?'Votre présence est confirmée pour le '+dateMsg+'.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.<br><br><strong>Votre invitation vous sera exigée pour contrôle d\'accès.</strong>'
+    :'Votre réponse a bien été transmise.<br>Lynda &amp; Marcel-Cédric vous remercient de vous être manifesté(e).';
   g('rvokm').innerHTML=txt;
   if(pr==='yes'){var cp=g('ckp');if(cp){cp.style.transition='stroke-dashoffset .6s cubic-bezier(.2,0,.2,1) .1s';cp.style.strokeDashoffset='0';}}
 
@@ -806,10 +808,11 @@ function applyExistingRSVP(data){
   var okt=g('rvokt'), okm=g('rvokm');
   var estPresent = data.rsvp_presence==='oui';
 
-  if(okt) okt.textContent = estPresent ? 'Présence confirmée ✓' : 'Absence confirmée';
+  if(okt) okt.textContent = estPresent ? 'Merci pour votre réponse' : 'Absence confirmée';
 
+  var dateMsg2 = lv===3 ? '16 mai 2026' : '15 mai 2026';
   var txt = estPresent
-    ? 'Votre présence est enregistrée pour le 15 mai 2026.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.'
+    ? 'Votre présence est enregistrée pour le '+dateMsg2+'.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.<br><br><strong>Votre invitation vous sera exigée pour contrôle d\'accès.</strong>'
     : 'Votre absence a bien été enregistrée.<br>Lynda &amp; Marcel-Cédric vous remercient de les avoir prévenus.';
   if(data.rsvp_ck1) txt+='<br>Cocktail famille : '+(data.rsvp_ck1==='oui'?'✓ Présent(e)':'✗ Absent(e)');
   if(data.rsvp_ck2) txt+='<br>Repas de mariage : '+(data.rsvp_ck2==='oui'?'✓ Présent(e)':'✗ Absent(e)');
