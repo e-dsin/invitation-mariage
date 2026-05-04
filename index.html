@@ -257,13 +257,13 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
       <svg viewBox="0 0 155 5" style="width:155px;margin-bottom:8px;overflow:visible"><line x1="0" y1="2.5" x2="155" y2="2.5" stroke="rgba(160,80,40,.2)" stroke-width=".8" stroke-dasharray="3 4"/></svg>
       <div class="fps"><span class="fpd">— </span>Save the date<span class="fpd"> —</span></div>
       <div class="fpsa">Oui</div><div class="fpye">pour la vie</div>
+      <div id="fp-prenom-zone"></div>
       <svg viewBox="0 0 78 78" style="width:46px;height:46px;margin:2px 0 9px;overflow:visible">
         <defs><linearGradient id="gf" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d890a0"/><stop offset="45%" stop-color="#f5f0e8"/><stop offset="100%" stop-color="#90b840"/></linearGradient></defs>
         <path fill="none" stroke="url(#gf)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="700" stroke-dashoffset="0"
           d="M39,39 C31,23 18,17 23,9 C28,1 39,13 39,21 C39,13 50,1 55,9 C60,17 47,23 39,39 C47,25 61,30 59,41 C57,52 44,44 39,39 C45,49 52,61 40,65 C28,69 29,56 39,39 C29,56 15,63 11,50 C7,37 25,35 39,39 M39,50 L37,64"
           style="animation:glowPulse 2.6s ease-in-out infinite"/>
       </svg>
-      <div id="fp-prenom-zone"></div>
       <div class="fpi">Lynda &amp; Marcel-Cédric</div>
       <div class="fpi2">seront ravis de vous compter parmi leurs convives</div>
       <div class="fpsp"><div class="fpsl"></div><div class="fpsd"></div><div class="fpsl"></div></div>
@@ -409,6 +409,31 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
 var pr=null,di=[],lv=3,af='once',lbi=0,lbv=[],confirmed=false;
 var guestToken='';
 var guestJwt='';
+
+/* ── Empreinte appareil (Option C) ── */
+function getDeviceUuid(){
+  var key='_dv_uuid';
+  var id=localStorage.getItem(key);
+  if(!id){
+    id='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){
+      var r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16);
+    });
+    localStorage.setItem(key,id);
+  }
+  return id;
+}
+
+function getDeviceFp(){
+  try{
+    var fp={
+      tz:Intl.DateTimeFormat().resolvedOptions().timeZone||'',
+      lang:navigator.language||'',
+      screen:screen.width+'x'+screen.height+'x'+screen.colorDepth,
+      platform:navigator.platform||navigator.userAgentData&&navigator.userAgentData.platform||''
+    };
+    return JSON.stringify(fp);
+  }catch(e){return '{}';}
+}
 var prCk1=null, prCk2=null;
 
 var photos=[];  /* tableau vide — les photos viennent de Google Drive */
@@ -747,7 +772,6 @@ async function resolveToken(){
   var params=new URLSearchParams(window.location.search);
   var t=params.get('t');
   if(!t){
-    /* Pas de token → message erreur */
     g('token-err').classList.add('show');
     return;
   }
@@ -756,24 +780,33 @@ async function resolveToken(){
     var res=await fetch('/.netlify/functions/resolve-token',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({guestToken:t})
+      body:JSON.stringify({
+        guestToken:t,
+        deviceUuid:getDeviceUuid(),
+        deviceFp:getDeviceFp()
+      })
     });
     var data=await res.json();
     if(!res.ok) throw new Error(data.error||'Token invalide');
     guestJwt=data.token;
-    /* Afficher le prénom sur le faire-part */
     var pz=g('fp-prenom-zone');
     if(pz&&data.prenom){
       pz.innerHTML='<div class="fp-prenom">'+data.prenom+'</div>';
     }
     go(data.niveau);
-    /* Vérifier RSVP existant */
     fetch('/.netlify/functions/check-rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:data.token})})
     .then(function(r){return r.json();})
     .then(function(rsvp){if(rsvp.rsvp_submitted){setTimeout(function(){applyExistingRSVP(rsvp);},400);}})
     .catch(function(e){console.warn('check-rsvp:',e);});
   }catch(e){
     g('token-err').classList.add('show');
+    /* Message spécifique si refus appareil */
+    var errBox=document.getElementById('token-err-box');
+    if(errBox&&e.message&&e.message.indexOf('autre appareil')>-1){
+      errBox.innerHTML='<div class="terr-ico">🔒</div>'
+        +'<div class="terr-t">Accès non autorisé</div>'
+        +'<div class="terr-s">'+e.message+'</div>';
+    }
     console.warn('resolve-token:',e.message);
   }
 }
