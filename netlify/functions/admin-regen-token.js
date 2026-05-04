@@ -55,7 +55,7 @@ exports.handler = async (event) => {
         valueInputOption: "RAW",
         data: [
           { range: `Invités!L${rowIndex}`,     values: [[newToken]] },  /* guest_token */
-          { range: `Invités!O${rowIndex}:V${rowIndex}`, values: [["","","","","","","","",""]] }, /* reset O→V */
+          { range: `Invités!O${rowIndex}:V${rowIndex}`, values: [["","","","","","","",""]] }, /* reset O→V (8 cols) */
         ]
       }
     });
