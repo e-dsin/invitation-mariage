@@ -13,10 +13,41 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://on-se-marie.ebelle.fr/preview.jpeg">
 <title>Admin — Invitation Lynda &amp; Marcel-Cédric</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;}
 body{min-height:100vh;font-family:Georgia,serif;background:linear-gradient(158deg,#d4845a 0%,#dc8870 4%,#e09080 7%,#dda0a8 11%,#d890a0 18%,#d88098 26%,#d8a0b0 33%,#e0b8c0 40%,#eac8cc 46%,#f2dcd8 52%,#f5f0e8 57%,#f0ecd8 62%,#e8e8c8 67%,#d8e4a8 73%,#c8d890 80%,#b8cc78 88%,#a8c065 95%,#98b455 100%);padding:20px 16px 40px;}
+
+/* Onglets rapport */
+.rpt-tabs{display:flex;gap:0;border-radius:12px;overflow:hidden;border:1px solid rgba(180,90,50,.22);margin-bottom:16px;}
+.rpt-tab{flex:1;padding:9px 6px;text-align:center;font-size:11px;font-style:italic;cursor:pointer;background:rgba(255,252,248,.4);color:rgba(120,50,20,.55);transition:all .2s;border:none;font-family:Georgia,serif;}
+.rpt-tab.on{background:rgba(194,65,12,.18);color:#7c2d12;font-weight:700;}
+.rpt-tab:not(:last-child){border-right:1px solid rgba(180,90,50,.18);}
+
+/* Vue liste rapport */
+#rpt-list-view,#rpt-map-view{display:none;}
+#rpt-list-view.on,#rpt-map-view.on{display:block;}
+
+/* Carte */
+#rpt-map{height:340px;border-radius:12px;overflow:hidden;border:1px solid rgba(180,90,50,.2);margin-bottom:10px;}
+
+/* Légende carte */
+.map-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;font-style:italic;color:rgba(110,50,20,.65);margin-bottom:12px;}
+.map-leg-item{display:flex;align-items:center;gap:5px;}
+.map-leg-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(0,0,0,.12);}
+
+/* Cards rapport liste */
+.rpt-ip-card{background:rgba(255,252,248,.45);border:1px solid rgba(180,90,50,.18);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
+.rpt-ip-name{font-family:'Dancing Script',cursive;font-size:18px;color:#7c3010;margin-bottom:2px;}
+.rpt-ip-addr{font-size:10px;color:rgba(110,50,20,.45);font-style:italic;margin-bottom:5px;}
+.rpt-ip-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-style:italic;padding:3px 10px;border-radius:8px;}
+.rpt-ip-badge.green{background:rgba(80,160,50,.15);color:#2d6010;border:1px solid rgba(80,160,50,.3);}
+.rpt-ip-badge.orange{background:rgba(200,140,20,.15);color:#7a5008;border:1px solid rgba(200,140,20,.3);}
+.rpt-ip-badge.red{background:rgba(200,50,30,.15);color:#8c1010;border:1px solid rgba(200,50,30,.3);}
+.rpt-ip-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:3px;}
+.rpt-ip-dot.green{background:#3a7020;}.rpt-ip-dot.orange{background:#c87010;}.rpt-ip-dot.red{background:#c02020;}
+.rpt-ip-log{font-size:10px;color:rgba(110,50,20,.38);margin-top:3px;}
 
 .page{display:none;max-width:500px;margin:0 auto;}
 .page.active{display:block;}
@@ -81,12 +112,6 @@ input::placeholder{color:rgba(160,90,50,.35);}
 .guest-rsvp{font-size:11px;color:rgba(110,50,20,.65);}
 .rsvp-oui{color:#2d6010;font-weight:700;}
 .rsvp-non{color:#8c1020;}
-.ip-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle;}
-.ip-green{background:#3a7020;}
-.ip-orange{background:#c87010;}
-.ip-red{background:#c02020;}
-.btn-regen{padding:3px 8px;border-radius:6px;border:1px solid rgba(180,60,20,.3);background:rgba(255,240,230,.6);font-size:10px;cursor:pointer;color:rgba(140,40,10,.7);}
-.btn-regen:hover{background:rgba(255,220,200,.8);}
 
 /* SECTION ADD */
 .section-title{font-family:'Dancing Script',cursive;font-size:22px;color:#7c3010;margin-bottom:14px;}
@@ -98,17 +123,8 @@ input::placeholder{color:rgba(160,90,50,.35);}
 
 .sep{height:1px;background:rgba(180,90,50,.15);margin:16px 0;}
 
-/* RAPPORT IP */
-.rpt-ip-card{background:rgba(255,252,248,.45);border:1px solid rgba(180,90,50,.18);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
-.rpt-ip-name{font-family:'Dancing Script',cursive;font-size:18px;color:#7c3010;margin-bottom:2px;}
-.rpt-ip-addr{font-size:10px;color:rgba(110,50,20,.45);font-style:italic;margin-bottom:5px;}
-.rpt-ip-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-style:italic;padding:3px 10px;border-radius:8px;}
-.rpt-ip-badge.green{background:rgba(80,160,50,.15);color:#2d6010;border:1px solid rgba(80,160,50,.3);}
-.rpt-ip-badge.orange{background:rgba(200,140,20,.15);color:#7a5008;border:1px solid rgba(200,140,20,.3);}
-.rpt-ip-badge.red{background:rgba(200,50,30,.15);color:#8c1010;border:1px solid rgba(200,50,30,.3);}
-.rpt-ip-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:3px;}
-.rpt-ip-dot.green{background:#3a7020;}.rpt-ip-dot.orange{background:#c87010;}.rpt-ip-dot.red{background:#c02020;}
-.rpt-ip-log{font-size:10px;color:rgba(110,50,20,.38);margin-top:3px;}
+/* LOGOUT */
+.logout{text-align:right;margin-bottom:12px;}
 .logout button{background:none;border:none;font-size:11px;font-style:italic;color:rgba(140,60,20,.5);cursor:pointer;text-decoration:underline;}
 </style>
 </head>
@@ -195,8 +211,27 @@ input::placeholder{color:rgba(160,90,50,.35);}
     Rapport IP
     <span id="rpt-refresh-btn" style="font-size:12px;font-style:italic;color:rgba(140,60,20,.5);cursor:pointer;text-decoration:underline;margin-left:8px;">actualiser</span>
   </div>
-  <div class="msg" id="msg-rpt"></div>
-  <div id="rpt-ip-list"></div>
+
+  <!-- Onglets Liste / Carte -->
+  <div class="rpt-tabs">
+    <button class="rpt-tab on" onclick="switchRptTab('list')">📋 Liste</button>
+    <button class="rpt-tab" onclick="switchRptTab('map')">🗺 Carte</button>
+  </div>
+
+  <!-- Vue liste -->
+  <div id="rpt-list-view" class="on">
+    <div id="rpt-ip-list"></div>
+  </div>
+
+  <!-- Vue carte -->
+  <div id="rpt-map-view">
+    <div class="map-legend">
+      <div class="map-leg-item"><div class="map-leg-dot" style="background:#3a7020;"></div>IP stable</div>
+      <div class="map-leg-item"><div class="map-leg-dot" style="background:#c87010;"></div>Changement mineur (&lt; 100m)</div>
+      <div class="map-leg-item"><div class="map-leg-dot" style="background:#c02020;"></div>Changement &gt; 100m</div>
+    </div>
+    <div id="rpt-map"></div>
+  </div>
 
 </div>
 
@@ -414,20 +449,10 @@ input::placeholder{color:rgba(160,90,50,.35);}
           +(g.rsvp_ck1?'<br>Cocktail famille : '+(g.rsvp_ck1==='oui'?'✓':'✗'):'')
           +(g.rsvp_ck2?'<br>Repas de mariage : '+(g.rsvp_ck2==='oui'?'✓':'✗'):'')
         : '<span style="color:rgba(150,80,30,.45);">En attente</span>';
-
-      /* Statut IP */
-      var ipHtml = '';
-      if(g.ip_status){
-        var ipLabel = g.ip_status==='green'?'IP stable':g.ip_status==='orange'?'Changement mineur':'Changement > 100m';
-        ipHtml = '<div style="font-size:10px;margin-top:3px;font-style:italic;">'
-          +'<span class="ip-dot ip-'+g.ip_status+'"></span>'+ipLabel
-          +(g.adr_ip?' — '+escHtml(g.adr_ip):'')+'</div>';
-      }
-
       var siteUrl = 'https://on-se-marie.ebelle.fr';
       var lienInvite = g.guest_token ? siteUrl+'?t='+g.guest_token : '';
-      var phoneEnc = encodeURIComponent(g.telephone||'');
-      var prenomEnc = encodeURIComponent(g.prenom||'');
+      var msgWA = 'Bonjour '+g.prenom+' 🌸\n\nLynda & Marcel-Cédric ont le bonheur de vous annoncer leur mariage et seraient touchés de vous avoir à leurs côtés pour célébrer ce jour si précieux.\n\nVotre invitation personnelle :\n'+lienInvite;
+      var waUrl = lienInvite ? 'https://wa.me/'+g.telephone.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(msgWA) : '';
 
       return '<div class="guest-card">'
         +'<div class="guest-top">'
@@ -435,58 +460,14 @@ input::placeholder{color:rgba(160,90,50,.35);}
         +'<span class="guest-badge badge-'+g.niveau+'">Niv. '+g.niveau+' — '+nivLabels[g.niveau]+'</span>'
         +'</div>'
         +'<div class="guest-tel">'+escHtml(g.telephone)+'</div>'
-        +(g.table?'<div style="font-size:10px;font-style:italic;color:rgba(130,60,20,.6);margin-bottom:3px;">🪑 Table : <strong>'+escHtml(g.table)+'</strong></div>':'')
-        +(g.timestamp_first_click?'<div style="font-size:10px;font-style:italic;color:rgba(110,50,20,.45);margin-bottom:3px;">Premier accès : '+escHtml(g.timestamp_first_click)+'</div>':'')
-        +ipHtml
-        +(lienInvite?'<div style="margin:6px 0;display:flex;align-items:center;gap:5px;flex-wrap:wrap;">'
+        +(g.first_click?'<div style="font-size:10px;font-style:italic;color:rgba(110,50,20,.45);margin-bottom:4px;"> Premier accès : '+escHtml(g.first_click)+'</div>':'')
+        +(lienInvite?'<div style="margin:4px 0 6px;display:flex;align-items:center;gap:6px;">'
           +'<span style="font-size:10px;color:rgba(110,50,20,.45);word-break:break-all;flex:1;">'+escHtml(lienInvite)+'</span>'
           +'<button onclick="navigator.clipboard.writeText(\''+escHtml(lienInvite)+'\').then(function(){this.textContent=\'✓\';}.bind(this))" '
           +'style="flex-shrink:0;padding:3px 8px;border-radius:6px;border:1px solid rgba(180,90,50,.28);background:rgba(255,252,248,.7);font-size:10px;cursor:pointer;">Copier</button>'
-          +'<button class="btn-regen" onclick="regenToken(\''+escHtml(g.telephone)+'\',\''+escHtml(g.prenom)+'\')">🔄 Régénérer</button>'
           +'</div>':'')
         +'<div class="guest-rsvp">'+rsvpHtml+'</div>'
         +(g.rsvp_message?'<div style="font-size:11px;font-style:italic;color:rgba(100,50,20,.55);margin-top:5px;border-top:1px solid rgba(180,90,50,.12);padding-top:5px;">«&nbsp;'+escHtml(g.rsvp_message)+'&nbsp;»</div>':'')
-        +'</div>';
-    }).join('');
-  }
-
-  /* Rapport IP */
-  document.getElementById('rpt-refresh-btn').addEventListener('click', loadRapportIP);
-
-  async function loadRapportIP(){
-    showMsg('msg-rpt','Chargement…','info');
-    try {
-      var res = await fetch('/.netlify/functions/admin-list-guests',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({token: adminToken})
-      });
-      var data = await res.json();
-      if(!res.ok) throw new Error(data.error);
-      hideMsg('msg-rpt');
-      renderRapportIP(data.guests||[]);
-    } catch(e){
-      showMsg('msg-rpt', e.message, 'ko');
-    }
-  }
-
-  function renderRapportIP(guests){
-    var list = document.getElementById('rpt-ip-list');
-    var withIp = guests.filter(function(g){ return g.ip_status; });
-    if(!withIp.length){
-      list.innerHTML = '<div style="text-align:center;font-style:italic;font-size:12px;color:rgba(130,60,25,.42);padding:16px;">Aucun accès enregistré</div>';
-      return;
-    }
-    var ipLabels = {green:'IP stable',orange:'Changement mineur (< 100m)',red:'Changement significatif (> 100m)'};
-    list.innerHTML = withIp.map(function(g){
-      var st = g.ip_status || 'green';
-      return '<div class="rpt-ip-card">'
-        +'<div class="rpt-ip-name">'+escHtml(g.prenom)+'</div>'
-        +'<div class="rpt-ip-addr">'+(g.adr_ip ? escHtml(g.adr_ip) : '—')+'</div>'
-        +'<span class="rpt-ip-badge '+st+'">'
-        +'<span class="rpt-ip-dot '+st+'"></span>'
-        +(ipLabels[st]||st)+'</span>'
-        +(g.ip_log?'<div class="rpt-ip-log">'+escHtml(g.ip_log)+'</div>':'')
         +'</div>';
     }).join('');
   }
@@ -495,25 +476,139 @@ input::placeholder{color:rgba(160,90,50,.35);}
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  /* Régénérer le token d'un invité */
-  window.regenToken = async function(phone, prenom){
-    if(!confirm('Régénérer le lien de '+prenom+' ? L\'ancien lien sera invalidé.')) return;
+  /* ── RAPPORT IP ── */
+  var leafletMap = null;
+  var ipLabels = {green:'IP stable', orange:'Changement mineur (< 100m)', red:'Changement > 100m'};
+  var ipColors = {green:'#3a7020', orange:'#c87010', red:'#c02020'};
+
+  document.getElementById('rpt-refresh-btn').addEventListener('click', loadRapportIP);
+
+  function switchRptTab(tab){
+    document.querySelectorAll('.rpt-tab').forEach(function(t,i){
+      t.classList.toggle('on', ['list','map'][i]===tab);
+    });
+    document.getElementById('rpt-list-view').classList.toggle('on', tab==='list');
+    document.getElementById('rpt-map-view').classList.toggle('on', tab==='map');
+    if(tab==='map' && leafletMap){ setTimeout(function(){ leafletMap.invalidateSize(); }, 100); }
+  }
+
+  async function loadRapportIP(){
     try {
-      var res = await fetch('/.netlify/functions/admin-regen-token',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({token: adminToken, phone: phone})
+      var res = await fetch('/.netlify/functions/admin-list-guests',{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({token: adminToken})
       });
       var data = await res.json();
       if(!res.ok) throw new Error(data.error);
-      alert('Nouveau lien pour '+prenom+' :\n'+data.inviteUrl);
-      loadGuests();
-    } catch(e){
-      alert('Erreur : '+e.message);
+      var guests = data.guests || [];
+      renderRapportListe(guests);
+      await renderRapportCarte(guests);
+    } catch(e){ console.warn('rapport IP:', e.message); }
+  }
+
+  function renderRapportListe(guests){
+    var list = document.getElementById('rpt-ip-list');
+    var withIp = guests.filter(function(g){ return g.ip_status; });
+    if(!withIp.length){
+      list.innerHTML='<div style="text-align:center;font-style:italic;font-size:12px;color:rgba(130,60,25,.42);padding:16px;">Aucun accès enregistré</div>';
+      return;
     }
-  };
+    list.innerHTML = withIp.map(function(g){
+      var st = g.ip_status||'green';
+      return '<div class="rpt-ip-card">'
+        +'<div class="rpt-ip-name">'+escHtml(g.prenom)+'</div>'
+        +'<div class="rpt-ip-addr">'+(g.adr_ip?escHtml(g.adr_ip):'—')+'</div>'
+        +'<span class="rpt-ip-badge '+st+'">'
+        +'<span class="rpt-ip-dot '+st+'"></span>'+(ipLabels[st]||st)+'</span>'
+        +(g.ip_log&&st!=='green'?'<div class="rpt-ip-log">'+escHtml(g.ip_log)+'</div>':'')
+        +'</div>';
+    }).join('');
+  }
+
+  async function renderRapportCarte(guests){
+    var withIp = guests.filter(function(g){ return g.ip_status && g.adr_ip; });
+    if(!withIp.length) return;
+
+    /* Initialiser la carte une seule fois */
+    if(!leafletMap){
+      leafletMap = L.map('rpt-map').setView([46.5, 2.5], 5);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom:18
+      }).addTo(leafletMap);
+    } else {
+      /* Vider les marqueurs existants */
+      leafletMap.eachLayer(function(layer){
+        if(layer instanceof L.CircleMarker) leafletMap.removeLayer(layer);
+      });
+    }
+
+    var bounds = [];
+
+    /* Géolocaliser et placer les marqueurs */
+    var geoPromises = withIp.map(function(g){
+      return fetch('https://ip-api.com/json/'+encodeURIComponent(g.adr_ip)+'?fields=lat,lon,status')
+        .then(function(r){ return r.json(); })
+        .then(function(geo){
+          if(geo.status !== 'success') return;
+          var st = g.ip_status||'green';
+          var color = ipColors[st]||'#3a7020';
+          var marker = L.circleMarker([geo.lat, geo.lon],{
+            radius: 9,
+            fillColor: color,
+            color: 'rgba(255,255,255,.8)',
+            weight: 1.5,
+            fillOpacity: 0.9
+          }).addTo(leafletMap);
+
+          /* Étiquette : prénom + timestamp si changement */
+          var popupContent = '<strong style="font-family:Georgia,serif;color:#7c3010;">'+escHtml(g.prenom)+'</strong>';
+          if(st !== 'green' && g.ip_log){
+            /* Extraire uniquement le timestamp de ip_log */
+            var ts = g.ip_log.split(' — ')[0]||'';
+            if(ts) popupContent += '<br><span style="font-size:10px;color:#7a5008;">'+escHtml(ts)+'</span>';
+          }
+          marker.bindTooltip(popupContent,{
+            permanent: false,
+            direction: 'top',
+            offset: [0, -8],
+            opacity: 0.95,
+            className: 'leaflet-tooltip-custom'
+          });
+
+          /* Clic → zoom + popup */
+          marker.on('click', function(){
+            leafletMap.flyTo([geo.lat, geo.lon], 12, {duration:0.8});
+            marker.openTooltip();
+          });
+
+          bounds.push([geo.lat, geo.lon]);
+        })
+        .catch(function(){});
+    });
+
+    await Promise.all(geoPromises);
+
+    if(bounds.length > 0){
+      leafletMap.fitBounds(bounds, {padding:[30,30], maxZoom:10});
+    }
+  }
 
 })();
 </script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+.leaflet-tooltip-custom{
+  background:rgba(255,252,248,.95);
+  border:1px solid rgba(180,90,50,.3);
+  border-radius:8px;
+  padding:5px 10px;
+  font-family:Georgia,serif;
+  font-size:12px;
+  box-shadow:0 2px 8px rgba(180,90,50,.15);
+  color:#7c3010;
+}
+.leaflet-tooltip-custom::before{border-top-color:rgba(180,90,50,.3);}
+</style>
 </body>
 </html>
