@@ -81,6 +81,12 @@ input::placeholder{color:rgba(160,90,50,.35);}
 .guest-rsvp{font-size:11px;color:rgba(110,50,20,.65);}
 .rsvp-oui{color:#2d6010;font-weight:700;}
 .rsvp-non{color:#8c1020;}
+.ip-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle;}
+.ip-green{background:#3a7020;}
+.ip-orange{background:#c87010;}
+.ip-red{background:#c02020;}
+.btn-regen{padding:3px 8px;border-radius:6px;border:1px solid rgba(180,60,20,.3);background:rgba(255,240,230,.6);font-size:10px;cursor:pointer;color:rgba(140,40,10,.7);}
+.btn-regen:hover{background:rgba(255,220,200,.8);}
 
 /* SECTION ADD */
 .section-title{font-family:'Dancing Script',cursive;font-size:22px;color:#7c3010;margin-bottom:14px;}
@@ -92,8 +98,17 @@ input::placeholder{color:rgba(160,90,50,.35);}
 
 .sep{height:1px;background:rgba(180,90,50,.15);margin:16px 0;}
 
-/* LOGOUT */
-.logout{text-align:right;margin-bottom:12px;}
+/* RAPPORT IP */
+.rpt-ip-card{background:rgba(255,252,248,.45);border:1px solid rgba(180,90,50,.18);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
+.rpt-ip-name{font-family:'Dancing Script',cursive;font-size:18px;color:#7c3010;margin-bottom:2px;}
+.rpt-ip-addr{font-size:10px;color:rgba(110,50,20,.45);font-style:italic;margin-bottom:5px;}
+.rpt-ip-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-style:italic;padding:3px 10px;border-radius:8px;}
+.rpt-ip-badge.green{background:rgba(80,160,50,.15);color:#2d6010;border:1px solid rgba(80,160,50,.3);}
+.rpt-ip-badge.orange{background:rgba(200,140,20,.15);color:#7a5008;border:1px solid rgba(200,140,20,.3);}
+.rpt-ip-badge.red{background:rgba(200,50,30,.15);color:#8c1010;border:1px solid rgba(200,50,30,.3);}
+.rpt-ip-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:3px;}
+.rpt-ip-dot.green{background:#3a7020;}.rpt-ip-dot.orange{background:#c87010;}.rpt-ip-dot.red{background:#c02020;}
+.rpt-ip-log{font-size:10px;color:rgba(110,50,20,.38);margin-top:3px;}
 .logout button{background:none;border:none;font-size:11px;font-style:italic;color:rgba(140,60,20,.5);cursor:pointer;text-decoration:underline;}
 </style>
 </head>
@@ -172,6 +187,17 @@ input::placeholder{color:rgba(160,90,50,.35);}
   <div class="section-title" style="margin-bottom:12px;">Liste des invités <span id="refresh-btn" style="font-size:12px;font-style:italic;color:rgba(140,60,20,.5);cursor:pointer;text-decoration:underline;margin-left:8px;">actualiser</span></div>
   <div class="msg" id="msg-list"></div>
   <div class="guest-list" id="guest-list"></div>
+
+  <div class="sep"></div>
+
+  <!-- RAPPORT IP -->
+  <div class="section-title" style="margin-bottom:12px;">
+    Rapport IP
+    <span id="rpt-refresh-btn" style="font-size:12px;font-style:italic;color:rgba(140,60,20,.5);cursor:pointer;text-decoration:underline;margin-left:8px;">actualiser</span>
+  </div>
+  <div class="msg" id="msg-rpt"></div>
+  <div id="rpt-ip-list"></div>
+
 </div>
 
 <script>
@@ -270,6 +296,7 @@ input::placeholder{color:rgba(160,90,50,.35);}
       adminToken = data.token;
       show('pg-dashboard');
       loadGuests();
+      loadRapportIP();
     } catch(e){
       showMsg('msg-otp', e.message, 'ko');
       otpInputs.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},400);});
@@ -387,10 +414,20 @@ input::placeholder{color:rgba(160,90,50,.35);}
           +(g.rsvp_ck1?'<br>Cocktail famille : '+(g.rsvp_ck1==='oui'?'✓':'✗'):'')
           +(g.rsvp_ck2?'<br>Repas de mariage : '+(g.rsvp_ck2==='oui'?'✓':'✗'):'')
         : '<span style="color:rgba(150,80,30,.45);">En attente</span>';
+
+      /* Statut IP */
+      var ipHtml = '';
+      if(g.ip_status){
+        var ipLabel = g.ip_status==='green'?'IP stable':g.ip_status==='orange'?'Changement mineur':'Changement > 100m';
+        ipHtml = '<div style="font-size:10px;margin-top:3px;font-style:italic;">'
+          +'<span class="ip-dot ip-'+g.ip_status+'"></span>'+ipLabel
+          +(g.adr_ip?' — '+escHtml(g.adr_ip):'')+'</div>';
+      }
+
       var siteUrl = 'https://on-se-marie.ebelle.fr';
       var lienInvite = g.guest_token ? siteUrl+'?t='+g.guest_token : '';
-      var msgWA = 'Bonjour '+g.prenom+' 🌸\n\nLynda & Marcel-Cédric ont le bonheur de vous annoncer leur mariage et seraient touchés de vous avoir à leurs côtés pour célébrer ce jour si précieux.\n\nVotre invitation personnelle :\n'+lienInvite;
-      var waUrl = lienInvite ? 'https://wa.me/'+g.telephone.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(msgWA) : '';
+      var phoneEnc = encodeURIComponent(g.telephone||'');
+      var prenomEnc = encodeURIComponent(g.prenom||'');
 
       return '<div class="guest-card">'
         +'<div class="guest-top">'
@@ -398,11 +435,14 @@ input::placeholder{color:rgba(160,90,50,.35);}
         +'<span class="guest-badge badge-'+g.niveau+'">Niv. '+g.niveau+' — '+nivLabels[g.niveau]+'</span>'
         +'</div>'
         +'<div class="guest-tel">'+escHtml(g.telephone)+'</div>'
-        +(g.first_click?'<div style="font-size:10px;font-style:italic;color:rgba(110,50,20,.45);margin-bottom:4px;"> Premier accès : '+escHtml(g.first_click)+'</div>':'')
-        +(lienInvite?'<div style="margin:4px 0 6px;display:flex;align-items:center;gap:6px;">'
+        +(g.table?'<div style="font-size:10px;font-style:italic;color:rgba(130,60,20,.6);margin-bottom:3px;">🪑 Table : <strong>'+escHtml(g.table)+'</strong></div>':'')
+        +(g.timestamp_first_click?'<div style="font-size:10px;font-style:italic;color:rgba(110,50,20,.45);margin-bottom:3px;">Premier accès : '+escHtml(g.timestamp_first_click)+'</div>':'')
+        +ipHtml
+        +(lienInvite?'<div style="margin:6px 0;display:flex;align-items:center;gap:5px;flex-wrap:wrap;">'
           +'<span style="font-size:10px;color:rgba(110,50,20,.45);word-break:break-all;flex:1;">'+escHtml(lienInvite)+'</span>'
           +'<button onclick="navigator.clipboard.writeText(\''+escHtml(lienInvite)+'\').then(function(){this.textContent=\'✓\';}.bind(this))" '
           +'style="flex-shrink:0;padding:3px 8px;border-radius:6px;border:1px solid rgba(180,90,50,.28);background:rgba(255,252,248,.7);font-size:10px;cursor:pointer;">Copier</button>'
+          +'<button class="btn-regen" onclick="regenToken(\''+escHtml(g.telephone)+'\',\''+escHtml(g.prenom)+'\')">🔄 Régénérer</button>'
           +'</div>':'')
         +'<div class="guest-rsvp">'+rsvpHtml+'</div>'
         +(g.rsvp_message?'<div style="font-size:11px;font-style:italic;color:rgba(100,50,20,.55);margin-top:5px;border-top:1px solid rgba(180,90,50,.12);padding-top:5px;">«&nbsp;'+escHtml(g.rsvp_message)+'&nbsp;»</div>':'')
@@ -410,9 +450,68 @@ input::placeholder{color:rgba(160,90,50,.35);}
     }).join('');
   }
 
+  /* Rapport IP */
+  document.getElementById('rpt-refresh-btn').addEventListener('click', loadRapportIP);
+
+  async function loadRapportIP(){
+    showMsg('msg-rpt','Chargement…','info');
+    try {
+      var res = await fetch('/.netlify/functions/admin-list-guests',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({token: adminToken})
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error);
+      hideMsg('msg-rpt');
+      renderRapportIP(data.guests||[]);
+    } catch(e){
+      showMsg('msg-rpt', e.message, 'ko');
+    }
+  }
+
+  function renderRapportIP(guests){
+    var list = document.getElementById('rpt-ip-list');
+    var withIp = guests.filter(function(g){ return g.ip_status; });
+    if(!withIp.length){
+      list.innerHTML = '<div style="text-align:center;font-style:italic;font-size:12px;color:rgba(130,60,25,.42);padding:16px;">Aucun accès enregistré</div>';
+      return;
+    }
+    var ipLabels = {green:'IP stable',orange:'Changement mineur (< 100m)',red:'Changement significatif (> 100m)'};
+    list.innerHTML = withIp.map(function(g){
+      var st = g.ip_status || 'green';
+      return '<div class="rpt-ip-card">'
+        +'<div class="rpt-ip-name">'+escHtml(g.prenom)+'</div>'
+        +'<div class="rpt-ip-addr">'+(g.adr_ip ? escHtml(g.adr_ip) : '—')+'</div>'
+        +'<span class="rpt-ip-badge '+st+'">'
+        +'<span class="rpt-ip-dot '+st+'"></span>'
+        +(ipLabels[st]||st)+'</span>'
+        +(g.ip_log?'<div class="rpt-ip-log">'+escHtml(g.ip_log)+'</div>':'')
+        +'</div>';
+    }).join('');
+  }
+
   function escHtml(s){
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
+
+  /* Régénérer le token d'un invité */
+  window.regenToken = async function(phone, prenom){
+    if(!confirm('Régénérer le lien de '+prenom+' ? L\'ancien lien sera invalidé.')) return;
+    try {
+      var res = await fetch('/.netlify/functions/admin-regen-token',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({token: adminToken, phone: phone})
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error);
+      alert('Nouveau lien pour '+prenom+' :\n'+data.inviteUrl);
+      loadGuests();
+    } catch(e){
+      alert('Erreur : '+e.message);
+    }
+  };
 
 })();
 </script>

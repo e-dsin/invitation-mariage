@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#1a1a2e">
-<title>Scanner — Lynda & Marcel-Cédric</title>
+<title>Scanner — Invitations LMC</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,serif;display:flex;align-items:center;justify-content:center;}
@@ -43,8 +43,27 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
 #result-time{font-size:13px;font-style:italic;color:rgba(255,255,255,.55);margin-top:10px;}
 .scan-count{font-size:11px;font-style:italic;color:rgba(255,240,220,.35);text-align:center;}
 
-@keyframes errShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-@keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+/* NAV ONGLETS */
+#main-nav{display:none;width:100%;max-width:430px;border-bottom:1px solid rgba(255,220,180,.15);background:rgba(0,0,0,.25);position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:100;}
+#main-nav.show{display:flex;}
+.mnv{flex:1;padding:11px 8px 9px;text-align:center;font-family:'Dancing Script',cursive;font-size:15px;color:rgba(255,240,220,.4);cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;}
+.mnv.on{color:rgba(255,200,120,.9);border-bottom-color:rgba(255,180,80,.7);}
+
+/* VUES PLAN ET RAPPORT */
+#vue-plan{display:none;width:100%;max-width:430px;padding:60px 16px 32px;min-height:100vh;}
+.vue-title{font-family:'Dancing Script',cursive;font-size:24px;color:rgba(255,240,220,.85);margin-bottom:14px;text-align:center;}
+.plan-card{background:rgba(255,252,248,.12);border:1px solid rgba(255,220,180,.18);border-radius:16px;padding:14px 10px;}
+#plan-svg{width:100%;max-width:380px;display:block;margin:0 auto;}
+.plan-legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:10px;font-size:11px;font-style:italic;color:rgba(255,240,220,.5);}
+.leg-item{display:flex;align-items:center;gap:5px;}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.leg-rect{width:14px;height:9px;border-radius:2px;flex-shrink:0;}
+
+/* RAPPORT IP */
+
+/* Table dans le résultat scan */
+#result-table{font-family:'Dancing Script',cursive;font-size:52px;color:#fff;line-height:1;margin-bottom:2px;display:none;}
+#result-places{font-size:15px;color:rgba(255,255,255,.8);font-style:italic;margin-bottom:8px;display:none;}
 
 #logout-btn{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,220,180,.15);border-radius:8px;padding:5px 10px;color:rgba(255,240,220,.4);font-size:10px;cursor:pointer;}
 </style>
@@ -57,7 +76,7 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
   <!-- PIN -->
   <div id="pin-screen">
     <div class="pin-title">Contrôle d'accès</div>
-    <div class="pin-sub">Lynda &amp; Marcel-Cédric · 15 mai 2026</div>
+    <div class="pin-sub">Lynda &amp; Marcel-Cédric · 15 & 16 mai 2026</div>
     <div id="pin-row">
       <input class="pd" id="p0" maxlength="1" type="tel" inputmode="numeric">
       <input class="pd" id="p1" maxlength="1" type="tel" inputmode="numeric">
@@ -78,6 +97,8 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
       <div id="cam-overlay"><div class="scan-frame"></div><div class="scan-line"></div></div>
     </div>
     <div id="result-wrap">
+      <div id="result-table"></div>
+      <div id="result-places"></div>
       <div id="result-icon"></div>
       <div id="result-name"></div>
       <div id="result-status"></div>
@@ -85,6 +106,60 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
     </div>
     <div class="scan-count" id="scan-count">En attente de scan…</div>
   </div>
+
+</div>
+
+<!-- NAV ONGLETS (visible après PIN) -->
+<div id="main-nav">
+  <div class="mnv on" onclick="showVue('scan')">📷 Scanner</div>
+  <div class="mnv" onclick="showVue('plan')">🗺 Plan</div>
+
+</div>
+
+<!-- VUE PLAN -->
+<div id="vue-plan">
+  <div class="vue-title">Plan de salle</div>
+  <div class="plan-card">
+    <svg id="plan-svg" viewBox="0 0 340 440" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="10" width="300" height="420" rx="6" fill="rgba(255,252,248,.08)" stroke="rgba(255,220,180,.25)" stroke-width="1"/>
+      <rect x="308" y="185" width="12" height="50" rx="3" fill="rgba(255,252,248,.25)" stroke="rgba(255,220,180,.35)" stroke-width="0.8"/>
+      <text x="325" y="208" font-size="9" font-style="italic" fill="rgba(255,240,220,.45)" font-family="Georgia,serif">Entrée →</text>
+      <!-- R1 : T1 · Mariés · T2 -->
+      <g id="pt-1" style="cursor:pointer" onclick="hlTable(1)">
+        <circle cx="65" cy="75" r="32" fill="rgba(255,252,248,.12)" stroke="rgba(255,220,180,.3)" stroke-width="1"/>
+        <text x="65" y="71" text-anchor="middle" font-size="11" font-weight="600" fill="rgba(255,240,220,.85)" font-family="Georgia,serif">T1</text>
+        <text x="65" y="84" text-anchor="middle" font-size="9" fill="rgba(255,240,220,.45)" font-family="Georgia,serif">9 pl.</text>
+      </g>
+      <g style="cursor:pointer">
+        <rect x="125" y="50" width="80" height="50" rx="6" fill="rgba(250,238,218,.18)" stroke="rgba(186,117,23,.6)" stroke-width="1.5"/>
+        <text x="165" y="71" text-anchor="middle" font-size="11" font-weight="600" fill="rgba(255,230,160,.9)" font-family="Georgia,serif">Mariés</text>
+        <text x="165" y="85" text-anchor="middle" font-size="9" fill="rgba(255,220,140,.55)" font-family="Georgia,serif">Lynda & M-C</text>
+      </g>
+      <g id="pt-2" style="cursor:pointer" onclick="hlTable(2)">
+        <circle cx="255" cy="75" r="32" fill="rgba(255,252,248,.12)" stroke="rgba(255,220,180,.3)" stroke-width="1"/>
+        <text x="255" y="71" text-anchor="middle" font-size="11" font-weight="600" fill="rgba(255,240,220,.85)" font-family="Georgia,serif">T2</text>
+        <text x="255" y="84" text-anchor="middle" font-size="9" fill="rgba(255,240,220,.45)" font-family="Georgia,serif">9 pl.</text>
+      </g>
+      <!-- R2 : T3 · T4 · T5 -->
+      <g id="pt-3" style="cursor:pointer" onclick="hlTable(3)"><circle cx="65" cy="185" r="32" fill="rgba(255,252,248,.12)" stroke="rgba(255,220,180,.3)" stroke-width="1"/><text x="65" y="181" text-anchor="middle" font-size="11" font-weight="600" fill="rgba(255,240,220,.85)" font-family="Georgia,serif">T3</text><text x="65" y="194" text-anchor="middle" font-size="9" fill="rgba(255,240,220,.45)" font-family="Georgia,serif">9 pl.</text></g>
+      <g id="pt-4" style="cursor:pointer" onclick="hlTable(4)"><circle cx="160" cy="185" r="32" fill="rgba(255,252,248,.12)" stroke="rgba(255,220,180,.3)" stroke-width="1"/><text x="160" y="181" text-anchor="middle" font-size="11" font-weight="600" fill="rgba(255,240,220,.85)" font-family="Georgia,serif">T4</text><text x="160" y="194" text-anchor="middle" font-size="9" fill="rgba(255,240,220,.45)" font-family="Georgia,serif">9 pl.</text></g>
+      <g id="pt-5" style="cursor:pointer" onclick="hlTable(5)"><circle cx="255" cy="185" r="32" fill="rgba(255,252,248,.12)" stroke="rgba(255,220,180,.3)" stroke-width="1"/><text x="255" y="181" text-anchor="middle" font-size="11" font-weight="600" fill="rgba(255,240,220,.85)" font-family="Georgia,serif">T5</text><text x="255" y="194" text-anchor="middle" font-size="9" fill="rgba(255,240,220,.45)" font-family="Georgia,serif">9 pl.</text></g>
+      <!-- R3 : T6 · T7 · T8 -->
+      <g id="pt-6" style="cursor:pointer" onclick="hlTable(6)"><circle cx="65" cy="295" r="32" fill="rgba(255,252,248,.12)" stroke="rgba(255,220,180,.3)" stroke-width="1"/><text x="65" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="rgba(255,240,220,.85)" font-family="Georgia,serif">T6</text><text x="65" y="304" text-anchor="middle" font-size="9" fill="rgba(255,240,220,.45)" font-family="Georgia,serif">9 pl.</text></g>
+      <g id="pt-7" style="cursor:pointer" onclick="hlTable(7)"><circle cx="160" cy="295" r="32" fill="rgba(255,252,248,.12)" stroke="rgba(255,220,180,.3)" stroke-width="1"/><text x="160" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="rgba(255,240,220,.85)" font-family="Georgia,serif">T7</text><text x="160" y="304" text-anchor="middle" font-size="9" fill="rgba(255,240,220,.45)" font-family="Georgia,serif">9 pl.</text></g>
+      <g id="pt-8" style="cursor:pointer" onclick="hlTable(8)"><circle cx="255" cy="295" r="32" fill="rgba(255,252,248,.12)" stroke="rgba(255,220,180,.3)" stroke-width="1"/><text x="255" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="rgba(255,240,220,.85)" font-family="Georgia,serif">T8</text><text x="255" y="304" text-anchor="middle" font-size="9" fill="rgba(255,240,220,.45)" font-family="Georgia,serif">9 pl.</text></g>
+      <!-- R4 : T9 · T10 · T11 -->
+      <g id="pt-9" style="cursor:pointer" onclick="hlTable(9)"><circle cx="65" cy="400" r="32" fill="rgba(255,252,248,.12)" stroke="rgba(255,220,180,.3)" stroke-width="1"/><text x="65" y="396" text-anchor="middle" font-size="11" font-weight="600" fill="rgba(255,240,220,.85)" font-family="Georgia,serif">T9</text><text x="65" y="409" text-anchor="middle" font-size="9" fill="rgba(255,240,220,.45)" font-family="Georgia,serif">9 pl.</text></g>
+      <g id="pt-10" style="cursor:pointer" onclick="hlTable(10)"><circle cx="160" cy="400" r="32" fill="rgba(255,252,248,.12)" stroke="rgba(255,220,180,.3)" stroke-width="1"/><text x="160" y="396" text-anchor="middle" font-size="11" font-weight="600" fill="rgba(255,240,220,.85)" font-family="Georgia,serif">T10</text><text x="160" y="409" text-anchor="middle" font-size="9" fill="rgba(255,240,220,.45)" font-family="Georgia,serif">9 pl.</text></g>
+      <g id="pt-11" style="cursor:pointer" onclick="hlTable(11)"><circle cx="255" cy="400" r="32" fill="rgba(255,252,248,.12)" stroke="rgba(255,220,180,.3)" stroke-width="1"/><text x="255" y="396" text-anchor="middle" font-size="11" font-weight="600" fill="rgba(255,240,220,.85)" font-family="Georgia,serif">T11</text><text x="255" y="409" text-anchor="middle" font-size="9" fill="rgba(255,240,220,.45)" font-family="Georgia,serif">9 pl.</text></g>
+    </svg>
+    <div class="plan-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(255,220,180,.5);"></div>Table invités</div>
+      <div class="leg-item"><div class="leg-rect" style="background:rgba(250,238,218,.3);border:1px solid rgba(186,117,23,.6);"></div>Mariés</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#3a7020;"></div>Table active</div>
+    </div>
+  </div>
+</div>
 
 </div>
 
@@ -190,6 +265,11 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
         clearTimeout(animTimer);
         animTimer=setTimeout(function(){
           document.getElementById('result-wrap').style.display='none';
+          /* Reset table/places */
+          var rt=document.getElementById('result-table');
+          var rp=document.getElementById('result-places');
+          if(rt){rt.style.display='none';rt.textContent='';}
+          if(rp){rp.style.display='none';rp.textContent='';}
           scanActive=true;
           lastScan='';
           startTimeout();
@@ -215,6 +295,15 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
       name.textContent=data.prenom||'';
       st.textContent='Accès '+evtLabel+' autorisé';
       tm.textContent=data.scanned_at||'';
+      /* Affichage table + places si repas samedi */
+      if(data.event==='ck2'&&data.table){
+        var rt=document.getElementById('result-table');
+        var rp=document.getElementById('result-places');
+        rt.textContent=data.table;rt.style.display='block';
+        rp.textContent='Places restantes : '+(data.placesRestantes!=null?data.placesRestantes:'—')+' / 9';
+        rp.style.display='block';
+        hlTableByName(data.table);
+      }
     } else if(status==='already_scanned'){
       wrap.classList.add('already');
       icon.textContent='🔴';
@@ -242,6 +331,29 @@ body{min-height:100vh;min-height:100dvh;background:#1a1a2e;font-family:Georgia,s
     location.reload();
   });
 
+})();
+
+/* ── NAV + PLAN + RAPPORT (ajouts v3, sans régression) ── */
+
+
+function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* Exposer la nav après connexion PIN réussie */
+var _origStartScanner = null;
+(function(){
+  var orig = window.startScanner;
+  /* Patch : afficher la nav après startScanner */
+  var patchNav = function(){
+    document.getElementById('main-nav').classList.add('show');
+  };
+  /* On écoute le clic sur pin-btn pour patcher après checkPin */
+  document.getElementById('pin-btn').addEventListener('click', function(){
+    setTimeout(function(){
+      if(document.getElementById('scan-screen').style.display==='flex'){
+        patchNav();
+      }
+    },100);
+  });
 })();
 </script>
 </body>
