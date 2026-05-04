@@ -16,15 +16,28 @@ exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") return { statusCode: 200, body: "" };
   if (event.httpMethod !== "POST") return { statusCode: 405, body: JSON.stringify({ error: "Method not allowed" }) };
 
-  let adminToken;
-  try { ({ token: adminToken } = JSON.parse(event.body)); }
+  let adminToken, pin;
+  try { ({ token: adminToken, pin } = JSON.parse(event.body)); }
   catch { return { statusCode: 400, body: JSON.stringify({ error: "Corps invalide" }) }; }
 
-  try {
-    const payload = jwt.verify(adminToken, process.env.OTP_SECRET);
-    if (payload.role !== "admin") throw new Error("Not admin");
-  } catch {
-    return { statusCode: 401, body: JSON.stringify({ error: "Session admin expirée" }) };
+  /* Deux modes d'authentification :
+     1. JWT admin (page admin)
+     2. PIN 8888 (scanner, messages, rapport-ip) */
+  const VIEWER_PIN = process.env.VIEWER_PIN || "8888";
+
+  if (pin) {
+    /* Mode PIN */
+    if (pin !== VIEWER_PIN) {
+      return { statusCode: 401, body: JSON.stringify({ error: "PIN invalide" }) };
+    }
+  } else {
+    /* Mode JWT admin */
+    try {
+      const payload = jwt.verify(adminToken, process.env.OTP_SECRET);
+      if (payload.role !== "admin") throw new Error("Not admin");
+    } catch {
+      return { statusCode: 401, body: JSON.stringify({ error: "Session admin expirée" }) };
+    }
   }
 
   try {
