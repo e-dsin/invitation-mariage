@@ -164,8 +164,8 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
 
 /* ALBUM */
 #p5{padding:14px 12px 24px;}
-.albt{font-family:'Dancing Script',cursive;font-size:27px;font-weight:700;color:#7c3010;text-align:center;margin-bottom:10px;}
-.albfs{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:9px;}
+.albt{font-family:'Dancing Script',cursive;font-size:27px;font-weight:700;color:#7c3010;text-align:center;margin-bottom:10px;width:100%;}
+.albfs{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:9px;width:100%;}
 .albf{padding:5px 12px;border-radius:20px;font-size:11px;font-style:italic;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .albf.on{background:rgba(194,65,12,.25);border:1px solid rgba(180,70,20,.48);color:#7c2d12;}
 .albf.off{background:rgba(255,252,248,.5);border:1px solid rgba(180,90,50,.2);color:rgba(120,55,20,.55);}
@@ -173,7 +173,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
 /* Filtre spécial "Il était une fois" — doré/sépia */
 .albf.once{background:rgba(160,110,40,.18);border:1px solid rgba(140,90,30,.35);color:rgba(110,70,20,.75);}
 .albf.once.on{background:rgba(160,110,40,.28);border-color:rgba(140,90,30,.55);color:#7c4a10;}
-.albct{font-size:10px;font-style:italic;color:rgba(130,60,25,.42);text-align:center;margin-bottom:9px;}
+.albct{font-size:10px;font-style:italic;color:rgba(130,60,25,.42);text-align:center;margin-bottom:9px;width:100%;}
 .albg{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;width:100%;}
 .albc{position:relative;aspect-ratio:1;border-radius:4px;overflow:hidden;cursor:pointer;}
 .albc:hover .albov{opacity:1;}
@@ -257,6 +257,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
       <svg viewBox="0 0 155 5" style="width:155px;margin-bottom:8px;overflow:visible"><line x1="0" y1="2.5" x2="155" y2="2.5" stroke="rgba(160,80,40,.2)" stroke-width=".8" stroke-dasharray="3 4"/></svg>
       <div class="fps"><span class="fpd">— </span>Save the date<span class="fpd"> —</span></div>
       <div class="fpsa">Oui</div><div class="fpye">pour la vie</div>
+      
       <svg viewBox="0 0 78 78" style="width:46px;height:46px;margin:2px 0 9px;overflow:visible">
         <defs><linearGradient id="gf" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d890a0"/><stop offset="45%" stop-color="#f5f0e8"/><stop offset="100%" stop-color="#90b840"/></linearGradient></defs>
         <path fill="none" stroke="url(#gf)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="700" stroke-dashoffset="0"
@@ -278,13 +279,13 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
         <div class="fpadr"><a href="https://maps.google.com/?q=13+avenue+de+Gros+Bois,+94440+Marolles-en-Brie" target="_blank" rel="noopener">13 avenue de Gros Bois, 94440 Marolles-en-Brie</a></div>
       </div> 
       <div class="fpck" id="fpck-msg">La cérémonie civile aura lieu en présence de nos proches.</div>
-      <div class="fpck" id="fpck-msg">Dress Code : Sortez avec vos plus belles tenues africaines - Afro attitude</div>
+      <div class="fpck" id="fpck-msg"></div>
       <button id="btn-confirm">Confirmer votre présence</button>
     </div>
 
     <!-- P1 : RSVP -->
     <div class="pnl" id="p1">
-      <div class="rvh"><div class="rvt">Votre réponse</div><div class="rvdl">Répondre avant le 15 avril 2026</div></div>
+      <div class="rvh"><div class="rvt">Votre invitation vous sera exigée</div><div class="rvdl">pour contrôle d'accès</div></div>
       <div class="rvc" id="rvf">
         <div class="rvse"><div class="rvq" id="rvq-ceremonie">Serez-vous présent(e) à la cérémonie ?</div>
           <div class="rvpr">
@@ -354,6 +355,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
         <div class="cki">Vous êtes invité(e) au Repas de mariage<br>qui se tiendra à l'adresse suivante</div>
         <div class="ckr"><svg class="ckic" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5s4.5-5 4.5-8.5c0-2.5-2-4.5-4.5-4.5zm0 6a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" fill="rgba(160,80,40,.65)"/></svg><a href="https://maps.google.com/?q=13+avenue+de+Gros+Bois,+94440+Marolles-en-Brie" target="_blank" rel="noopener" class="cktx" style="color:inherit;text-decoration:underline;text-underline-offset:2px;">Salle du Parvis — 13 av. de Gros Bois, 94440 Marolles-en-Brie</a></div>
         <div class="ckr"><svg class="ckic" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="2" stroke="rgba(160,80,40,.65)" stroke-width="1.2"/><line x1="2" y1="6.5" x2="14" y2="6.5" stroke="rgba(160,80,40,.65)" stroke-width="1"/><line x1="5" y1="2" x2="5" y2="4.5" stroke="rgba(160,80,40,.65)" stroke-width="1.2" stroke-linecap="round"/><line x1="11" y1="2" x2="11" y2="4.5" stroke="rgba(160,80,40,.65)" stroke-width="1.2" stroke-linecap="round"/></svg><span class="cktx">Samedi 16 mai 2026 — à partir de 12h</span></div>
+        <div class="fpck" style="margin-top:10px;">Dress Code : Sortez avec vos plus belles tenues africaines — Afro attitude 🪭</div>
         <div class="cksp"></div>
         <div class="qrw"><div class="qrl">Votre accès</div>
           <div style="position:relative;display:inline-block;border-radius:12px;overflow:hidden;">
@@ -366,7 +368,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
     </div>
 
     <!-- P4 : ALBUM -->
-    <div class="pnl" id="p4" style="padding:14px 12px 24px;">
+    <div class="pnl" id="p4" style="padding:14px 12px 24px;justify-content:flex-start;align-items:flex-start;">
       <div class="albt">Notre album</div>
       <div class="albfs" id="afs">
         <button class="albf once on" data-c="once">Il était une fois</button>
@@ -407,8 +409,32 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
 (function(){
 var pr=null,di=[],lv=3,af='once',lbi=0,lbv=[],confirmed=false;
 var guestToken='';
-var guestShortCode='';
 var guestJwt='';
+
+/* ── Empreinte appareil (Option C) ── */
+function getDeviceUuid(){
+  var key='_dv_uuid';
+  var id=localStorage.getItem(key);
+  if(!id){
+    id='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){
+      var r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16);
+    });
+    localStorage.setItem(key,id);
+  }
+  return id;
+}
+
+function getDeviceFp(){
+  try{
+    var fp={
+      tz:Intl.DateTimeFormat().resolvedOptions().timeZone||'',
+      lang:navigator.language||'',
+      screen:screen.width+'x'+screen.height+'x'+screen.colorDepth,
+      platform:navigator.platform||navigator.userAgentData&&navigator.userAgentData.platform||''
+    };
+    return JSON.stringify(fp);
+  }catch(e){return '{}';}
+}
 var prCk1=null, prCk2=null;
 
 var photos=[];  /* tableau vide — les photos viennent de Google Drive */
@@ -422,14 +448,8 @@ function go(l){
   lv=l;
   g('main').classList.add('show');
   var siteUrl = window.location.origin;
-  if(l===2||l>=4){
-    var qr1url=guestShortCode?siteUrl+'/s/'+guestShortCode:siteUrl+'/scanner.html?g='+guestToken+'&e=ck1';
-    qr('qr1',qr1url);
-  }
-  if(l===3||l>=4){
-    var qr2url=guestShortCode?siteUrl+'/s/'+guestShortCode:siteUrl+'/scanner.html?g='+guestToken+'&e=ck2';
-    qr('qr2',qr2url);
-  }
+  if(l===2||l>=4) qr('qr1', siteUrl+'/scanner.html?g='+guestToken+'&e=ck1');
+  if(l===3||l>=4) qr('qr2', siteUrl+'/scanner.html?g='+guestToken+'&e=ck2');
 
   /* Message faire-part dynamique selon niveau */
   var fpck=g('fpck-msg');
@@ -539,9 +559,11 @@ g('rvsub').addEventListener('click',function(){
   g('rverr').textContent='';g('rvf').style.display='none';
   var ok=g('rvok');
   ok.style.display='flex';ok.style.animation='successPop .48s cubic-bezier(.2,0,.2,1)';
-  g('rvokt').textContent=pr==='yes'?'Merci, à très bientôt !':'Merci de nous avoir prévenus';
+  g('rvokt').textContent=pr==='yes'?'Merci pour votre réponse':'Merci de nous avoir prévenus';
   var dateMsg = lv===3 ? '16 mai 2026' : '15 mai 2026';
-  var txt=pr==='yes'?'Votre présence est confirmée pour le '+dateMsg+'.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.':'Votre réponse a bien été transmise.<br>Lynda &amp; Marcel-Cédric vous remercient de vous être manifesté(e).';
+  var txt=pr==='yes'
+    ?'Votre présence est confirmée pour le '+dateMsg+'.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.<br><br><strong>Votre invitation vous sera exigée pour contrôle d\'accès.</strong>'
+    :'Votre réponse a bien été transmise.<br>Lynda &amp; Marcel-Cédric vous remercient de vous être manifesté(e).';
   g('rvokm').innerHTML=txt;
   if(pr==='yes'){var cp=g('ckp');if(cp){cp.style.transition='stroke-dashoffset .6s cubic-bezier(.2,0,.2,1) .1s';cp.style.strokeDashoffset='0';}}
 
@@ -751,7 +773,6 @@ async function resolveToken(){
   var params=new URLSearchParams(window.location.search);
   var t=params.get('t');
   if(!t){
-    /* Pas de token → message erreur */
     g('token-err').classList.add('show');
     return;
   }
@@ -760,25 +781,33 @@ async function resolveToken(){
     var res=await fetch('/.netlify/functions/resolve-token',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({guestToken:t})
+      body:JSON.stringify({
+        guestToken:t,
+        deviceUuid:getDeviceUuid(),
+        deviceFp:getDeviceFp()
+      })
     });
     var data=await res.json();
     if(!res.ok) throw new Error(data.error||'Token invalide');
     guestJwt=data.token;
-    if(data.shortCode) guestShortCode=data.shortCode;
-    /* Afficher le prénom sur le faire-part */
     var pz=g('fp-prenom-zone');
     if(pz&&data.prenom){
       pz.innerHTML='<div class="fp-prenom">'+data.prenom+'</div>';
     }
     go(data.niveau);
-    /* Vérifier RSVP existant */
     fetch('/.netlify/functions/check-rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:data.token})})
     .then(function(r){return r.json();})
     .then(function(rsvp){if(rsvp.rsvp_submitted){setTimeout(function(){applyExistingRSVP(rsvp);},400);}})
     .catch(function(e){console.warn('check-rsvp:',e);});
   }catch(e){
     g('token-err').classList.add('show');
+    /* Message spécifique si refus appareil */
+    var errBox=document.getElementById('token-err-box');
+    if(errBox&&e.message&&e.message.indexOf('autre appareil')>-1){
+      errBox.innerHTML='<div class="terr-ico">🔒</div>'
+        +'<div class="terr-t">Accès non autorisé</div>'
+        +'<div class="terr-s">'+e.message+'</div>';
+    }
     console.warn('resolve-token:',e.message);
   }
 }
@@ -813,10 +842,11 @@ function applyExistingRSVP(data){
   var okt=g('rvokt'), okm=g('rvokm');
   var estPresent = data.rsvp_presence==='oui';
 
-  if(okt) okt.textContent = estPresent ? 'Présence confirmée ✓' : 'Absence confirmée';
+  if(okt) okt.textContent = estPresent ? 'Merci pour votre réponse' : 'Absence confirmée';
 
+  var dateMsg2 = lv===3 ? '16 mai 2026' : '15 mai 2026';
   var txt = estPresent
-    ? 'Votre présence est enregistrée pour le 15 mai 2026.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.'
+    ? 'Votre présence est enregistrée pour le '+dateMsg2+'.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.<br><br><strong>Votre invitation vous sera exigée pour contrôle d\'accès.</strong>'
     : 'Votre absence a bien été enregistrée.<br>Lynda &amp; Marcel-Cédric vous remercient de les avoir prévenus.';
   if(data.rsvp_ck1) txt+='<br>Cocktail famille : '+(data.rsvp_ck1==='oui'?'✓ Présent(e)':'✗ Absent(e)');
   if(data.rsvp_ck2) txt+='<br>Repas de mariage : '+(data.rsvp_ck2==='oui'?'✓ Présent(e)':'✗ Absent(e)');
