@@ -78,7 +78,7 @@ exports.handler = async (event) => {
         ]
       }
     });
-
+    console.log(`Token régénéré pour ${prenom} (${phone}): ${newToken}, short_code: ${newShortCode}`);
     return {
       statusCode: 200,
       body: JSON.stringify({ success: true, inviteUrl, shortUrl, shortCode: newShortCode, prenom }),
