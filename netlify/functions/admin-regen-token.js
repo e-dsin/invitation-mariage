@@ -4,6 +4,17 @@ const crypto = require("crypto");
 
 const SHEET_ID = process.env.GOOGLE_SHEETS_ID;
 
+
+function generateShortCode() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  const bytes = crypto.randomBytes(8);
+  for (let i = 0; i < 8; i++) {
+    code += chars[bytes[i] % chars.length];
+  }
+  return code;
+}
+
 async function getSheetsClient() {
   const auth = new google.auth.JWT({
     email: process.env.GOOGLE_SERVICE_EMAIL,
@@ -45,24 +56,27 @@ exports.handler = async (event) => {
     if (rowIndex === -1) return { statusCode: 404, body: JSON.stringify({ error: "Invité introuvable" }) };
 
     const newToken = crypto.randomBytes(24).toString("hex");
+    const newShortCode = generateShortCode();
     const siteUrl = process.env.SITE_URL || "https://on-se-marie.ebelle.fr";
     const inviteUrl = `${siteUrl}?t=${newToken}`;
+    const shortUrl  = `${siteUrl}/s/${newShortCode}`;
 
-    /* Réinitialiser : token + toutes les données device + IP */
+    /* Réinitialiser : token + short_code + toutes les données device + IP */
     await sheets.spreadsheets.values.batchUpdate({
       spreadsheetId: SHEET_ID,
       requestBody: {
         valueInputOption: "RAW",
         data: [
-          { range: `Invités!L${rowIndex}`,     values: [[newToken]] },  /* guest_token */
-          { range: `Invités!O${rowIndex}:V${rowIndex}`, values: [["","","","","","","",""]] }, /* reset O→V (8 cols) */
+          { range: `Invités!L${rowIndex}`,               values: [[newToken]] },
+          { range: `Invités!O${rowIndex}:V${rowIndex}`,   values: [["","","","","","","",""]] }, /* O P Q R S T U V = 8 cols */
+          { range: `Invités!W${rowIndex}`,               values: [[newShortCode]] },
         ]
       }
     });
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, inviteUrl, prenom }),
+      body: JSON.stringify({ success: true, inviteUrl, shortUrl, shortCode: newShortCode, prenom }),
     };
   } catch (err) {
     console.error("admin-regen-token error:", err);

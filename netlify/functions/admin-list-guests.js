@@ -44,7 +44,7 @@ exports.handler = async (event) => {
     const sheets = await getSheetsClient();
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId: SHEET_ID,
-      range: "Invités!A:T",
+      range: "Invités!A:W",
     });
 
     const rows = res.data.values || [];
@@ -75,6 +75,7 @@ exports.handler = async (event) => {
         count:                parseInt(row[17]) || 1,
         table:                row[18] || "",
         ip_status:            row[19] || "",
+        short_code:           row[22] || "",
       };
     });
 

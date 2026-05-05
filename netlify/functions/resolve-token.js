@@ -16,7 +16,7 @@ async function getSheetsClient() {
 async function findGuestByToken(sheets, token) {
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: "Invités!A:V",
+    range: "Invités!A:W",
   });
   const rows = res.data.values || [];
   for (let i = 1; i < rows.length; i++) {
@@ -30,7 +30,8 @@ async function findGuestByToken(sheets, token) {
         firstClick:  row[14] || "",
         storedIp:    row[15] || "",
         deviceUuid:  row[20] || "",   /* Col U = index 20 */
-        deviceFp:    row[21] || "",   /* Col V = index 21 */
+        deviceFp:    row[21] || "",
+        shortCode:   row[22] || "",   /* Col W = index 22 */
       };
     }
   }
@@ -58,6 +59,19 @@ function haversine(lat1, lon1, lat2, lon2) {
   const dLon = (lon2 - lon1) * Math.PI / 180;
   const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+
+/* Générer un short_code 8 chars sans caractères ambigus */
+function generateShortCode() {
+  const crypto = require("crypto");
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  const bytes = crypto.randomBytes(8);
+  for (let i = 0; i < 8; i++) {
+    code += chars[bytes[i] % chars.length];
+  }
+  return code;
 }
 
 /* Similarité fingerprint — compte les champs identiques */
@@ -94,6 +108,18 @@ exports.handler = async (event) => {
 
     const clientIp = getClientIp(event);
     const now = new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" });
+
+    /* ── GÉNÉRER SHORT_CODE si absent (migration invités existants) ── */
+    if (!guest.shortCode) {
+      guest.shortCode = generateShortCode();
+      await sheets.spreadsheets.values.update({
+        spreadsheetId: SHEET_ID,
+        range: `Invités!W${guest.rowIndex}`,
+        valueInputOption: "RAW",
+        requestBody: { values: [[guest.shortCode]] },
+      });
+      console.log(`short_code généré pour ${guest.prenom}: ${guest.shortCode}`);
+    }
 
     /* ── VÉRIFICATION DEVICE (Option C) ── */
     if (!guest.deviceUuid && !guest.deviceFp) {
@@ -171,7 +197,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, prenom: guest.prenom, niveau: guest.niveau, token }),
+      body: JSON.stringify({ success: true, prenom: guest.prenom, niveau: guest.niveau, token, shortCode: guest.shortCode }),
     };
 
   } catch (err) {
