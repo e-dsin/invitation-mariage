@@ -67,9 +67,14 @@ exports.handler = async (event) => {
       requestBody: {
         valueInputOption: "RAW",
         data: [
-          { range: `Invités!L${rowIndex}`,               values: [[newToken]] },
-          { range: `Invités!O${rowIndex}:V${rowIndex}`,   values: [["","","","","","","",""]] }, /* O P Q R S T U V = 8 cols */
-          { range: `Invités!W${rowIndex}`,               values: [[newShortCode]] },
+          { range: `Invités!L${rowIndex}`,  values: [[newToken]] },      /* guest_token */
+          { range: `Invités!O${rowIndex}`,  values: [[""]] },            /* first_click_date */
+          { range: `Invités!P${rowIndex}`,  values: [[""]] },            /* adr_ip */
+          { range: `Invités!Q${rowIndex}`,  values: [[""]] },            /* ip_log */
+          { range: `Invités!T${rowIndex}`,  values: [[""]] },            /* ip_status */
+          { range: `Invités!U${rowIndex}`,  values: [[""]] },            /* device_uuid */
+          { range: `Invités!V${rowIndex}`,  values: [[""]] },            /* device_fp */
+          { range: `Invités!W${rowIndex}`,  values: [[newShortCode]] },  /* short_code */
         ]
       }
     });
