@@ -18,6 +18,17 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{min-height:100vh;font-family:Georgia,serif;background:linear-gradient(158deg,#d4845a 0%,#dc8870 4%,#e09080 7%,#dda0a8 11%,#d890a0 18%,#d88098 26%,#d8a0b0 33%,#e0b8c0 40%,#eac8cc 46%,#f2dcd8 52%,#f5f0e8 57%,#f0ecd8 62%,#e8e8c8 67%,#d8e4a8 73%,#c8d890 80%,#b8cc78 88%,#a8c065 95%,#98b455 100%);padding:20px 16px 40px;}
 
+/* Onglets rapport */
+
+/* Vue liste rapport */
+
+/* Carte */
+
+/* Légende carte */
+.map-leg-item{display:flex;align-items:center;gap:5px;}
+
+/* Cards rapport liste */
+
 .page{display:none;max-width:500px;margin:0 auto;}
 .page.active{display:block;}
 
@@ -172,6 +183,13 @@ input::placeholder{color:rgba(160,90,50,.35);}
   <div class="section-title" style="margin-bottom:12px;">Liste des invités <span id="refresh-btn" style="font-size:12px;font-style:italic;color:rgba(140,60,20,.5);cursor:pointer;text-decoration:underline;margin-left:8px;">actualiser</span></div>
   <div class="msg" id="msg-list"></div>
   <div class="guest-list" id="guest-list"></div>
+
+</div>
+      <div class="map-leg-item"><div class="map-leg-dot" style="background:#c87010;"></div>Changement mineur (&lt; 100m)</div>
+      <div class="map-leg-item"><div class="map-leg-dot" style="background:#c02020;"></div>Changement &gt; 100m</div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -389,8 +407,7 @@ input::placeholder{color:rgba(160,90,50,.35);}
         : '<span style="color:rgba(150,80,30,.45);">En attente</span>';
       var siteUrl = 'https://on-se-marie.ebelle.fr';
       var lienInvite = g.guest_token ? siteUrl+'?t='+g.guest_token : '';
-      var msgWA = 'Bonjour '+g.prenom+' 🌸\n\nLynda & Marcel-Cédric ont le bonheur de vous annoncer leur mariage et seraient touchés de vous avoir à leurs côtés pour célébrer ce jour si précieux.\n\nVotre invitation personnelle :\n'+lienInvite;
-      var waUrl = lienInvite ? 'https://wa.me/'+g.telephone.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(msgWA) : '';
+      var shortUrl   = g.short_code  ? siteUrl+'/s/'+g.short_code  : '';
 
       return '<div class="guest-card">'
         +'<div class="guest-top">'
@@ -399,10 +416,17 @@ input::placeholder{color:rgba(160,90,50,.35);}
         +'</div>'
         +'<div class="guest-tel">'+escHtml(g.telephone)+'</div>'
         +(g.first_click?'<div style="font-size:10px;font-style:italic;color:rgba(110,50,20,.45);margin-bottom:4px;"> Premier accès : '+escHtml(g.first_click)+'</div>':'')
-        +(lienInvite?'<div style="margin:4px 0 6px;display:flex;align-items:center;gap:6px;">'
+        +(lienInvite?'<div style="margin:4px 0 2px;display:flex;align-items:center;gap:6px;">'
           +'<span style="font-size:10px;color:rgba(110,50,20,.45);word-break:break-all;flex:1;">'+escHtml(lienInvite)+'</span>'
           +'<button onclick="navigator.clipboard.writeText(\''+escHtml(lienInvite)+'\').then(function(){this.textContent=\'✓\';}.bind(this))" '
           +'style="flex-shrink:0;padding:3px 8px;border-radius:6px;border:1px solid rgba(180,90,50,.28);background:rgba(255,252,248,.7);font-size:10px;cursor:pointer;">Copier</button>'
+          +'<button onclick="regenToken(\''+escHtml(g.telephone)+'\',\''+escHtml(g.prenom)+'\')" '
+          +'style="flex-shrink:0;padding:3px 8px;border-radius:6px;border:1px solid rgba(180,50,20,.25);background:rgba(255,240,230,.6);font-size:10px;cursor:pointer;color:rgba(140,40,10,.7);">🔄</button>'
+          +'</div>':'')
+        +(shortUrl?'<div style="font-size:10px;font-style:italic;color:rgba(110,50,20,.38);margin-bottom:5px;">📱 QR court : '
+          +'<span style="color:rgba(160,70,20,.6);">'+escHtml(shortUrl)+'</span>'
+          +'<button onclick="navigator.clipboard.writeText(\''+escHtml(shortUrl)+'\').then(function(){this.textContent=\'✓\';}.bind(this))" '
+          +'style="margin-left:5px;padding:2px 6px;border-radius:5px;border:1px solid rgba(180,90,50,.22);background:rgba(255,252,248,.6);font-size:9px;cursor:pointer;">Copier</button>'
           +'</div>':'')
         +'<div class="guest-rsvp">'+rsvpHtml+'</div>'
         +(g.rsvp_message?'<div style="font-size:11px;font-style:italic;color:rgba(100,50,20,.55);margin-top:5px;border-top:1px solid rgba(180,90,50,.12);padding-top:5px;">«&nbsp;'+escHtml(g.rsvp_message)+'&nbsp;»</div>':'')
@@ -413,6 +437,26 @@ input::placeholder{color:rgba(160,90,50,.35);}
   function escHtml(s){
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
+
+  /* Régénérer token + short_code */
+  window.regenToken = async function(phone, prenom){
+    if(!confirm('Régénérer le lien de '+prenom+' ? L\'ancien lien sera invalidé.')) return;
+    try {
+      var res = await fetch('/.netlify/functions/admin-regen-token',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({token: adminToken, phone: phone})
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error);
+      var msg = '✓ Nouveau lien pour '+escHtml(prenom)+' :\n'+data.inviteUrl;
+      if(data.shortUrl) msg += '\n\nCode QR court : '+data.shortUrl;
+      alert(msg);
+      loadGuests();
+    } catch(e){
+      alert('Erreur : '+e.message);
+    }
+  };
 
 })();
 </script>

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#1a1a2e">
+<title>Rapport IP — Lynda & Marcel-Cédric</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:Georgia,serif;}
+body{background:#1a1a2e;}
+
+/* ── PIN ── */
+#pin-screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px;background:rgba(0,0,0,.55);z-index:200;}
+.pin-title{font-family:'Dancing Script',cursive;font-size:30px;color:rgba(255,240,220,.95);text-align:center;}
+.pin-sub{font-size:12px;font-style:italic;color:rgba(255,240,220,.5);text-align:center;}
+#pin-row{display:flex;gap:12px;justify-content:center;}
+.pd{width:52px;height:60px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,220,180,.25);border-radius:12px;text-align:center;font-size:26px;font-weight:700;color:#fff5ee;outline:none;transition:border-color .2s;}
+.pd:focus{border-color:rgba(255,180,100,.7);}
+.pd.err{border-color:rgba(220,60,60,.8);animation:errShake .3s;}
+#pin-btn{padding:13px 40px;background:linear-gradient(135deg,#c2410c,#9a3412);border:none;border-radius:12px;color:#fff5ee;font-family:Georgia,serif;font-size:16px;cursor:pointer;}
+#pin-err{font-size:12px;color:rgba(220,80,60,.9);font-style:italic;min-height:16px;text-align:center;}
+
+/* ── STAGE ── */
+#stage{position:fixed;inset:0;display:none;flex-direction:column;}
+
+/* Header */
+#stage-header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(20,15,35,.85);border-bottom:1px solid rgba(255,220,180,.08);z-index:20;}
+#stage-title{font-family:'Dancing Script',cursive;font-size:20px;color:rgba(255,230,180,.8);}
+.header-right{display:flex;align-items:center;gap:10px;}
+#refresh-btn{background:rgba(255,180,80,.12);border:1px solid rgba(255,180,80,.2);border-radius:7px;padding:4px 10px;color:rgba(255,200,120,.7);font-size:10px;cursor:pointer;font-style:italic;}
+#quit-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,220,180,.12);border-radius:8px;padding:5px 12px;color:rgba(255,230,180,.5);font-size:11px;cursor:pointer;}
+
+/* ── CARTE plein écran ── */
+#map{flex:1;width:100%;min-height:0;}
+
+/* ── PANNEAU TABLEAU — Leaflet Control ── */
+.lf-panel{background:rgba(20,15,35,.92);border:1px solid rgba(255,220,180,.12);border-radius:12px;width:270px;max-height:52vh;display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(8px);}
+.lf-panel-header{padding:8px 12px;border-bottom:1px solid rgba(255,220,180,.08);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.lf-panel-title{font-family:'Dancing Script',cursive;font-size:15px;color:rgba(255,230,180,.8);}
+.lf-panel-count{font-size:10px;font-style:italic;color:rgba(255,220,180,.35);}
+.lf-panel-body{overflow-y:auto;flex:1;}
+.lf-panel-body::-webkit-scrollbar{width:3px;}
+.lf-panel-body::-webkit-scrollbar-thumb{background:rgba(255,180,80,.2);border-radius:2px;}
+
+/* Lignes tableau */
+.log-row{display:flex;align-items:flex-start;gap:8px;padding:7px 12px;cursor:pointer;border-bottom:1px solid rgba(255,220,180,.05);transition:background .15s;}
+.log-row:hover{background:rgba(255,180,80,.07);}
+.log-row.active{background:rgba(255,140,40,.15);border-left:2.5px solid rgba(255,160,60,.7);}
+.log-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:3px;border:1.5px solid rgba(255,255,255,.2);}
+.log-dot.green{background:#3a7020;}.log-dot.orange{background:#c87010;}.log-dot.red{background:#c02020;}
+.log-info{flex:1;min-width:0;}
+.log-name{font-family:'Dancing Script',cursive;font-size:14px;color:rgba(255,230,180,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.log-city{font-size:9px;color:rgba(255,220,180,.38);font-style:italic;margin-top:1px;}
+.log-ts{font-size:9px;color:rgba(255,180,80,.55);margin-top:1px;}
+.log-ip-txt{font-size:9px;color:rgba(255,220,180,.25);flex-shrink:0;margin-top:3px;}
+
+/* ── LÉGENDE — Leaflet Control ── */
+.lf-legend{background:rgba(20,15,35,.88);border:1px solid rgba(255,220,180,.1);border-radius:10px;padding:8px 12px;}
+.leg-row{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:10px;font-style:italic;color:rgba(255,220,180,.55);}
+.leg-row:last-child{margin-bottom:0;}
+.leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(255,255,255,.2);}
+
+/* ── LOADING overlay ── */
+#loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(20,15,35,.8);z-index:50;gap:14px;pointer-events:none;}
+.load-spinner{width:34px;height:34px;border:2.5px solid rgba(255,180,80,.15);border-top-color:rgba(255,180,80,.75);border-radius:50%;animation:spin .9s linear infinite;}
+.load-txt{font-style:italic;font-size:12px;color:rgba(255,220,180,.55);}
+.load-prog{font-size:11px;color:rgba(255,180,80,.5);}
+
+/* Tooltip Leaflet */
+.lf-tip{background:rgba(20,15,35,.96)!important;border:1px solid rgba(255,180,80,.3)!important;border-radius:8px!important;padding:6px 10px!important;font-family:Georgia,serif!important;font-size:12px!important;color:rgba(255,230,180,.9)!important;box-shadow:0 3px 12px rgba(0,0,0,.4)!important;white-space:nowrap!important;}
+.lf-tip.leaflet-tooltip-top::before{border-top-color:rgba(255,180,80,.3)!important;}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes errShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+</style>
+</head>
+<body>
+
+<!-- PIN -->
+<div id="pin-screen">
+  <div class="pin-title">Rapport IP</div>
+  <div class="pin-sub">Lynda &amp; Marcel-Cédric · Accès sécurisé</div>
+  <div id="pin-row">
+    <input class="pd" id="p0" maxlength="1" type="tel" inputmode="numeric">
+    <input class="pd" id="p1" maxlength="1" type="tel" inputmode="numeric">
+    <input class="pd" id="p2" maxlength="1" type="tel" inputmode="numeric">
+    <input class="pd" id="p3" maxlength="1" type="tel" inputmode="numeric">
+  </div>
+  <div id="pin-err"></div>
+  <button id="pin-btn">Accéder au rapport</button>
+</div>
+
+<!-- STAGE -->
+<div id="stage">
+  <div id="stage-header">
+    <div id="stage-title">Rapport IP · Connexions</div>
+    <div class="header-right">
+      <button id="refresh-btn">↺ Actualiser</button>
+      <button id="quit-btn">✕ Quitter</button>
+    </div>
+  </div>
+  <div id="map"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function(){
+
+  /* ════════════════════════════════════════════
+     CONSTANTES
+  ════════════════════════════════════════════ */
+  var SESSION_KEY = 'rapport_ip_dict';
+  var IP_COLORS   = {green:'#3a7020', orange:'#c87010', red:'#c02020'};
+  var IP_LABELS   = {green:'IP stable', orange:'Changement < 100m', red:'Changement > 100m'};
+  var ORDER       = {red:0, orange:1, green:2};
+
+  /* ════════════════════════════════════════════
+     ÉTAT
+  ════════════════════════════════════════════ */
+  var adminPin   = '';
+  var guestDict  = null;   /* dictionnaire JSON source de vérité */
+  var leafletMap = null;
+  var geoLayer   = null;   /* L.geoJSON feature layer */
+  var activeIdx  = -1;
+  var markerMap  = {};     /* idx → Leaflet layer */
+
+  /* ════════════════════════════════════════════
+     PIN — même logique que messages.html
+  ════════════════════════════════════════════ */
+  var pds = ['p0','p1','p2','p3'].map(function(id){ return document.getElementById(id); });
+  pds.forEach(function(inp, i){
+    inp.addEventListener('keydown', function(e){
+      if(e.key==='Backspace'){ if(inp.value){ inp.value=''; } else if(i>0){ pds[i-1].focus(); pds[i-1].value=''; } e.preventDefault(); }
+      if(e.key==='Enter') checkPin();
+    });
+    inp.addEventListener('input', function(){
+      var v = inp.value.replace(/\D/g,'').slice(-1); inp.value=v;
+      if(v && i<3) pds[i+1].focus();
+    });
+  });
+  document.getElementById('pin-btn').addEventListener('click', checkPin);
+
+  function checkPin(){
+    var c = pds.map(function(d){ return d.value; }).join('');
+    if(c.length < 4){
+      pds.forEach(function(d){ d.classList.add('err'); setTimeout(function(){ d.classList.remove('err'); }, 300); });
+      return;
+    }
+    adminPin = c;
+    loadData(false);
+  }
+
+  /* ════════════════════════════════════════════
+     FONCTION 1 — buildGuestData(rawGuests)
+     Reçoit la liste brute, géolocalise chaque IP,
+     retourne un dictionnaire JSON structuré.
+     Persisté en sessionStorage.
+  ════════════════════════════════════════════ */
+  async function buildGuestData(rawGuests, loadingEl, progEl) {
+    var withIp = rawGuests.filter(function(g){ return g.ip_status && g.adr_ip; });
+    withIp.sort(function(a,b){ return (ORDER[a.ip_status]||2)-(ORDER[b.ip_status]||2); });
+
+    var total = withIp.length;
+    var result = { guests: [], generated_at: new Date().toISOString() };
+
+    /* Géoloc en parallèle par batch de 4 pour respecter ip-api (45 req/min gratuit) */
+    var BATCH = 4;
+    for(var i=0; i<withIp.length; i+=BATCH){
+      var batch = withIp.slice(i, i+BATCH);
+      var batchResults = await Promise.all(batch.map(function(g){
+        return fetch('https://ip-api.com/json/'+encodeURIComponent(g.adr_ip.split(',')[0].trim())
+          +'?fields=lat,lon,status,city,country,regionName')
+          .then(function(r){ return r.json(); })
+          .then(function(geo){
+            var entry = {
+              prenom:               g.prenom               || '',
+              adr_ip:               g.adr_ip               || '',
+              ip_status:            g.ip_status            || 'green',
+              ip_log:               g.ip_log               || '',
+              timestamp_first_click:g.timestamp_first_click|| '',
+              lat:  null,
+              lon:  null,
+              city:    '',
+              region:  '',
+              country: ''
+            };
+            if(geo.status === 'success'){
+              entry.lat     = geo.lat;
+              entry.lon     = geo.lon;
+              entry.city    = geo.city    || '';
+              entry.region  = geo.regionName || '';
+              entry.country = geo.country || '';
+            }
+            return entry;
+          })
+          .catch(function(){ return null; });
+      }));
+
+      batchResults.forEach(function(e){ if(e) result.guests.push(e); });
+
+      /* Mise à jour progression */
+      if(progEl){
+        var done = Math.min(i+BATCH, total);
+        progEl.textContent = done + ' / ' + total + ' adresses traitées';
+      }
+
+      /* Pause entre batches */
+      if(i+BATCH < withIp.length) await pause(400);
+    }
+
+    /* Persister en sessionStorage */
+    try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(result)); }
+    catch(e){ console.warn('sessionStorage write error:', e); }
+
+    return result;
+  }
+
+  /* ════════════════════════════════════════════
+     FONCTION 2 — renderFeatures(dict)
+     Crée le GeoJSON FeatureCollection,
+     l'ajoute à la carte via L.geoJSON,
+     et construit le tableau dans le panneau.
+  ════════════════════════════════════════════ */
+  function renderFeatures(dict) {
+    if(!dict || !dict.guests || !dict.guests.length) return;
+
+    /* Nettoyer l'ancien layer si existant */
+    if(geoLayer){ leafletMap.removeLayer(geoLayer); geoLayer=null; }
+    markerMap = {};
+    activeIdx = -1;
+
+    /* ── Construire le GeoJSON FeatureCollection ── */
+    var features = dict.guests
+      .filter(function(g){ return g.lat !== null && g.lon !== null; })
+      .map(function(g, i){
+        return {
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: [g.lon, g.lat] },
+          properties: {
+            idx:                  i,
+            prenom:               g.prenom,
+            ip_status:            g.ip_status,
+            ip_log:               g.ip_log,
+            timestamp_first_click:g.timestamp_first_click,
+            adr_ip:               g.adr_ip,
+            city:                 g.city,
+            region:               g.region,
+            country:              g.country
+          }
+        };
+      });
+
+    var featureCollection = { type: 'FeatureCollection', features: features };
+
+    /* ── Ajouter le layer GeoJSON à la carte ── */
+    geoLayer = L.geoJSON(featureCollection, {
+      pointToLayer: function(feature, latlng){
+        var st    = feature.properties.ip_status || 'green';
+        var color = IP_COLORS[st];
+        var marker = L.circleMarker(latlng, {
+          radius:      10,
+          fillColor:   color,
+          color:       'rgba(255,255,255,.75)',
+          weight:      2,
+          fillOpacity: 0.92,
+          interactive: true
+        });
+
+        /* Tooltip */
+        var p   = feature.properties;
+        var ts  = (p.ip_status !== 'green' && p.ip_log) ? p.ip_log.split(' — ')[0]||'' : '';
+        var loc = [p.city, p.country].filter(Boolean).join(' · ');
+        var tip = '<strong>'+escH(p.prenom)+'</strong>'
+          +(ts ? '<br><span style="font-size:10px;color:rgba(255,180,80,.75);">'+escH(ts)+'</span>' : '')
+          +(loc ? '<br><span style="font-size:9px;color:rgba(255,220,180,.4);">'+escH(loc)+'</span>' : '');
+
+        marker.bindTooltip(tip,{
+          permanent:false, direction:'top', offset:[0,-10],
+          opacity:0.97, className:'lf-tip'
+        });
+
+        /* Clic marker → sélectionner ligne tableau */
+        marker.on('click', function(){
+          selectGuest(p.idx, false);
+        });
+
+        markerMap[p.idx] = marker;
+        return marker;
+      }
+    }).addTo(leafletMap);
+
+    /* ── Construire le tableau dans le panneau ── */
+    var body = document.getElementById('panel-body');
+    var count = document.getElementById('panel-count');
+    if(count) count.textContent = dict.guests.length + ' invité'+(dict.guests.length>1?'s':'');
+    if(body){
+      body.innerHTML = '';
+      dict.guests.forEach(function(g, i){
+        var st  = g.ip_status || 'green';
+        var ts  = (st !== 'green' && g.ip_log) ? g.ip_log.split(' — ')[0]||'' : '';
+        var loc = [g.city, g.country].filter(Boolean).join(' · ');
+        var row = document.createElement('div');
+        row.className = 'log-row';
+        row.id = 'row-'+i;
+        row.innerHTML =
+          '<div class="log-dot '+st+'"></div>'
+          +'<div class="log-info">'
+          +'<div class="log-name">'+escH(g.prenom)+'</div>'
+          +(loc  ? '<div class="log-city">'+escH(loc)+'</div>' : '')
+          +(ts   ? '<div class="log-ts">'+escH(ts)+'</div>' : '')
+          +'</div>'
+          +'<div class="log-ip-txt">'+escH((g.adr_ip||'').split('.').slice(0,2).join('.')+'.x.x')+'</div>';
+        row.addEventListener('click', function(){ selectGuest(i, true); });
+        body.appendChild(row);
+      });
+    }
+
+    /* Ajuster la vue sur tous les points */
+    var bounds = features
+      .map(function(f){ return [f.geometry.coordinates[1], f.geometry.coordinates[0]]; });
+    if(bounds.length > 0){
+      leafletMap.fitBounds(bounds, {padding:[40,40], maxZoom:9});
+    }
+
+    /* Auto-sélectionner le premier rouge */
+    if(dict.guests.length && dict.guests[0].ip_status === 'red'){
+      setTimeout(function(){ selectGuest(0, false); }, 350);
+    }
+  }
+
+  /* ════════════════════════════════════════════
+     SÉLECTION CROISÉE
+  ════════════════════════════════════════════ */
+  function selectGuest(idx, fromRow) {
+    /* Désélectionner le précédent */
+    if(activeIdx >= 0){
+      var prevRow = document.getElementById('row-'+activeIdx);
+      if(prevRow) prevRow.classList.remove('active');
+      if(markerMap[activeIdx]) markerMap[activeIdx].setStyle({radius:10, weight:2});
+    }
+    activeIdx = idx;
+
+    /* Surligner la ligne */
+    var row = document.getElementById('row-'+idx);
+    if(row){
+      row.classList.add('active');
+      if(fromRow) row.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+
+    /* Agrandir le marker et zoomer */
+    if(markerMap[idx]){
+      markerMap[idx].setStyle({radius:14, weight:3});
+      markerMap[idx].openTooltip();
+      leafletMap.flyTo(markerMap[idx].getLatLng(), 12, {duration:0.8});
+    }
+  }
+
+  /* ════════════════════════════════════════════
+     INITIALISATION CARTE
+  ════════════════════════════════════════════ */
+  function initMap() {
+    leafletMap = L.map('map',{zoomControl:false, attributionControl:false}).setView([46.5,2.5],5);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(leafletMap);
+    L.control.zoom({position:'bottomright'}).addTo(leafletMap);
+    L.control.attribution({position:'bottomright', prefix:false})
+      .addAttribution('© <a href="https://carto.com" style="color:rgba(255,180,80,.35)">CARTO</a> © <a href="https://openstreetmap.org" style="color:rgba(255,180,80,.35)">OSM</a>')
+      .addTo(leafletMap);
+
+    /* Panneau tableau */
+    var PanelControl = L.Control.extend({
+      options:{position:'topleft'},
+      onAdd:function(){
+        var div = L.DomUtil.create('div','lf-panel');
+        L.DomEvent.disableScrollPropagation(div);
+        L.DomEvent.disableClickPropagation(div);
+        var hdr = L.DomUtil.create('div','lf-panel-header',div);
+        hdr.innerHTML='<span class="lf-panel-title">Connexions</span><span class="lf-panel-count" id="panel-count">—</span>';
+        var body = L.DomUtil.create('div','lf-panel-body',div);
+        body.id = 'panel-body';
+        return div;
+      }
+    });
+    new PanelControl().addTo(leafletMap);
+
+    /* Légende */
+    var LegendControl = L.Control.extend({
+      options:{position:'bottomleft'},
+      onAdd:function(){
+        var div = L.DomUtil.create('div','lf-legend');
+        L.DomEvent.disableClickPropagation(div);
+        div.innerHTML=
+          '<div class="leg-row"><div class="leg-dot" style="background:#3a7020;"></div>IP stable</div>'
+          +'<div class="leg-row"><div class="leg-dot" style="background:#c87010;"></div>Changement &lt; 100m</div>'
+          +'<div class="leg-row"><div class="leg-dot" style="background:#c02020;"></div>Changement &gt; 100m</div>';
+        return div;
+      }
+    });
+    new LegendControl().addTo(leafletMap);
+  }
+
+  /* ════════════════════════════════════════════
+     CHARGEMENT PRINCIPAL
+  ════════════════════════════════════════════ */
+  async function loadData(forceRefresh) {
+    document.getElementById('pin-btn') && (document.getElementById('pin-btn').textContent='Chargement…');
+    document.getElementById('pin-btn') && (document.getElementById('pin-btn').disabled=true);
+
+    /* Récupérer la liste brute */
+    var raw;
+    try {
+      var r = await fetch('/.netlify/functions/admin-list-guests',{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({pin: adminPin})
+      });
+      raw = await r.json();
+    } catch(e) {
+      document.getElementById('pin-err') && (document.getElementById('pin-err').textContent='Erreur de connexion');
+      document.getElementById('pin-btn') && (document.getElementById('pin-btn').textContent='Accéder au rapport');
+      document.getElementById('pin-btn') && (document.getElementById('pin-btn').disabled=false);
+      return;
+    }
+
+    if(raw.error){
+      document.getElementById('pin-err') && (document.getElementById('pin-err').textContent='PIN invalide');
+      document.getElementById('pin-btn') && (document.getElementById('pin-btn').textContent='Accéder au rapport');
+      document.getElementById('pin-btn') && (document.getElementById('pin-btn').disabled=false);
+      adminPin=''; pds.forEach(function(d){ d.value=''; });
+      return;
+    }
+
+    /* Afficher le stage */
+    document.getElementById('pin-screen').style.display='none';
+    var stage = document.getElementById('stage');
+    stage.style.display='flex';
+    if(!leafletMap) initMap();
+
+    /* ── Vérifier sessionStorage ── */
+    var cached = null;
+    if(!forceRefresh){
+      try {
+        var stored = sessionStorage.getItem(SESSION_KEY);
+        if(stored) cached = JSON.parse(stored);
+      } catch(e){}
+    }
+
+    if(cached && cached.guests && cached.guests.length){
+      /* Utiliser le dictionnaire en cache — pas de géoloc */
+      guestDict = cached;
+      renderFeatures(guestDict);
+      return;
+    }
+
+    /* ── Pas de cache : construire le dictionnaire ── */
+    var mapEl = document.getElementById('map');
+    var loadingEl = document.createElement('div');
+    loadingEl.id='loading';
+    loadingEl.innerHTML=
+      '<div class="load-spinner"></div>'
+      +'<div class="load-txt">Géolocalisation des adresses IP…</div>'
+      +'<div class="load-prog" id="load-prog"></div>';
+    mapEl.appendChild(loadingEl);
+
+    guestDict = await buildGuestData(raw.guests||[], loadingEl, document.getElementById('load-prog'));
+
+    /* Supprimer le loading */
+    if(loadingEl.parentNode) loadingEl.parentNode.removeChild(loadingEl);
+
+    renderFeatures(guestDict);
+  }
+
+  /* Bouton actualiser — vide le cache et recharge */
+  document.getElementById('refresh-btn').addEventListener('click', function(){
+    try { sessionStorage.removeItem(SESSION_KEY); } catch(e){}
+    loadData(true);
+  });
+
+  document.getElementById('quit-btn').addEventListener('click', function(){ location.reload(); });
+
+  /* ════════════════════════════════════════════
+     UTILITAIRES
+  ════════════════════════════════════════════ */
+  function pause(ms){ return new Promise(function(res){ setTimeout(res, ms); }); }
+  function escH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+})();
+</script>
+</body>
+</html>

@@ -65,20 +65,13 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
 #rr{position:absolute;right:0;top:0;width:140px;height:18px;background:linear-gradient(90deg,#f5f0e8,#c8d890,#a8c065);border-radius:0 9px 9px 0;box-shadow:0 0 10px rgba(160,192,100,.45);transform-origin:left center;transition:transform .68s cubic-bezier(.38,0,.22,1),opacity .68s;}
 #bow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:54px;pointer-events:none;transition:transform .52s cubic-bezier(.38,0,.22,1),opacity .42s;}
 
-#otp{position:absolute;inset:0;z-index:15;display:flex;align-items:center;justify-content:center;padding:28px 20px;opacity:0;pointer-events:none;transition:opacity .45s;}
-#otp.show{opacity:1;pointer-events:auto;}
-#otpb{background:rgba(255,252,248,.72);border:1px solid rgba(180,90,50,.22);border-radius:20px;padding:30px 26px 26px;width:100%;max-width:300px;text-align:center;box-shadow:0 8px 40px rgba(180,90,50,.15);}
-.ott{font-family:'Dancing Script',cursive;font-size:23px;color:#7c3010;margin-bottom:5px;}
-.ots{font-size:12px;font-style:italic;color:rgba(100,40,20,.58);margin-bottom:22px;line-height:1.5;}
-#otr{display:flex;gap:10px;justify-content:center;margin-bottom:20px;}
-.od{width:46px;height:54px;background:rgba(255,255,255,.8);border:1.5px solid rgba(180,90,50,.3);border-radius:12px;text-align:center;font-size:23px;font-weight:700;color:#7c3010;outline:none;-webkit-user-select:text;user-select:text;transition:border-color .2s,background .2s,box-shadow .2s;}
-.od:focus{border-color:rgba(160,70,30,.65);background:#fff;box-shadow:0 0 0 3px rgba(180,90,50,.18);}
-.od.filled{background:rgba(255,240,225,.9);border-color:rgba(160,80,40,.45);}
-.od.err{border-color:rgba(200,50,50,.7)!important;animation:errShake .32s;}
-#otbtn{width:100%;padding:13px;background:linear-gradient(135deg,#c2410c,#9a3412);border:none;border-radius:12px;color:#fff5ee;font-family:'Dancing Script',cursive;font-size:19px;cursor:pointer;margin-bottom:11px;transition:transform .12s,filter .2s;}
-#otbtn:hover{filter:brightness(1.1);}
-#otbtn:active{transform:scale(.975);}
-.oth{font-size:11px;font-style:italic;color:rgba(140,60,20,.42);}
+#token-err{position:absolute;inset:0;z-index:15;display:none;align-items:center;justify-content:center;padding:28px 20px;}
+#token-err.show{display:flex;}
+#token-err-box{background:rgba(255,252,248,.78);border:1px solid rgba(180,90,50,.22);border-radius:20px;padding:32px 26px 28px;width:100%;max-width:300px;text-align:center;box-shadow:0 8px 40px rgba(180,90,50,.12);}
+.terr-ico{font-size:36px;margin-bottom:12px;}
+.terr-t{font-family:'Dancing Script',cursive;font-size:22px;color:#7c3010;margin-bottom:10px;}
+.terr-s{font-size:13px;font-style:italic;color:rgba(100,40,20,.65);line-height:1.6;}
+.fp-prenom{font-family:'Dancing Script',cursive;font-size:32px;font-weight:700;color:#922010;margin-bottom:2px;text-shadow:0 0 20px rgba(180,70,30,.18);}
 
 #main{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;z-index:12;overflow:hidden;}
 #main.show{opacity:1;pointer-events:auto;animation:fadeUp .62s cubic-bezier(.2,0,.8,1) forwards;}
@@ -100,14 +93,14 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
 .fpye{font-family:'Dancing Script',cursive;font-size:36px;font-weight:600;color:#7c3010;line-height:1;letter-spacing:.5px;margin-bottom:8px;}
 .fpi{font-size:13.5px;font-style:italic;color:rgba(100,40,20,.68);text-align:center;line-height:1.7;}
 .fpi2{font-size:13.5px;font-style:italic;color:rgba(100,40,20,.68);text-align:center;line-height:1.7;margin-bottom:10px;}
-.fpadr{font-size:11px;font-style:italic;text-align:center;margin-bottom:14px;}
+.fpadr{font-size:14px;font-style:italic;text-align:center;margin-bottom:14px;}
 .fpadr a{color:#b45309;text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(180,83,9,.35);}
 .fpadr a:hover{text-decoration-color:rgba(180,83,9,.8);}
 .fpsp{display:flex;align-items:center;gap:8px;width:78%;margin:4px 0 10px;}
 .fpsl{flex:1;height:1px;background:rgba(160,80,40,.18);}
 .fpsd{width:5px;height:5px;border-radius:50%;background:rgba(160,80,40,.38);}
 .fpdt{font-size:15px;font-weight:700;letter-spacing:1px;color:#7c3010;margin-bottom:2px;text-align:center;width:100%;}
-.fplc{font-size:12px;font-style:italic;color:rgba(100,50,20,.6);margin-bottom:3px;}
+.fplc{font-size:14px;font-style:italic;color:rgba(100,50,20,.6);margin-bottom:3px;}
 .fpck{font-size:11px;font-style:italic;color:rgba(100,50,20,.5);text-align:center;line-height:1.65;border-top:1px solid rgba(160,80,40,.12);padding-top:11px;width:100%;margin-bottom:14px;}
 
 /* BOUTON CONFIRMER PRÉSENCE */
@@ -171,8 +164,8 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
 
 /* ALBUM */
 #p5{padding:14px 12px 24px;}
-.albt{font-family:'Dancing Script',cursive;font-size:27px;font-weight:700;color:#7c3010;text-align:center;margin-bottom:10px;}
-.albfs{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:9px;}
+.albt{font-family:'Dancing Script',cursive;font-size:27px;font-weight:700;color:#7c3010;text-align:center;margin-bottom:10px;width:100%;}
+.albfs{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:9px;width:100%;}
 .albf{padding:5px 12px;border-radius:20px;font-size:11px;font-style:italic;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .albf.on{background:rgba(194,65,12,.25);border:1px solid rgba(180,70,20,.48);color:#7c2d12;}
 .albf.off{background:rgba(255,252,248,.5);border:1px solid rgba(180,90,50,.2);color:rgba(120,55,20,.55);}
@@ -180,7 +173,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
 /* Filtre spécial "Il était une fois" — doré/sépia */
 .albf.once{background:rgba(160,110,40,.18);border:1px solid rgba(140,90,30,.35);color:rgba(110,70,20,.75);}
 .albf.once.on{background:rgba(160,110,40,.28);border-color:rgba(140,90,30,.55);color:#7c4a10;}
-.albct{font-size:10px;font-style:italic;color:rgba(130,60,25,.42);text-align:center;margin-bottom:9px;}
+.albct{font-size:10px;font-style:italic;color:rgba(130,60,25,.42);text-align:center;margin-bottom:9px;width:100%;}
 .albg{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;width:100%;}
 .albc{position:relative;aspect-ratio:1;border-radius:4px;overflow:hidden;cursor:pointer;}
 .albc:hover .albov{opacity:1;}
@@ -243,17 +236,10 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
   </svg></div>
 </div>
 
-<div id="otp"><div id="otpb">
-  <div class="ott">Votre invitation vous attend</div>
-  <div class="ots">Entrez le code reçu par SMS</div>
-  <div id="otr">
-    <input class="od" id="d0" maxlength="1" type="tel" inputmode="numeric" autocomplete="one-time-code">
-    <input class="od" id="d1" maxlength="1" type="tel" inputmode="numeric" autocomplete="off">
-    <input class="od" id="d2" maxlength="1" type="tel" inputmode="numeric" autocomplete="off">
-    <input class="od" id="d3" maxlength="1" type="tel" inputmode="numeric" autocomplete="off">
-  </div>
-  <button id="otbtn">Ouvrir mon invitation</button>
-  <div class="oth">@ Mundo Archi Product</div>
+<div id="token-err"><div id="token-err-box">
+  <div class="terr-ico">💌</div>
+  <div class="terr-t">Lien invalide</div>
+  <div class="terr-s">Ce lien d'invitation n'est pas reconnu.<br><br>Veuillez contacter les mariés pour recevoir votre lien personnel.</div>
 </div></div>
 
 <div id="main">
@@ -271,12 +257,14 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
       <svg viewBox="0 0 155 5" style="width:155px;margin-bottom:8px;overflow:visible"><line x1="0" y1="2.5" x2="155" y2="2.5" stroke="rgba(160,80,40,.2)" stroke-width=".8" stroke-dasharray="3 4"/></svg>
       <div class="fps"><span class="fpd">— </span>Save the date<span class="fpd"> —</span></div>
       <div class="fpsa">Oui</div><div class="fpye">pour la vie</div>
+      
       <svg viewBox="0 0 78 78" style="width:46px;height:46px;margin:2px 0 9px;overflow:visible">
         <defs><linearGradient id="gf" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d890a0"/><stop offset="45%" stop-color="#f5f0e8"/><stop offset="100%" stop-color="#90b840"/></linearGradient></defs>
         <path fill="none" stroke="url(#gf)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="700" stroke-dashoffset="0"
           d="M39,39 C31,23 18,17 23,9 C28,1 39,13 39,21 C39,13 50,1 55,9 C60,17 47,23 39,39 C47,25 61,30 59,41 C57,52 44,44 39,39 C45,49 52,61 40,65 C28,69 29,56 39,39 C29,56 15,63 11,50 C7,37 25,35 39,39 M39,50 L37,64"
           style="animation:glowPulse 2.6s ease-in-out infinite"/>
       </svg>
+      <div id="fp-prenom-zone"></div>
       <div class="fpi">Lynda &amp; Marcel-Cédric</div>
       <div class="fpi2">seront ravis de vous compter parmi leurs convives</div>
       <div class="fpsp"><div class="fpsl"></div><div class="fpsd"></div><div class="fpsl"></div></div>
@@ -287,16 +275,17 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
       </div>
       <div id="fp-repas-bloc" style="display:none;">
         <div class="fpdt"><span style="font-weight:400;font-style:italic;">Samedi</span> 16 / 05 / 2026</div>
-        <div class="fplc">Salle du Parvis de Marolles en Brie à partir de 12h</div>
+        <div class="fplc">Salle du Parvis de Marolles en Brie</div>
         <div class="fpadr"><a href="https://maps.google.com/?q=13+avenue+de+Gros+Bois,+94440+Marolles-en-Brie" target="_blank" rel="noopener">13 avenue de Gros Bois, 94440 Marolles-en-Brie</a></div>
       </div> 
       <div class="fpck" id="fpck-msg">La cérémonie civile aura lieu en présence de nos proches.</div>
+      <div class="fpck" id="fpck-msg"></div>
       <button id="btn-confirm">Confirmer votre présence</button>
     </div>
 
     <!-- P1 : RSVP -->
     <div class="pnl" id="p1">
-      <div class="rvh"><div class="rvt">Votre réponse</div><div class="rvdl">Répondre avant le 15 avril 2026</div></div>
+      <div class="rvh"><div class="rvt">Votre invitation vous sera exigée</div><div class="rvdl">pour contrôle d'accès</div></div>
       <div class="rvc" id="rvf">
         <div class="rvse"><div class="rvq" id="rvq-ceremonie">Serez-vous présent(e) à la cérémonie ?</div>
           <div class="rvpr">
@@ -366,7 +355,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
         <div class="cki">Vous êtes invité(e) au Repas de mariage<br>qui se tiendra à l'adresse suivante</div>
         <div class="ckr"><svg class="ckic" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5s4.5-5 4.5-8.5c0-2.5-2-4.5-4.5-4.5zm0 6a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" fill="rgba(160,80,40,.65)"/></svg><a href="https://maps.google.com/?q=13+avenue+de+Gros+Bois,+94440+Marolles-en-Brie" target="_blank" rel="noopener" class="cktx" style="color:inherit;text-decoration:underline;text-underline-offset:2px;">Salle du Parvis — 13 av. de Gros Bois, 94440 Marolles-en-Brie</a></div>
         <div class="ckr"><svg class="ckic" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="2" stroke="rgba(160,80,40,.65)" stroke-width="1.2"/><line x1="2" y1="6.5" x2="14" y2="6.5" stroke="rgba(160,80,40,.65)" stroke-width="1"/><line x1="5" y1="2" x2="5" y2="4.5" stroke="rgba(160,80,40,.65)" stroke-width="1.2" stroke-linecap="round"/><line x1="11" y1="2" x2="11" y2="4.5" stroke="rgba(160,80,40,.65)" stroke-width="1.2" stroke-linecap="round"/></svg><span class="cktx">Samedi 16 mai 2026 — à partir de 12h</span></div>
-        <div class="cki">Dress Code : Sortez avec vos plus belles tenues africaines <br> Afro attitude</div>
+        <div class="fpck" style="margin-top:10px;">Dress Code : Sortez avec vos plus belles tenues africaines — Afro attitude 🪭</div>
         <div class="cksp"></div>
         <div class="qrw"><div class="qrl">Votre accès</div>
           <div style="position:relative;display:inline-block;border-radius:12px;overflow:hidden;">
@@ -379,7 +368,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
     </div>
 
     <!-- P4 : ALBUM -->
-    <div class="pnl" id="p4" style="padding:14px 12px 24px;">
+    <div class="pnl" id="p4" style="padding:14px 12px 24px;justify-content:flex-start;align-items:flex-start;">
       <div class="albt">Notre album</div>
       <div class="albfs" id="afs">
         <button class="albf once on" data-c="once">Il était une fois</button>
@@ -421,6 +410,31 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
 var pr=null,di=[],lv=3,af='once',lbi=0,lbv=[],confirmed=false;
 var guestToken='';
 var guestJwt='';
+
+/* ── Empreinte appareil (Option C) ── */
+function getDeviceUuid(){
+  var key='_dv_uuid';
+  var id=localStorage.getItem(key);
+  if(!id){
+    id='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){
+      var r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16);
+    });
+    localStorage.setItem(key,id);
+  }
+  return id;
+}
+
+function getDeviceFp(){
+  try{
+    var fp={
+      tz:Intl.DateTimeFormat().resolvedOptions().timeZone||'',
+      lang:navigator.language||'',
+      screen:screen.width+'x'+screen.height+'x'+screen.colorDepth,
+      platform:navigator.platform||navigator.userAgentData&&navigator.userAgentData.platform||''
+    };
+    return JSON.stringify(fp);
+  }catch(e){return '{}';}
+}
 var prCk1=null, prCk2=null;
 
 var photos=[];  /* tableau vide — les photos viennent de Google Drive */
@@ -429,31 +443,9 @@ var photos=[];  /* tableau vide — les photos viennent de Google Drive */
 function g(id){return document.getElementById(id);}
 function w(ms){return new Promise(function(r){setTimeout(r,ms);});}
 
-var ds=['d0','d1','d2','d3'].map(function(id){return g(id);});
-ds.forEach(function(inp,i){
-  inp.addEventListener('keydown',function(e){
-    if(e.key==='Backspace'){if(inp.value){inp.value='';inp.classList.remove('filled');}else if(i>0){ds[i-1].focus();ds[i-1].value='';ds[i-1].classList.remove('filled');}e.preventDefault();}
-    if(e.key==='Enter')chk();
-  });
-  inp.addEventListener('input',function(){var v=inp.value.replace(/\D/g,'').slice(-1);inp.value=v;if(v){inp.classList.add('filled');if(i<3)ds[i+1].focus();}else inp.classList.remove('filled');});
-  inp.addEventListener('paste',function(e){var t=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'');if(t.length>=4){ds.forEach(function(d,j){d.value=t[j]||'';t[j]?d.classList.add('filled'):d.classList.remove('filled');});ds[3].focus();e.preventDefault();}});
-  inp.addEventListener('click',function(){inp.select();});
-});
-g('otbtn').addEventListener('click',chk);
-
-function chk(){
-  var c=ds.map(function(d){return d.value;}).join('');
-  if(c==='2701'){go(1);return;}
-  if(c==='2702'){go(2);return;}
-  if(c==='2703'){go(3);return;}
-  if(c==='2704'){go(4);return;}
-  if(c.length===4) verifyReal(c);
-  else ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
-}
 
 function go(l){
   lv=l;
-  var o=g('otp');o.style.transition='opacity .42s';o.style.opacity='0';setTimeout(function(){o.remove();},450);
   g('main').classList.add('show');
   var siteUrl = window.location.origin;
   if(l===2||l>=4) qr('qr1', siteUrl+'/scanner.html?g='+guestToken+'&e=ck1');
@@ -567,9 +559,11 @@ g('rvsub').addEventListener('click',function(){
   g('rverr').textContent='';g('rvf').style.display='none';
   var ok=g('rvok');
   ok.style.display='flex';ok.style.animation='successPop .48s cubic-bezier(.2,0,.2,1)';
-  g('rvokt').textContent=pr==='yes'?'Merci, à très bientôt !':'Merci de nous avoir prévenus';
+  g('rvokt').textContent=pr==='yes'?'Merci pour votre réponse':'Merci de nous avoir prévenus';
   var dateMsg = lv===3 ? '16 mai 2026' : '15 mai 2026';
-  var txt=pr==='yes'?'Votre présence est confirmée pour le '+dateMsg+'.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.':'Votre réponse a bien été transmise.<br>Lynda &amp; Marcel-Cédric vous remercient de vous être manifesté(e).';
+  var txt=pr==='yes'
+    ?'Votre présence est confirmée pour le '+dateMsg+'.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.<br><br><strong>Votre invitation vous sera exigée pour contrôle d\'accès.</strong>'
+    :'Votre réponse a bien été transmise.<br>Lynda &amp; Marcel-Cédric vous remercient de vous être manifesté(e).';
   g('rvokm').innerHTML=txt;
   if(pr==='yes'){var cp=g('ckp');if(cp){cp.style.transition='stroke-dashoffset .6s cubic-bezier(.2,0,.2,1) .1s';cp.style.strokeDashoffset='0';}}
 
@@ -755,7 +749,7 @@ function qr(id, url){
 }
 
 async function anim(){
-  var wrap=g('ewrap'),flap=g('eflap'),seal=g('wax'),rl=g('rl'),rr=g('rr'),bow=g('bow'),prev=g('bprev'),otp=g('otp');
+  var wrap=g('ewrap'),flap=g('eflap'),seal=g('wax'),rl=g('rl'),rr=g('rr'),bow=g('bow'),prev=g('bprev');
   prev.classList.add('show');
   await w(900);
   wrap.style.animation='shake .62s ease-in-out';await w(660);wrap.style.animation='';await w(320);
@@ -765,66 +759,58 @@ async function anim(){
   rr.style.transform='translateX(200px) rotate(18deg)';rr.style.opacity='0';
   bow.style.transform='translate(-50%,-50%) scale(0)';bow.style.opacity='0';await w(720);
   wrap.style.opacity='0';wrap.style.transform='scale(.86) translateY(22px)';prev.classList.remove('show');await w(560);
-  otp.classList.add('show');
   ['p1','p2','p3'].forEach(function(id,i){
     var el=document.getElementById(id);if(!el)return;
     el.style.transition='stroke-dashoffset '+(1.35+i*.28)+'s ease '+(i*.22)+'s';el.style.strokeDashoffset='0';
     setTimeout(function(){el.style.animation='glowPulse '+(2.3+i*.4)+'s ease-in-out '+(0.9+i*.2)+'s infinite';},1350+i*500);
   });
-  await w(380);ds[0].focus();
+  /* Résolution du token au chargement */
+  resolveToken();
 }
 
-/* ── API : vérification OTP réel ── */
-async function verifyReal(code){
-  var btn=g('otbtn');
-  btn.textContent='Vérification…';btn.disabled=true;
+/* ── Résolution du token ?t= → accès direct sans OTP ── */
+async function resolveToken(){
+  var params=new URLSearchParams(window.location.search);
+  var t=params.get('t');
+  if(!t){
+    g('token-err').classList.add('show');
+    return;
+  }
+  guestToken=t;
   try{
-    var body={otp:code};
-    if(guestToken) body.guestToken=guestToken;
-    var res=await fetch('/.netlify/functions/verify-otp',{
+    var res=await fetch('/.netlify/functions/resolve-token',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(body)
+      body:JSON.stringify({
+        guestToken:t,
+        deviceUuid:getDeviceUuid(),
+        deviceFp:getDeviceFp()
+      })
     });
     var data=await res.json();
-    if(!res.ok) throw new Error(data.error);
+    if(!res.ok) throw new Error(data.error||'Token invalide');
     guestJwt=data.token;
+    var pz=g('fp-prenom-zone');
+    if(pz&&data.prenom){
+      pz.innerHTML='<div class="fp-prenom">'+data.prenom+'</div>';
+    }
     go(data.niveau);
-    /* Si RSVP déjà soumis → afficher directement l'écran "déjà confirmé" */
     fetch('/.netlify/functions/check-rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:data.token})})
     .then(function(r){return r.json();})
     .then(function(rsvp){if(rsvp.rsvp_submitted){setTimeout(function(){applyExistingRSVP(rsvp);},400);}})
     .catch(function(e){console.warn('check-rsvp:',e);});
   }catch(e){
-    ds.forEach(function(d){d.classList.add('err');setTimeout(function(){d.classList.remove('err');},380);});
-    var errEl=g('rverr');if(errEl) errEl.textContent=e.message;
-    btn.textContent='Ouvrir mon invitation';btn.disabled=false;
+    g('token-err').classList.add('show');
+    /* Message spécifique si refus appareil */
+    var errBox=document.getElementById('token-err-box');
+    if(errBox&&e.message&&e.message.indexOf('autre appareil')>-1){
+      errBox.innerHTML='<div class="terr-ico">🔒</div>'
+        +'<div class="terr-t">Accès non autorisé</div>'
+        +'<div class="terr-s">'+e.message+'</div>';
+    }
+    console.warn('resolve-token:',e.message);
   }
 }
-
-/* ── API : lecture ?t= au chargement → send-otp automatique ── */
-(function(){
-  var params=new URLSearchParams(window.location.search);
-  var t=params.get('t');
-  if(!t) return;
-  guestToken=t;
-  fetch('/.netlify/functions/send-otp',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({guestToken:t})
-  })
-  .then(function(r){return r.json();})
-  .then(function(data){
-    if(data.success){
-      var otpb=g('otpb');
-      if(otpb){
-        var sub=otpb.querySelector('.ots');
-        if(sub) sub.textContent='Bonjour '+data.prenom+' \u2014 votre code a \u00e9t\u00e9 envoy\u00e9 par SMS';
-      }
-    }
-  })
-  .catch(function(e){console.warn('send-otp auto:',e);});
-})();
 
 /* ── API : sauvegarde RSVP dans Google Sheets ── */
 (function(){
@@ -856,10 +842,11 @@ function applyExistingRSVP(data){
   var okt=g('rvokt'), okm=g('rvokm');
   var estPresent = data.rsvp_presence==='oui';
 
-  if(okt) okt.textContent = estPresent ? 'Présence confirmée ✓' : 'Absence confirmée';
+  if(okt) okt.textContent = estPresent ? 'Merci pour votre réponse' : 'Absence confirmée';
 
+  var dateMsg2 = lv===3 ? '16 mai 2026' : '15 mai 2026';
   var txt = estPresent
-    ? 'Votre présence a bien été enregistrée.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.'
+    ? 'Votre présence est enregistrée pour le '+dateMsg2+'.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.<br><br><strong>Votre invitation vous sera exigée pour contrôle d\'accès.</strong>'
     : 'Votre absence a bien été enregistrée.<br>Lynda &amp; Marcel-Cédric vous remercient de les avoir prévenus.';
   if(data.rsvp_ck1) txt+='<br>Cocktail famille : '+(data.rsvp_ck1==='oui'?'✓ Présent(e)':'✗ Absent(e)');
   if(data.rsvp_ck2) txt+='<br>Repas de mariage : '+(data.rsvp_ck2==='oui'?'✓ Présent(e)':'✗ Absent(e)');

@@ -23,13 +23,32 @@ exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") return { statusCode: 200, body: "" };
   if (event.httpMethod !== "POST") return { statusCode: 405, body: JSON.stringify({ error: "Method not allowed" }) };
 
-  let guestToken, evt, pin;
-  try { ({ guestToken, event: evt, pin } = JSON.parse(event.body)); }
+  let guestToken, evt, pin, shortCode;
+  try { ({ guestToken, shortCode, event: evt, pin } = JSON.parse(event.body)); }
   catch { return { statusCode: 400, body: JSON.stringify({ error: "Corps invalide" }) }; }
 
   /* Vérifier le PIN scanner */
   if (!pin || pin !== process.env.SCANNER_PIN) {
     return { statusCode: 401, body: JSON.stringify({ error: "PIN invalide" }) };
+  }
+
+  /* Résoudre shortCode si fourni (QR court) */
+  if (shortCode && !guestToken) {
+    /* Chercher par short_code col W = index 22 */
+    try {
+      const sheets2 = await getSheetsClient();
+      const sc = await sheets2.spreadsheets.values.get({ spreadsheetId: SHEET_ID, range: "Invités!A:W" });
+      const scRows = sc.data.values || [];
+      for (let i = 1; i < scRows.length; i++) {
+        if ((scRows[i][22]||"").toUpperCase() === shortCode.toUpperCase()) {
+          guestToken = scRows[i][11] || "";
+          const niv = parseInt(scRows[i][2]) || 1;
+          if (!evt) evt = niv === 2 ? "ck1" : niv >= 3 ? "ck2" : null;
+          break;
+        }
+      }
+    } catch(e) { console.error("shortCode resolve:", e.message); }
+    if (!guestToken) return { statusCode: 200, body: JSON.stringify({ status: "invalid" }) };
   }
 
   if (!guestToken || !["ck1", "ck2"].includes(evt)) {
@@ -42,7 +61,7 @@ exports.handler = async (event) => {
     /* Lire colonnes A:N */
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId: SHEET_ID,
-      range: "Invités!A:N",
+      range: "Invités!A:W",
     });
 
     const rows = res.data.values || [];
@@ -61,6 +80,8 @@ exports.handler = async (event) => {
           rsvp_ck2:      (row[10] || "").toLowerCase(),
           entry_ck1:     row[12] || "",
           entry_ck2:     row[13] || "",
+          table:         row[18] || "",
+          count:         parseInt(row[17]) || 1,
         };
         break;
       }
@@ -103,9 +124,23 @@ exports.handler = async (event) => {
       requestBody: { values: [[now]] },
     });
 
+    /* Calculer places restantes pour ck2 */
+    let placesRestantes = null;
+    if (evt === "ck2" && guest.table) {
+      try {
+        const sheets3 = await getSheetsClient();
+        const pr = await sheets3.spreadsheets.values.get({ spreadsheetId: SHEET_ID, range: "Invités!N:S" });
+        const prRows = pr.data.values || [];
+        let occupied = 0;
+        prRows.slice(1).forEach(function(r){ if((r[4]||"")===guest.table && r[0]) occupied += parseInt(r[3])||1; });
+        occupied += guest.count;
+        placesRestantes = Math.max(0, 9 - occupied);
+      } catch(e) { console.warn("places restantes:", e.message); }
+    }
+
     return {
       statusCode: 200,
-      body: JSON.stringify({ status: "granted", prenom: guest.prenom, event: evt, scanned_at: now }),
+      body: JSON.stringify({ status: "granted", prenom: guest.prenom, event: evt, scanned_at: now, table: guest.table, placesRestantes }),
     };
 
   } catch (err) {
