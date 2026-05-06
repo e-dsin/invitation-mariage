@@ -4,8 +4,9 @@
   "description": "Backend invitation mariage Lynda & Marcel-Cédric",
   "private": true,
   "dependencies": {
+    "geoip-lite": "^1.4.10",
     "googleapis": "^140.0.0",
-    "twilio": "^5.0.0",
-    "jsonwebtoken": "^9.0.0"
+    "jsonwebtoken": "^9.0.0",
+    "twilio": "^5.0.0"
   }
 }
