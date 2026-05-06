@@ -102,11 +102,8 @@ body{background:#1a1a2e;}
 </div>
 
 <script>
-/* ════════════════════════════════════════════
-   CONSTANTES
-════════════════════════════════════════════ */
 var ARCGIS_API_KEY = 'AAPTan5QhTRTt-XEPphTzyrFtKA..DsL6PBNPN8nN8WQfKKSSfMnOCwMngfyq2OwNehbAnDcapmQScCwy23KgzbP6tXi9VIdWOylc2Jqefced9Dlf8TU6y5j5bMNDyeWpItKBUxNK5R8AgtKqYlmz8pMxxyZZoVt_-11gzapqpTjX21JxrbA2WMYWxLnLc7IELEs7tVlluUDs8Yctp5ORS2faKuBkogCCk4VOynic6qqShFPpysD9pMZixF8zapeNGuu9qAzfklXFf_O2pH6PMA..AT1_KMQaRDlb';
-var SESSION_KEY    = 'rapport_ip_dict_arcgis';
+var SESSION_KEY = 'rapport_ip_dict_arcgis';
 var IP_COLORS      = {green:'#3a7020', orange:'#c87010', red:'#c02020'};
 var IP_LABELS      = {green:'IP stable', orange:'Changement < 100m', red:'Changement > 100m'};
 var ORDER          = {red:0, orange:1, green:2};
@@ -149,7 +146,7 @@ function checkPin(){
 
 /* ════════════════════════════════════════════
    FONCTION 1 — buildGuestData
-   Géolocalise les IPs et construit le dictionnaire JSON.
+   Géolocalise les IPs séquentiellement (respect rate limit ip-api 45/min).
    Persisté en sessionStorage.
 ════════════════════════════════════════════ */
 async function buildGuestData(rawGuests) {
@@ -160,35 +157,46 @@ async function buildGuestData(rawGuests) {
   var total  = withIp.length;
   var progEl = document.getElementById('load-prog');
 
-  /* Géoloc par batch de 4 */
-  var BATCH = 4;
-  for(var i=0; i<withIp.length; i+=BATCH){
-    var batch = withIp.slice(i, i+BATCH);
-    var batchResults = await Promise.all(batch.map(function(g){
-      return fetch('https://ip-api.com/json/'+encodeURIComponent(g.adr_ip.split(',')[0].trim())
-        +'?fields=lat,lon,status,city,country,regionName')
-        .then(function(r){ return r.json(); })
-        .then(function(geo){
-          return {
-            prenom:               g.prenom               || '',
-            adr_ip:               g.adr_ip               || '',
-            ip_status:            g.ip_status            || 'green',
-            ip_log:               g.ip_log               || '',
-            timestamp_first_click:g.timestamp_first_click|| '',
-            lat:     geo.status==='success' ? geo.lat    : null,
-            lon:     geo.status==='success' ? geo.lon    : null,
-            city:    geo.status==='success' ? geo.city   : '',
-            region:  geo.status==='success' ? geo.regionName : '',
-            country: geo.status==='success' ? geo.country: '',
-          };
-        })
-        .catch(function(){ return null; });
-    }));
-    batchResults.forEach(function(e){ if(e && e.lat !== null) result.guests.push(e); });
-    if(progEl){ var done=Math.min(i+BATCH,total); progEl.textContent=done+' / '+total+' adresses traitées'; }
-    if(i+BATCH < withIp.length) await pause(400);
+  /* Géoloc séquentielle — 1 requête toutes les 1.4s = ~42/min < limite 45/min */
+  for(var i=0; i<withIp.length; i++){
+    var g = withIp[i];
+    if(progEl) progEl.textContent = (i+1) + ' / ' + total + ' adresses traitées';
+    try {
+      var r = await fetch('https://ip-api.com/json/'+encodeURIComponent(g.adr_ip.split(',')[0].trim())
+        +'?fields=lat,lon,status,city,country,regionName');
+      /* Gérer le 429 : attendre et réessayer une fois */
+      if(r.status === 429){
+        await pause(2000);
+        r = await fetch('https://ip-api.com/json/'+encodeURIComponent(g.adr_ip.split(',')[0].trim())
+          +'?fields=lat,lon,status,city,country,regionName');
+      }
+      var geo = await r.json();
+      result.guests.push({
+        prenom:               g.prenom               || '',
+        adr_ip:               g.adr_ip               || '',
+        ip_status:            g.ip_status            || 'green',
+        ip_log:               g.ip_log               || '',
+        timestamp_first_click:g.timestamp_first_click|| '',
+        lat:     geo.status==='success' ? geo.lat    : null,
+        lon:     geo.status==='success' ? geo.lon    : null,
+        city:    geo.status==='success' ? (geo.city||'') : '',
+        region:  geo.status==='success' ? (geo.regionName||'') : '',
+        country: geo.status==='success' ? (geo.country||'') : '',
+      });
+    } catch(e) {
+      /* Erreur réseau — inclure quand même sans coordonnées */
+      result.guests.push({
+        prenom: g.prenom||'', adr_ip: g.adr_ip||'',
+        ip_status: g.ip_status||'green', ip_log: g.ip_log||'',
+        timestamp_first_click: g.timestamp_first_click||'',
+        lat: null, lon: null, city:'', region:'', country:''
+      });
+    }
+    if(i < withIp.length-1) await pause(1400);
   }
 
+  /* Ne garder que les invités géolocalisés */
+  result.guests = result.guests.filter(function(g){ return g.lat !== null; });
   try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(result)); } catch(e){}
   return result;
 }
@@ -210,6 +218,7 @@ function renderFeatures(dict) {
     'esri/widgets/Home',
   ], function(esriConfig, Map, MapView, FeatureLayer, Graphic, FeatureTable, Legend, Home) {
 
+    /* ── CRITIQUE : apiKey doit être définie en PREMIER ── */
     esriConfig.apiKey = ARCGIS_API_KEY;
 
     /* ── 1. Construire les Graphics (feature class points) ── */
@@ -287,7 +296,7 @@ function renderFeatures(dict) {
 
     /* ── 5. Map + MapView ── */
     var map = new Map({
-      basemap: 'dark-gray-vector',
+      basemap: 'streets-night-vector',
       layers:  [layer],
     });
 
