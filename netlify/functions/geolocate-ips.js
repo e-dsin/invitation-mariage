@@ -34,7 +34,7 @@ exports.handler = async (event) => {
       results[ip] = { lat: null, lon: null, city: "", region: "", country: "" };
     }
   }
-
+  
   return {
     statusCode: 200,
     headers: { "Content-Type": "application/json" },
