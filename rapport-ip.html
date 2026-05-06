@@ -146,7 +146,8 @@ function checkPin(){
 
 /* ════════════════════════════════════════════
    FONCTION 1 — buildGuestData
-   Géolocalise les IPs séquentiellement (respect rate limit ip-api 45/min).
+   Appelle la fonction Netlify geolocate-ips (côté serveur)
+   pour contourner les restrictions CORS de ip-api.com.
    Persisté en sessionStorage.
 ════════════════════════════════════════════ */
 async function buildGuestData(rawGuests) {
@@ -154,49 +155,48 @@ async function buildGuestData(rawGuests) {
   withIp.sort(function(a,b){ return (ORDER[a.ip_status]||2)-(ORDER[b.ip_status]||2); });
 
   var result = { guests: [], generated_at: new Date().toISOString() };
-  var total  = withIp.length;
   var progEl = document.getElementById('load-prog');
+  if(progEl) progEl.textContent = 'Géolocalisation en cours…';
 
-  /* Géoloc séquentielle — 1 requête toutes les 1.4s = ~42/min < limite 45/min */
-  for(var i=0; i<withIp.length; i++){
-    var g = withIp[i];
-    if(progEl) progEl.textContent = (i+1) + ' / ' + total + ' adresses traitées';
-    try {
-      var r = await fetch('https://ip-api.com/json/'+encodeURIComponent(g.adr_ip.split(',')[0].trim())
-        +'?fields=lat,lon,status,city,country,regionName');
-      /* Gérer le 429 : attendre et réessayer une fois */
-      if(r.status === 429){
-        await pause(2000);
-        r = await fetch('https://ip-api.com/json/'+encodeURIComponent(g.adr_ip.split(',')[0].trim())
-          +'?fields=lat,lon,status,city,country,regionName');
-      }
-      var geo = await r.json();
+  /* Extraire la liste d'IPs uniques */
+  var ips = withIp.map(function(g){ return g.adr_ip.split(',')[0].trim(); })
+    .filter(function(ip, idx, arr){ return arr.indexOf(ip) === idx; });
+
+  /* Appel unique côté serveur — pas de CORS, pas de rate limit côté client */
+  var geoMap = {};
+  try {
+    var r = await fetch('/.netlify/functions/geolocate-ips', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ips: ips })
+    });
+    var data = await r.json();
+    geoMap = data.results || {};
+  } catch(e) {
+    console.warn('geolocate-ips error:', e);
+  }
+
+  /* Construire le dictionnaire à partir des résultats */
+  withIp.forEach(function(g, i) {
+    var cleanIp = g.adr_ip.split(',')[0].trim();
+    var geo = geoMap[cleanIp] || {};
+    if(progEl) progEl.textContent = (i+1) + ' / ' + withIp.length + ' traités';
+    if(geo.lat) {
       result.guests.push({
         prenom:               g.prenom               || '',
         adr_ip:               g.adr_ip               || '',
         ip_status:            g.ip_status            || 'green',
         ip_log:               g.ip_log               || '',
         timestamp_first_click:g.timestamp_first_click|| '',
-        lat:     geo.status==='success' ? geo.lat    : null,
-        lon:     geo.status==='success' ? geo.lon    : null,
-        city:    geo.status==='success' ? (geo.city||'') : '',
-        region:  geo.status==='success' ? (geo.regionName||'') : '',
-        country: geo.status==='success' ? (geo.country||'') : '',
-      });
-    } catch(e) {
-      /* Erreur réseau — inclure quand même sans coordonnées */
-      result.guests.push({
-        prenom: g.prenom||'', adr_ip: g.adr_ip||'',
-        ip_status: g.ip_status||'green', ip_log: g.ip_log||'',
-        timestamp_first_click: g.timestamp_first_click||'',
-        lat: null, lon: null, city:'', region:'', country:''
+        lat:     geo.lat,
+        lon:     geo.lon,
+        city:    geo.city    || '',
+        region:  geo.region  || '',
+        country: geo.country || '',
       });
     }
-    if(i < withIp.length-1) await pause(1400);
-  }
+  });
 
-  /* Ne garder que les invités géolocalisés */
-  result.guests = result.guests.filter(function(g){ return g.lat !== null; });
   try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(result)); } catch(e){}
   return result;
 }
