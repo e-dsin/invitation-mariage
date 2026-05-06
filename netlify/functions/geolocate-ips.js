@@ -48,13 +48,16 @@ exports.handler = async (event) => {
   }
 
   const results = {};
-  /* Séquentiel avec pause 1.4s pour respecter la limite 45 req/min */
-  for (let i = 0; i < ips.length; i++) {
-    const ip = ips[i];
-    if (!results[ip]) {
-      results[ip] = await geolocate(ip);
-      if (i < ips.length - 1) await pause(1400);
-    }
+  const unique = [...new Set(ips)];
+
+  /* Parallèle par batch de 5 — Node.js n'a pas de limite CORS */
+  const BATCH = 5;
+  for (let i = 0; i < unique.length; i += BATCH) {
+    const batch = unique.slice(i, i + BATCH);
+    await Promise.all(batch.map(async function(ip) {
+      if (!results[ip]) results[ip] = await geolocate(ip);
+    }));
+    if (i + BATCH < unique.length) await pause(300);
   }
 
   return {
