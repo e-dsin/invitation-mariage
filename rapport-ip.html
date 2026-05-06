@@ -151,18 +151,21 @@ function checkPin(){
    Persisté en sessionStorage.
 ════════════════════════════════════════════ */
 async function buildGuestData(rawGuests) {
-  var withIp = rawGuests.filter(function(g){ return g.ip_status && g.adr_ip; });
+  /* Inclure tous les invités ayant une adresse IP, même sans ip_status */
+  var withIp = rawGuests.filter(function(g){ return g.adr_ip && g.adr_ip.trim(); });
   withIp.sort(function(a,b){ return (ORDER[a.ip_status]||2)-(ORDER[b.ip_status]||2); });
+
+  console.log('buildGuestData: withIp count =', withIp.length);
 
   var result = { guests: [], generated_at: new Date().toISOString() };
   var progEl = document.getElementById('load-prog');
   if(progEl) progEl.textContent = 'Géolocalisation en cours…';
 
-  /* Extraire la liste d'IPs uniques */
   var ips = withIp.map(function(g){ return g.adr_ip.split(',')[0].trim(); })
-    .filter(function(ip, idx, arr){ return arr.indexOf(ip) === idx; });
+    .filter(function(ip, idx, arr){ return ip && arr.indexOf(ip) === idx; });
 
-  /* Appel unique côté serveur — pas de CORS, pas de rate limit côté client */
+  console.log('IPs uniques à géolocaliser:', ips);
+
   var geoMap = {};
   try {
     var r = await fetch('/.netlify/functions/geolocate-ips', {
@@ -172,11 +175,11 @@ async function buildGuestData(rawGuests) {
     });
     var data = await r.json();
     geoMap = data.results || {};
+    console.log('geoMap reçu:', JSON.stringify(geoMap).slice(0,200));
   } catch(e) {
     console.warn('geolocate-ips error:', e);
   }
 
-  /* Construire le dictionnaire à partir des résultats */
   withIp.forEach(function(g, i) {
     var cleanIp = g.adr_ip.split(',')[0].trim();
     var geo = geoMap[cleanIp] || {};
@@ -184,7 +187,7 @@ async function buildGuestData(rawGuests) {
     if(geo.lat) {
       result.guests.push({
         prenom:               g.prenom               || '',
-        adr_ip:               g.adr_ip               || '',
+        adr_ip:               cleanIp,
         ip_status:            g.ip_status            || 'green',
         ip_log:               g.ip_log               || '',
         timestamp_first_click:g.timestamp_first_click|| '',
@@ -194,9 +197,12 @@ async function buildGuestData(rawGuests) {
         region:  geo.region  || '',
         country: geo.country || '',
       });
+    } else {
+      console.warn('Pas de coordonnées pour:', cleanIp, geo);
     }
   });
 
+  console.log('buildGuestData: résultat final =', result.guests.length, 'points');
   try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(result)); } catch(e){}
   return result;
 }
@@ -222,7 +228,9 @@ function renderFeatures(dict) {
     esriConfig.apiKey = ARCGIS_API_KEY;
 
     /* ── 1. Construire les Graphics (feature class points) ── */
+    console.log('renderFeatures: dict.guests =', dict.guests.length);
     var graphics = dict.guests.map(function(g, i){
+      console.log('graphic', i, g.prenom, g.lat, g.lon, g.ip_status);
       return new Graphic({
         geometry: { type:'point', longitude: g.lon, latitude: g.lat },
         attributes: {
