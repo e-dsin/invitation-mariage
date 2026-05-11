@@ -862,7 +862,7 @@ function applyExistingRSVP(data){
   }
 
   var bc=g('btn-confirm');
-  if(bc){bc.textContent=estPresent?'Présence confirmée ✓':'Absence confirmée';bc.classList.add('done');bc.disabled=true;}
+  if(bc){bc.textContent=estPresent?'Présence confirmée ✓ - Cliquer sur les onglets':'Absence confirmée';bc.classList.add('done');bc.disabled=true;}
 
   var rved=g('rved');
   if(rved){rved.textContent='Modifier votre réservation';rved.style.display='block';}
