@@ -576,7 +576,7 @@ g('rvsub').addEventListener('click',function(){
     if(lv===2||lv>=4)g('af1').classList.remove('hidden');
     if(lv===3||lv>=4)g('af2').classList.remove('hidden');
     var bc=g('btn-confirm');
-    if(bc){bc.textContent='Présence confirmée ✓';bc.classList.add('done');bc.disabled=true;}
+    if(bc){bc.textContent='Présence confirmée ✓ - Cliquer sur les onglets';bc.classList.add('done');bc.disabled=true;}
     buildTabBar(lv);
   }
 });
