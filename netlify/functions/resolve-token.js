@@ -30,8 +30,10 @@ async function findGuestByToken(sheets, token) {
         firstClick:  row[14] || "",
         storedIp:    row[15] || "",
         deviceUuid:  row[20] || "",   /* Col U = index 20 */
-        deviceFp:    row[21] || "",
+        deviceFp:    row[21] || "",   /* Col V = index 21 */
         shortCode:   row[22] || "",   /* Col W = index 22 */
+        shortCode:   row[22] || "",   /* Col W = index 22 */
+        table:       row[18] || "",   /* Col S = index 18 */
       };
     }
   }
@@ -121,7 +123,7 @@ exports.handler = async (event) => {
       console.log(`short_code généré pour ${guest.prenom}: ${guest.shortCode}`);
     }
 
-    /* ── VÉRIFICATION DEVICE (Option C) ── */
+        /* ── VÉRIFICATION DEVICE (Option C) ── */
     if (!guest.deviceUuid && !guest.deviceFp) {
       /* ── PREMIER ACCÈS : enregistrer UUID + fingerprint + IP ── */
       await sheets.spreadsheets.values.batchUpdate({
@@ -197,7 +199,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, prenom: guest.prenom, niveau: guest.niveau, token, shortCode: guest.shortCode }),
+      body: JSON.stringify({ success: true, prenom: guest.prenom, niveau: guest.niveau, token, shortCode: guest.shortCode, table: guest.table }),
     };
 
   } catch (err) {
