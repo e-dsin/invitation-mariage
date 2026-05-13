@@ -162,6 +162,10 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
 .rv-priv{font-size:10px;font-style:italic;color:rgba(130,60,25,.42);margin-top:8px;border-top:1px solid rgba(160,80,40,.12);padding-top:8px;}
 .rved{margin-top:15px;padding:8px 20px;border-radius:20px;border:1px solid rgba(180,90,50,.22);background:rgba(255,252,248,.5);color:rgba(120,50,20,.6);font-size:11px;font-style:italic;cursor:pointer;}
 
+/* Repas de famille */
+.guest-table-name{font-family:'Dancing Script',cursive;font-size:38px;font-weight:700;color:#922010;line-height:1;text-shadow:0 0 20px rgba(180,70,30,.18);margin:10px 0 4px;}
+.guest-table-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-style:italic;color:rgba(110,45,20,.48);margin-bottom:8px;}
+
 /* ALBUM */
 #p5{padding:14px 12px 24px;}
 .albt{font-family:'Dancing Script',cursive;font-size:27px;font-weight:700;color:#7c3010;text-align:center;margin-bottom:10px;width:100%;}
@@ -364,6 +368,10 @@ body{min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;just
             </div>
           </div> 
           <div class="qrst on">Accès activé</div></div>
+            <div id="guest-table-bloc" style="display:none;text-align:center;margin-bottom:4px;">
+          <div class="guest-table-label">Votre table</div>
+          <div class="guest-table-name" id="guest-table-name"></div>
+        </div>
       </div>
     </div>
 
@@ -444,7 +452,7 @@ function g(id){return document.getElementById(id);}
 function w(ms){return new Promise(function(r){setTimeout(r,ms);});}
 
 
-function go(l){
+function go(l, data){
   lv=l;
   g('main').classList.add('show');
   var siteUrl = window.location.origin;
@@ -503,6 +511,13 @@ g('tabs').addEventListener('click',function(e){
   var ids=['t0','t1','t2','t3','t4'],i=ids.indexOf(t.id);if(i<0)return;
   switchTab(i);
 });
+
+/* Afficher la table pour niveaux 3 et 4 */
+  if((l===3||l>=4) && data && data.table){
+    var tb = g('guest-table-bloc');
+    var tn = g('guest-table-name');
+    if(tb && tn){ tn.textContent = data.table; tb.style.display = 'block'; }
+  }
 
 function switchTab(idx){
   var ids=['t0','t1','t2','t3','t4'];
@@ -794,7 +809,7 @@ async function resolveToken(){
     if(pz&&data.prenom){
       pz.innerHTML='<div class="fp-prenom">'+data.prenom+'</div>';
     }
-    go(data.niveau);
+    go(data.niveau, data);
     fetch('/.netlify/functions/check-rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:data.token})})
     .then(function(r){return r.json();})
     .then(function(rsvp){if(rsvp.rsvp_submitted){setTimeout(function(){applyExistingRSVP(rsvp);},400);}})
