@@ -514,8 +514,8 @@ g('tabs').addEventListener('click',function(e){
 
 /* Afficher la table pour niveaux 3 et 4 */
   if((l===3||l>=4) && data && data.table){
-    var tb = g('guest-table-bloc');
-    var tn = g('guest-table-name');
+    var tb = g(l,'guest-table-bloc');
+    var tn = g(l,'guest-table-name');
     if(tb && tn){ tn.textContent = data.table; tb.style.display = 'block'; }
   }
 
