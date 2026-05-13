@@ -589,7 +589,7 @@ g('rvsub').addEventListener('click',function(){
     if(lv===2||lv>=4)g('af1').classList.remove('hidden');
     if(lv===3||lv>=4)g('af2').classList.remove('hidden');
     var bc=g('btn-confirm');
-    if(bc){bc.textContent='Présence confirmée ✓ Cliquer les onglets';bc.classList.add('done');bc.disabled=true;}
+    if(bc){bc.textContent='Présence confirmée ✓ Cliquer sur les onglets';bc.classList.add('done');bc.disabled=true;}
     buildTabBar(lv);
   }
 });
@@ -858,7 +858,7 @@ function applyExistingRSVP(data){
   var okt=g('rvokt'), okm=g('rvokm');
   var estPresent = data.rsvp_presence==='oui';
 
-  if(okt) okt.textContent = estPresent ? 'Présence confirmée ✓ Cliquer les onglets' : 'Absence confirmée';
+  if(okt) okt.textContent = estPresent ? 'Présence confirmée ✓ Cliquer sur les onglets' : 'Absence confirmée';
 
   var txt = estPresent
     ? 'Votre présence est enregistrée pour le 15 mai 2026.<br>Lynda &amp; Marcel-Cédric sont impatients de vous retrouver.'
@@ -877,7 +877,7 @@ function applyExistingRSVP(data){
   }
 
   var bc=g('btn-confirm');
-  if(bc){bc.textContent=estPresent?'Présence confirmée ✓ Cliquer les onglets':'Absence confirmée';bc.classList.add('done');bc.disabled=true;}
+  if(bc){bc.textContent=estPresent?'Présence confirmée ✓ Cliquer sur les onglets':'Absence confirmée';bc.classList.add('done');bc.disabled=true;}
 
   var rved=g('rved');
   if(rved){rved.textContent='Modifier votre réservation';rved.style.display='block';}
